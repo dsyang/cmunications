@@ -1,0 +1,15 @@
+{
+    "name": "cmunications",
+    "version": "0.1.0",
+    "contributors": [
+        { "name": "Dan Yang" },
+        { "name": "Shikha Nalla" },
+        { "name": "Anand Pattabiraman" }
+    ],
+    "dependencies": {
+        "express": "3.0.3",
+        "mongodb": "1.2.13",
+        "connect-flash": "0.1.0",
+        "passport": "0.1.16"
+    }
+}
