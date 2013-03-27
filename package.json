@@ -11,5 +11,8 @@
         "mongodb": "1.2.13",
         "connect-flash": "0.1.0",
         "passport": "0.1.16"
+    },
+    "devDependencies": {
+        "qunit": "0.5.16"
     }
 }
