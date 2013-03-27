@@ -1,5 +1,6 @@
 var express = require("express");
 var mongo = require('mongodb');
+var utils = require('./js/utils.js');
 var app = express();
 var MongoClient = mongo.MongoClient;
 var connectionURI = process.env.MONGOLAB_URI ||
@@ -12,17 +13,15 @@ app.use(express.bodyParser());
 
 app.get("/", function(request, response) {
     var data = {};
-    defaultFunction(request, response, data);
+    defaultAction(request, response, data);
 })
 
 
-function defaultFunction(request, response) {
+function defaultAction(request, response) {
     response.send({"hello": "world!"});
 }
 
-module.exports = {
-    defaultFunction: defaultFunction
-};
+module.exports = utils.exportFunctions([defaultAction]);
 
 // Only runs if this file is passed into node "node app.js"
 if(__filename == process.argv[1]) {
