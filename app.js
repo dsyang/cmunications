@@ -16,7 +16,7 @@ app.get("/", function(request, response) {
 })
 
 app.get("/:name", function(request, response) {
-    var data = {"name": name}
+    var data = {"name": request.params.name}
     nameAction(request, response, data);
 });
 
