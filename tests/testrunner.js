@@ -7,7 +7,7 @@ testrunner.setup({
 
 
 testrunner.run({
-    code: dirname + "/../app.js", // The code to test
+    code: dirname + "/../js/applicationCode.js", // The code to test
     tests:dirname + "/test-app.js" // The testing code
 }, function(err, report) {
     if(err) throw err;

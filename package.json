@@ -11,7 +11,8 @@
         "mongodb": "1.2.13",
         "connect-flash": "0.1.0",
         "passport": "0.1.16",
-        "passport-facebook": "*"
+        "passport-facebook": "*",
+        "passport-local": "*"
    },
     "devDependencies": {
         "qunit": "0.5.16"

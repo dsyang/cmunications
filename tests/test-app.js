@@ -1,8 +1,20 @@
-test("defaultAction test", function() {
-    var expected = {"hello": "world!"};
+test("defaultAction not facebook logged in", function() {
+    var expected = {"hello": "world!",
+                    "not logged in": "go to /auth/facebook to log in"
+                   };
     var response = new MockResponse();
     defaultAction(new MockRequest(), response);
-    deepEqual(response.things_sent, expected, 'send hello world');
+    deepEqual(response.things_sent, expected, 'send hello world and URL');
+});
+test("defaultAction facebook logged in", function() {
+    var expected = {"hello": "world!",
+                    "logged in as": "USAR!"
+                   };
+    var response = new MockResponse();
+    var request = new MockRequest();
+    request.user = "USAR!";
+    defaultAction(request, response);
+    deepEqual(response.things_sent, expected, 'send hello world and name');
 });
 
 test("nameAction test normal person", function() {
