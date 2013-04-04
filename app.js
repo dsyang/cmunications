@@ -40,21 +40,15 @@ var facebookCallbackUrl = process.env.FACEBOOK_CALLBACK_URL ||
 // HTTP routes.
 var initializeRoutes = require('./js/routes.js');
 
-// We now initialize the app and database client as well as declare a global
-// database variable.
+// We now initialize the app and database client
 var app = express();
 var MongoClient = mongo.MongoClient;
-var db;
 
 
 // The following code only runs if we execute the file using node or foreman.
 // This way we can load the code as a library if we want.
 if(__filename == process.argv[1]) {
     initializeApp();
-
-    //`app` and `passport` are needed to initialize routes so we can
-    // attach routes and declare which ones require authentication
-    initializeRoutes(app, passport);
 
     MongoClient.connect(connectionURI, dbConnectCallback);
 
@@ -63,7 +57,11 @@ if(__filename == process.argv[1]) {
             console.log("ERROR opening database:  "+err);
         } else {
             console.log("Database connection established. Starting app");
-            db = database;
+
+            //`app`, `passport`, and `database` are needed to initialize routes
+            // so we case attach routes to the app, declare which ones require
+            // authentication, and interact with the database.
+            initializeRoutes(app, passport, database);
             app.listen(port);
             console.log("Created server on port: "+port);
         }
