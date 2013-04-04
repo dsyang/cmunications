@@ -1,9 +1,12 @@
 //App.js is the starting point of our app. The app can be run with the
 //`foreman start` or `npm start` commands.
 // Addidionally there are other commands for other tasks:
-//   * `npm start`:  starts the app
-//   * `npm test`:   runs the tests/testrunner.js
-//   * `npm run-script docs`: Generates html docs from these comments
+//
+//   + `npm start`:  starts the app
+//   + `npm test`:   runs tests/testrunner.js
+//   + `npm run-script docs`: Generates html docs from these comments
+//
+
 
 //We start by importing essential extrenal libraries needed for the main app.
 //The `passport-facebook` is used to handle facebook authentication for
