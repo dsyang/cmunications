@@ -1,4 +1,5 @@
 var utils = require('../js/utils.js');
+
 function MockResponse() {
     this.sent = false;
     this.things_sent = undefined;
@@ -15,4 +16,8 @@ function MockRequest(body) {
     this.body = body;
 }
 
-module.exports = utils.exportFunctions([MockRequest, MockResponse]);
+function MockDb() {
+    return this;
+}
+
+module.exports = utils.exportFunctions([MockRequest, MockResponse, MockDb]);
