@@ -1,27 +1,49 @@
+//We start by importing essential extrenal libraries needed for the main app.
+//The ```passport-facebook``` is used to handle facebook authentication for
+//users and ```passport-local``` is used to roll our own auth for organization
+//accounts.
 var express = require("express"),
     mongo = require('mongodb'),
     passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy;
     LocalStrategy = require('passport-local').Strategy;
 
-var connectionURI = process.env.MONGOLAB_URI ||
-    "mongodb://localhost:27017/myNotebook";
+
+
+//These configuration variables are necessary to hook the app to the correct
+//services. ```process.env``` is used here so we can store sensitive data in a
+//environment variables and not in version control.  By inculding a ```.env```
+//file in the project directory, The command ```foreman start``` will add all
+//variables declared in there as environment variables.
+//
+//MONGOLAB_URI is something defined in heroku with the remote mongo URI
 var port = process.env.PORT || 8889;
+var connectionURI = process.env.MONGOLAB_URI ||
+    "mongodb://localhost:27017/cmunications";
 var FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 var FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 var facebookCallbackUrl = process.env.FACEBOOK_CALLBACK_URL ||
     "http://localhost:"+port+"/auth/facebook/callback";
 
+
+// The ```js/routes.js``` file exports a function that sets up all of our
+// HTTP routes.
 var initializeRoutes = require('./js/routes.js');
+// We now initialize the app and database client as well as declare a global
+// database variable.
 var app = express();
 var MongoClient = mongo.MongoClient;
 var db;
 
-// Only runs if this file is passed into node like "node app.js"
+
+// The following code only runs if we execute the file using node or foreman.
+// This way we can load the code as a library if we want.
 if(__filename == process.argv[1]) {
     initializeApp();
-    //set up routes
+    //```app``` and ```passport``` are needed to initialize routes so we can
+    // attach routes and declare which ones require authentication
     initializeRoutes(app, passport);
+
     MongoClient.connect(connectionURI, dbConnectCallback);
 
     function dbConnectCallback(err, database) {
@@ -37,15 +59,20 @@ if(__filename == process.argv[1]) {
 
 }
 
+//`initializeApp()` does all the heavy lifting in configuring and initializing
+// thrid party libraries.
 function initializeApp() {
 
-    // Passport session setup.
-    //   To support persistent login sessions, Passport needs to be able to
-    //   serialize users into and deserialize users out of the session.  Typically,
-    //   this will be as simple as storing the user ID when serializing, and finding
-    //   the user by ID when deserializing.  However, since this example does not
-    //   have a database of user records, the complete Facebook profile is serialized
-    //   and deserialized.
+    //Passport session setup.
+    // This function is used to serialize the user object so we can access it
+    // later. Whatever you pass to ```done``` in ```serializeUser``` is
+    // ```obj``` in ```deserializeUser```
+    // And whatever you pass to ```done``` in ```deseerializeUser``` is
+    // ```request.user```
+
+    /* Typically this will be as simple as storing the user
+       ID when serializing, and finding the user by ID when deserializing.
+     */
     passport.serializeUser(function(user, done) {
         done(null, user);
     });
@@ -55,6 +82,28 @@ function initializeApp() {
     });
 
 
+    //This sets up facebook authentication.
+    // Strategies in Passport require a `verify` function, which accept
+    // credentials (in this case, an accessToken, refreshToken, and Facebook
+    // profile), and invoke a callback with a user object.
+    passport.use('facebook', new FacebookStrategy({
+        clientID: FACEBOOK_APP_ID,
+        clientSecret: FACEBOOK_APP_SECRET,
+        callbackURL: facebookCallbackUrl
+    }, function(accessToken, refreshToken, profile, done) {
+        /* In a typical application, you would want
+           to associate the Facebook account with a user record in your database,
+           and return that user instead.
+        */
+        return done(null, profile);
+    }
+                                                 ));
+
+
+    // This sets up the local strategy, used for organization accounts.
+    // whatever data passed as `username=x&password=y` to the POST
+    //request that calls ```passport.authenticate('local')``` middleware
+    //will be passed into this function as `username` and `password`.
     passport.use('local', new LocalStrategy(
         function(username, password, done) {
             console.log(username, password);
@@ -63,37 +112,16 @@ function initializeApp() {
                 );
 
 
-    // Use the FacebookStrategy within Passport.
-    //   Strategies in Passport require a `verify` function, which accept
-    //   credentials (in this case, an accessToken, refreshToken, and Facebook
-    //   profile), and invoke a callback with a user object.
-    passport.use('facebook', new FacebookStrategy({
-        clientID: FACEBOOK_APP_ID,
-        clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: facebookCallbackUrl
-    }, function(accessToken, refreshToken, profile, done) {
-        // asynchronous verification, for effect...
-        process.nextTick(function () {
-
-            // To keep the example simple, the user's Facebook profile is returned to
-            // represent the logged-in user.  In a typical application, you would want
-            // to associate the Facebook account with a user record in your database,
-            // and return that user instead.
-            return done(null, profile);
-        });
-    }
-                                                 ));
-
+    // Finally we register all the middleware we'll be using.
+    // `passport.session()` allows us to support presistent login sessions.
     app.use(express.logger());
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.session({ secret: 'ahsdjfhiwehfuiahdkf' }));
-    // Initialize Passport!  Also use passport.session() middleware, to support
-    // persistent login sessions (recommended).
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(app.router);
-    //  app.use(express.static(__dirname + '/public'));
+    /*  app.use(express.static(__dirname + '/public'));*/
 
 };
