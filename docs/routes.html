@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>routes.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="applicationCode.html">
+                applicationCode.js
+              </a>
+            
+              
+              <a class="source" href="routes.html">
+                routes.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>routes.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This file hold all the routes for the app, describing our api endpoints</p>
+<p><code>applicationCode.js</code> holds all the logic for our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> code = require(<span class="string">"./applicationCode.js"</span>);
+
+module.exports = <span class="keyword">function</span>(app, passport) {
+
+    app.get(<span class="string">"/"</span>, <span class="keyword">function</span>(request, response) {
+        <span class="keyword">var</span> data = {};
+        code.defaultAction(request, response, data);
+    })
+
+    app.get(<span class="string">'/auth/facebook'</span>, passport.authenticate(<span class="string">'facebook'</span>), <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This callback is never called as we&#39;re redirected to facebook.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span>;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>After the user authenticates with facebook, this route is hit
+(Configurable of course in app.js)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    app.get(
+        <span class="string">'/auth/facebook/callback'</span>,
+        passport.authenticate(<span class="string">'facebook'</span>, { failureRedirect: <span class="string">'/'</span> }),
+        <span class="keyword">function</span>(request, response) {
+            <span class="keyword">var</span> data = {};
+            code.facebookLoginAction(request, response, data);
+        }
+    );
+
+    app.get(<span class="string">'/auth/organization'</span>, <span class="keyword">function</span>(request, response) {
+        <span class="keyword">var</span> data = {};
+        code.organizationLoginAction(request, response, data);
+    });
+
+    app.post(
+        <span class="string">'/auth/organization'</span>,
+        passport.authenticate(<span class="string">'local'</span>, { failureRedirect: <span class="string">'/'</span> }),
+        <span class="keyword">function</span>(request, response) {
+            response.send({<span class="string">"hi"</span> : request.user});
+        });
+
+    app.get(<span class="string">"/:name"</span>, <span class="keyword">function</span>(request, response) {
+        <span class="keyword">var</span> data = {<span class="string">"name"</span>: request.params.name}
+        code.nameAction(request, response, data);
+    });
+
+    app.post(<span class="string">"/post"</span>, <span class="keyword">function</span>(request, response) {
+        <span class="keyword">var</span> data = {<span class="string">"stuff"</span>: request.body.stuff}
+        code.postAction(request, response, data);
+    });
+
+    <span class="keyword">return</span> app;
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

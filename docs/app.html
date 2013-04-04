@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>app.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="applicationCode.html">
+                applicationCode.js
+              </a>
+            
+              
+              <a class="source" href="routes.html">
+                routes.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>app.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>App.js is the starting point of our app. The app can be run with the
+<code>foreman start</code> or <code>npm start</code> commands.
+Addidionally there are other commands for other tasks:
+  <em> <code>npm start</code>:  starts the app
+  </em> <code>npm test</code>:   runs the tests/testrunner.js
+  * <code>npm run-script docs</code>: Generates html docs from these comments</p>
+<p>We start by importing essential extrenal libraries needed for the main app.
+The <code>passport-facebook</code> is used to handle facebook authentication for
+users and <code>passport-local</code> is used to roll our own auth for organization
+accounts.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> express = require(<span class="string">"express"</span>),
+    mongo = require(<span class="string">'mongodb'</span>),
+    passport = require(<span class="string">'passport'</span>),
+    FacebookStrategy = require(<span class="string">'passport-facebook'</span>).Strategy;
+    LocalStrategy = require(<span class="string">'passport-local'</span>).Strategy;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>These configuration variables are necessary to hook the app to the correct
+services. <code>process.env</code> is used here so we can store sensitive data in a
+environment variables and not in version control.  By inculding a <code>.env</code>
+file in the project directory, The command <code>foreman start</code> will add all
+variables declared in there as environment variables.</p>
+<p>MONGOLAB_URI is something defined in heroku with the remote mongo URI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> port = process.env.PORT || <span class="number">8889</span>;
+<span class="keyword">var</span> connectionURI = process.env.MONGOLAB_URI ||
+    <span class="string">"mongodb://localhost:27017/cmunications"</span>;
+<span class="keyword">var</span> FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+<span class="keyword">var</span> FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+<span class="keyword">var</span> facebookCallbackUrl = process.env.FACEBOOK_CALLBACK_URL ||
+    <span class="string">"http://localhost:"</span>+port+<span class="string">"/auth/facebook/callback"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The <code>js/routes.js</code> file exports a function that sets up all of our
+HTTP routes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> initializeRoutes = require(<span class="string">'./js/routes.js'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>We now initialize the app and database client as well as declare a global
+database variable.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> app = express();
+<span class="keyword">var</span> MongoClient = mongo.MongoClient;
+<span class="keyword">var</span> db;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>The following code only runs if we execute the file using node or foreman.
+This way we can load the code as a library if we want.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">if</span>(__filename == process.argv[<span class="number">1</span>]) {
+    initializeApp();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><code>app</code> and <code>passport</code> are needed to initialize routes so we can
+attach routes and declare which ones require authentication</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    initializeRoutes(app, passport);
+
+    MongoClient.connect(connectionURI, dbConnectCallback);
+
+    <span class="function"><span class="keyword">function</span> <span class="title">dbConnectCallback</span><span class="params">(err, database)</span> {</span>
+        <span class="keyword">if</span>(err) {
+            console.log(<span class="string">"ERROR opening database:  "</span>+err);
+        } <span class="keyword">else</span> {
+            console.log(<span class="string">"Database connection established. Starting app"</span>);
+            db = database;
+            app.listen(port);
+            console.log(<span class="string">"Created server on port: "</span>+port);
+        }
+    }
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><code>initializeApp()</code> does all the heavy lifting in configuring and initializing
+thrid party libraries.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">initializeApp</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Passport session setup.
+This function is used to serialize the user object so we can access it
+later. Whatever you pass to <code>done</code> in <code>serializeUser</code> is
+<code>obj</code> in <code>deserializeUser</code>
+And whatever you pass to <code>done</code> in <code>deseerializeUser</code> is
+<code>request.user</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/* Typically this will be as simple as storing the user
+       ID when serializing, and finding the user by ID when deserializing.
+     */</span>
+    passport.serializeUser(<span class="keyword">function</span>(user, done) {
+        done(<span class="literal">null</span>, user);
+    });
+
+    passport.deserializeUser(<span class="keyword">function</span>(obj, done) {
+        done(<span class="literal">null</span>, obj);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>This sets up facebook authentication.
+Strategies in Passport require a <code>verify</code> function, which accept
+credentials (in this case, an accessToken, refreshToken, and Facebook
+profile), and invoke a callback with a user object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    passport.use(<span class="string">'facebook'</span>, <span class="keyword">new</span> FacebookStrategy({
+        clientID: FACEBOOK_APP_ID,
+        clientSecret: FACEBOOK_APP_SECRET,
+        callbackURL: facebookCallbackUrl
+    }, <span class="keyword">function</span>(accessToken, refreshToken, profile, done) {
+        <span class="comment">/* In a typical application, you would want
+           to associate the Facebook account with a user record in your database,
+           and return that user instead.
+        */</span>
+        <span class="keyword">return</span> done(<span class="literal">null</span>, profile);
+    }
+                                                 ));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>This sets up the local strategy, used for organization accounts.
+whatever data passed as <code>username=x&amp;password=y</code> to the POST
+request that calls <code>passport.authenticate(&#39;local&#39;)</code> middleware
+will be passed into this function as <code>username</code> and <code>password</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    passport.use(<span class="string">'local'</span>, <span class="keyword">new</span> LocalStrategy(
+        <span class="keyword">function</span>(username, password, done) {
+            console.log(username, password);
+            <span class="keyword">return</span> done(<span class="literal">null</span>, {<span class="string">'provider'</span>: <span class="string">'local'</span>, <span class="string">"user"</span>: username});
+        })
+                );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Finally we register all the middleware we&#39;ll be using.
+<code>passport.session()</code> allows us to support presistent login sessions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    app.use(express.logger());
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.session({ secret: <span class="string">'ahsdjfhiwehfuiahdkf'</span> }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(app.router);
+    <span class="comment">/*  app.use(express.static(__dirname + '/public'));*/</span>
+
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
