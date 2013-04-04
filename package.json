@@ -6,6 +6,11 @@
         { "name": "Shikha Nalla" },
         { "name": "Anand Pattabiraman" }
     ],
+    "scripts" : {
+        "test" : "node tests/testrunner.js",
+        "start": "foreman start",
+        "docs" : "node_modules/docco/bin/docco app.js js/*"
+    },
     "dependencies": {
         "express": "3.0.3",
         "mongodb": "1.2.13",
@@ -15,6 +20,7 @@
         "passport-local": "*"
    },
     "devDependencies": {
-        "qunit": "0.5.16"
+        "qunit": "0.5.16",
+        "docco": "*"
     }
 }
