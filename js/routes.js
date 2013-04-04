@@ -1,5 +1,6 @@
 // This file hold all the routes for the app, describing our api endpoints
 
+//`applicationCode.js` holds all the logic for our application.
 var code = require("./applicationCode.js");
 
 module.exports = function(app, passport) {
@@ -10,9 +11,12 @@ module.exports = function(app, passport) {
     })
 
     app.get('/auth/facebook', passport.authenticate('facebook'), function() {
-        //never called, redirected to facebook
+        //This callback is never called as we're redirected to facebook.
         return;
     });
+
+    // After the user authenticates with facebook, this route is hit
+    // (Configurable of course in app.js)
     app.get(
         '/auth/facebook/callback',
         passport.authenticate('facebook', { failureRedirect: '/' }),

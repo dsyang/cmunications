@@ -6,6 +6,7 @@ test("defaultAction not facebook logged in", function() {
     defaultAction(new MockRequest(), response);
     deepEqual(response.things_sent, expected, 'send hello world and URL');
 });
+
 test("defaultAction facebook logged in", function() {
     var expected = {"hello": "world!",
                     "logged in as": "USAR!"

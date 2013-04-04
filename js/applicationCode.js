@@ -1,3 +1,7 @@
+//`applicateCode.js` holds all of the application logic right now.
+//All functionality goes in here. These can also be moved into separate files
+// later. Be sure to export any function you write or else it can't be tested.
+
 var utils = require('./utils.js');
 
 function facebookLoginAction(request, response, data) {
@@ -10,8 +14,6 @@ function organizationLoginAction(request, response, data) {
                   });
 }
 
-//All functionality goes in here. These can also be moved into another file
-// Be sure to export any function you write or else it can't be tested
 function defaultAction(request, response) {
     if(request.user) {
         response.send({"hello": "world!",
