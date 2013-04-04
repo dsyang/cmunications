@@ -38,6 +38,21 @@
                 utils.js
               </a>
             
+              
+              <a class="source" href="test-app.html">
+                test-app.js
+              </a>
+            
+              
+              <a class="source" href="testrunner.html">
+                testrunner.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
           </div>
         </li>
       </ul>
@@ -130,14 +145,12 @@ HTTP routes.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>We now initialize the app and database client as well as declare a global
-database variable.</p>
+              <p>We now initialize the app and database client</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> app = express();
-<span class="keyword">var</span> MongoClient = mongo.MongoClient;
-<span class="keyword">var</span> db;</pre></div></div>
+<span class="keyword">var</span> MongoClient = mongo.MongoClient;</pre></div></div>
             
         </li>
         
@@ -154,7 +167,15 @@ This way we can load the code as a library if we want.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">if</span>(__filename == process.argv[<span class="number">1</span>]) {
-    initializeApp();</pre></div></div>
+    initializeApp();
+
+    MongoClient.connect(connectionURI, dbConnectCallback);
+
+    <span class="function"><span class="keyword">function</span> <span class="title">dbConnectCallback</span><span class="params">(err, database)</span> {</span>
+        <span class="keyword">if</span>(err) {
+            console.log(<span class="string">"ERROR opening database:  "</span>+err);
+        } <span class="keyword">else</span> {
+            console.log(<span class="string">"Database connection established. Starting app"</span>);</pre></div></div>
             
         </li>
         
@@ -165,21 +186,13 @@ This way we can load the code as a library if we want.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p><code>app</code> and <code>passport</code> are needed to initialize routes so we can
-attach routes and declare which ones require authentication</p>
+              <p><code>app</code>, <code>passport</code>, and <code>database</code> are needed to initialize routes
+so we case attach routes to the app, declare which ones require
+authentication, and interact with the database.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    initializeRoutes(app, passport);
-
-    MongoClient.connect(connectionURI, dbConnectCallback);
-
-    <span class="function"><span class="keyword">function</span> <span class="title">dbConnectCallback</span><span class="params">(err, database)</span> {</span>
-        <span class="keyword">if</span>(err) {
-            console.log(<span class="string">"ERROR opening database:  "</span>+err);
-        } <span class="keyword">else</span> {
-            console.log(<span class="string">"Database connection established. Starting app"</span>);
-            db = database;
+            <div class="content"><div class='highlight'><pre>            initializeRoutes(app, passport, database);
             app.listen(port);
             console.log(<span class="string">"Created server on port: "</span>+port);
         }

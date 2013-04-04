@@ -38,6 +38,21 @@
                 utils.js
               </a>
             
+              
+              <a class="source" href="test-app.html">
+                test-app.js
+              </a>
+            
+              
+              <a class="source" href="testrunner.html">
+                testrunner.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
           </div>
         </li>
       </ul>
@@ -66,41 +81,43 @@ later. Be sure to export any function you write or else it can&#39;t be tested.<
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> utils = require(<span class="string">'./utils.js'</span>);
 
-<span class="function"><span class="keyword">function</span> <span class="title">facebookLoginAction</span><span class="params">(request, response, data)</span> {</span>
-    response.send({<span class="string">"hi"</span> : request.user});
-}
+<span class="function"><span class="keyword">function</span> <span class="title">Application</span><span class="params">(db)</span> {</span>
 
-<span class="function"><span class="keyword">function</span> <span class="title">organizationLoginAction</span><span class="params">(request, response, data)</span> {</span>
-    response.send({<span class="string">"hi"</span>:
-                   <span class="string">'curl -v -d "username=bob&amp;password=secret" http://127.0.0.1:5000/auth/organization'</span>
-                  });
-}
-
-<span class="function"><span class="keyword">function</span> <span class="title">defaultAction</span><span class="params">(request, response)</span> {</span>
-    <span class="keyword">if</span>(request.user) {
-        response.send({<span class="string">"hello"</span>: <span class="string">"world!"</span>,
-                       <span class="string">"logged in as"</span> : request.user});
-    } <span class="keyword">else</span> {
-        response.send({<span class="string">"hello"</span>: <span class="string">"world!"</span>,
-                       <span class="string">"not logged in"</span>: <span class="string">"go to /auth/facebook to log in"</span>});
+    <span class="function"><span class="keyword">function</span> <span class="title">facebookLoginAction</span><span class="params">(request, response, data)</span> {</span>
+        response.send({<span class="string">"hi"</span> : request.user});
     }
-}
 
-<span class="function"><span class="keyword">function</span> <span class="title">nameAction</span><span class="params">(request, response, d)</span> {</span>
-    <span class="keyword">if</span>(d.name === <span class="string">"Anand"</span>) {
-        response.send(<span class="string">"ANAND IS HERE!!!"</span>);
+    <span class="function"><span class="keyword">function</span> <span class="title">organizationLoginAction</span><span class="params">(request, response, data)</span> {</span>
+        response.send({<span class="string">"hi"</span>:
+                       <span class="string">'curl -v -d "username=bob&amp;password=secret" http://127.0.0.1:5000/auth/organization'</span>
+                      });
     }
-    response.send({<span class="string">"hello"</span>: d.name});
-}
 
-<span class="function"><span class="keyword">function</span> <span class="title">postAction</span><span class="params">(request, response, d)</span> {</span>
-    <span class="keyword">var</span> data = request.body.stuff;
-    <span class="keyword">if</span>(data === d.stuff) {
-        response.send({<span class="string">"success"</span>: <span class="literal">true</span>});
-    } <span class="keyword">else</span> {
-        response.send({<span class="string">"success"</span>: <span class="literal">false</span>});
+    <span class="function"><span class="keyword">function</span> <span class="title">defaultAction</span><span class="params">(request, response)</span> {</span>
+        <span class="keyword">if</span>(request.user) {
+            response.send({<span class="string">"hello"</span>: <span class="string">"world!"</span>,
+                           <span class="string">"logged in as"</span> : request.user});
+        } <span class="keyword">else</span> {
+            response.send({<span class="string">"hello"</span>: <span class="string">"world!"</span>,
+                           <span class="string">"not logged in"</span>: <span class="string">"go to /auth/facebook to log in"</span>});
+        }
     }
-}</pre></div></div>
+
+    <span class="function"><span class="keyword">function</span> <span class="title">nameAction</span><span class="params">(request, response, d)</span> {</span>
+        <span class="keyword">if</span>(d.name === <span class="string">"Anand"</span>) {
+            response.send(<span class="string">"ANAND IS HERE!!!"</span>);
+        }
+        response.send({<span class="string">"hello"</span>: d.name});
+    }
+
+    <span class="function"><span class="keyword">function</span> <span class="title">postAction</span><span class="params">(request, response, d)</span> {</span>
+        <span class="keyword">var</span> data = request.body.stuff;
+        <span class="keyword">if</span>(data === d.stuff) {
+            response.send({<span class="string">"success"</span>: <span class="literal">true</span>});
+        } <span class="keyword">else</span> {
+            response.send({<span class="string">"success"</span>: <span class="literal">false</span>});
+        }
+    }</pre></div></div>
             
         </li>
         
@@ -115,12 +132,15 @@ later. Be sure to export any function you write or else it can&#39;t be tested.<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports = utils.exportFunctions([defaultAction,
-                                        nameAction,
-                                        postAction,
-                                        facebookLoginAction,
-                                        organizationLoginAction
-                                       ]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> utils.exportFunctions([defaultAction,
+                                  nameAction,
+                                  postAction,
+                                  facebookLoginAction,
+                                  organizationLoginAction
+                                 ]);
+}
+
+module.exports.Application = Application;</pre></div></div>
             
         </li>
         

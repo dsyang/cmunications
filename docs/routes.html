@@ -38,6 +38,21 @@
                 utils.js
               </a>
             
+              
+              <a class="source" href="test-app.html">
+                test-app.js
+              </a>
+            
+              
+              <a class="source" href="testrunner.html">
+                testrunner.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
           </div>
         </li>
       </ul>
@@ -63,9 +78,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> code = require(<span class="string">"./applicationCode.js"</span>);
+            <div class="content"><div class='highlight'><pre>module.exports = <span class="keyword">function</span>(app, passport, db) {
+    <span class="keyword">var</span> code = <span class="keyword">new</span> require(<span class="string">"./applicationCode.js"</span>).Application(db);
 
-module.exports = <span class="keyword">function</span>(app, passport) {
 
     app.get(<span class="string">"/"</span>, <span class="keyword">function</span>(request, response) {
         <span class="keyword">var</span> data = {};

@@ -9,7 +9,7 @@
     "scripts" : {
         "test" : "node tests/testrunner.js",
         "start": "foreman start",
-        "docs" : "node_modules/docco/bin/docco app.js js/*"
+        "docs" : "node_modules/docco/bin/docco app.js js/* tests/*"
     },
     "dependencies": {
         "express": "3.0.3",

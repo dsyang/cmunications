@@ -38,6 +38,21 @@
                 utils.js
               </a>
             
+              
+              <a class="source" href="test-app.html">
+                test-app.js
+              </a>
+            
+              
+              <a class="source" href="testrunner.html">
+                testrunner.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
           </div>
         </li>
       </ul>
@@ -58,20 +73,32 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>This file holds utility functions that might come in handy</p>
-<p>This is a simple function that creates a hash of {&quot;functionName&quot;: function}
-for the <code>fns</code> array passed in.</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports.exportFunctions = <span class="function"><span class="keyword">function</span> <span class="params">(fns)</span> {</span>
-    <span class="keyword">var</span> obj = {};
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> utils = require(<span class="string">'../js/utils.js'</span>);
 
-    fns.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(f)</span> {</span>
-        obj[f.name] = f;
-    });
-    <span class="keyword">return</span> obj;
-}</pre></div></div>
+<span class="function"><span class="keyword">function</span> <span class="title">MockResponse</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.sent = <span class="literal">false</span>;
+    <span class="keyword">this</span>.things_sent = <span class="literal">undefined</span>;
+}
+
+MockResponse.prototype.send = <span class="keyword">function</span>(obj) {
+    <span class="keyword">if</span>(<span class="keyword">this</span>.sent === <span class="literal">false</span>) {
+        <span class="keyword">this</span>.things_sent = obj;
+        <span class="keyword">this</span>.sent = <span class="literal">true</span>;
+    }
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">MockRequest</span><span class="params">(body)</span> {</span>
+    <span class="keyword">this</span>.body = body;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">MockDb</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+}
+
+module.exports = utils.exportFunctions([MockRequest, MockResponse, MockDb]);</pre></div></div>
             
         </li>
         
