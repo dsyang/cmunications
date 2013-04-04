@@ -4,46 +4,51 @@
 
 var utils = require('./utils.js');
 
-function facebookLoginAction(request, response, data) {
-    response.send({"hi" : request.user});
-}
+function Application(db) {
 
-function organizationLoginAction(request, response, data) {
-    response.send({"hi":
-                   'curl -v -d "username=bob&password=secret" http://127.0.0.1:5000/auth/organization'
-                  });
-}
-
-function defaultAction(request, response) {
-    if(request.user) {
-        response.send({"hello": "world!",
-                       "logged in as" : request.user});
-    } else {
-        response.send({"hello": "world!",
-                       "not logged in": "go to /auth/facebook to log in"});
+    function facebookLoginAction(request, response, data) {
+        response.send({"hi" : request.user});
     }
-}
 
-function nameAction(request, response, d) {
-    if(d.name === "Anand") {
-        response.send("ANAND IS HERE!!!");
+    function organizationLoginAction(request, response, data) {
+        response.send({"hi":
+                       'curl -v -d "username=bob&password=secret" http://127.0.0.1:5000/auth/organization'
+                      });
     }
-    response.send({"hello": d.name});
-}
 
-function postAction(request, response, d) {
-    var data = request.body.stuff;
-    if(data === d.stuff) {
-        response.send({"success": true});
-    } else {
-        response.send({"success": false});
+    function defaultAction(request, response) {
+        if(request.user) {
+            response.send({"hello": "world!",
+                           "logged in as" : request.user});
+        } else {
+            response.send({"hello": "world!",
+                           "not logged in": "go to /auth/facebook to log in"});
+        }
     }
+
+    function nameAction(request, response, d) {
+        if(d.name === "Anand") {
+            response.send("ANAND IS HERE!!!");
+        }
+        response.send({"hello": d.name});
+    }
+
+    function postAction(request, response, d) {
+        var data = request.body.stuff;
+        if(data === d.stuff) {
+            response.send({"success": true});
+        } else {
+            response.send({"success": false});
+        }
+    }
+
+    //functions exported so we can test them
+    return utils.exportFunctions([defaultAction,
+                                  nameAction,
+                                  postAction,
+                                  facebookLoginAction,
+                                  organizationLoginAction
+                                 ]);
 }
 
-//functions exported so we can test them
-module.exports = utils.exportFunctions([defaultAction,
-                                        nameAction,
-                                        postAction,
-                                        facebookLoginAction,
-                                        organizationLoginAction
-                                       ]);
+module.exports.Application = Application;

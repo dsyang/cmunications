@@ -1,9 +1,10 @@
 // This file hold all the routes for the app, describing our api endpoints
 
 //`applicationCode.js` holds all the logic for our application.
-var code = require("./applicationCode.js");
 
-module.exports = function(app, passport) {
+module.exports = function(app, passport, db) {
+    var code = new require("./applicationCode.js").Application(db);
+
 
     app.get("/", function(request, response) {
         var data = {};
