@@ -1,0 +1,55 @@
+	Purpose:
+		-Demonstrate the ability to upload a file from a website onto our Node server (ideally images).
+	
+	Usage:
+		-Go to app.js and change this to your appropriate absolute project file path.
+			var projectFilePath = '/Users/Mochi/15-237/DemoFileUpload/';
+		-Run the node server:
+			node app
+		-Make sure there's an 'images' folder in the same directory as app.js
+		-Try it
+		
+	Bugs:
+		-Works for .jpg, and .pdf files. Weird problems when .exe is uploaded.
+	
+	Technologies Required:
+		HTML5
+			jquery
+				Any version > 1.7.0 will definitely work.
+				Either download a 'jquery-1.9.0.js' file or include it straight from google api's    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+			JQUERY FORM PLUGIN!!!!
+					http://malsup.com/jquery/form/
+					Either download from github or include it straight from github:
+					<script src="http://malsup.github.com/jquery.form.js"></script> 
+				Requirements: Assumes jquery preloaded.
+		Node.js
+			express
+				Obtain via 'npm install express'
+
+	Relevant Code: Mostly ALL of it is taken from http://markdawson.tumblr.com/post/18359176420/asynchronous-file-uploading-using-express-and-node-js
+	with a few minor tweaks.
+		index.html
+			We need to use <form>s for fileuploads. This submits to the node server via an http POST request. 
+				enctype - specifies the type of POST request. 
+					POST requests are split into 2 types:
+						application/x-www-form-urlencoded (default)
+						multipart/form-data
+				action - specifies the path on which the form gets submitted.
+					In Node.js, this is the specified route:
+					If I say action = '/api/photos', that means the route is:
+					app.post('/api/photos', function(request, response) {....
+		fileupload.js
+			Some tricky code used to accept the input. This is where the JQUERY FORM PLUGIN is used. Specifically:
+				$(this).ajaxSubmit(...
+			The API is on: http://malsup.com/jquery/form/	
+		app.js
+			Code in app.post('/api/photos', function(req, res) ...
+			The file is automatically saved somewhere on the node server. It's accessible via:
+				request.files.<input name field>.path
+			
+		
+	References:
+		Code:	http://markdawson.tumblr.com/post/18359176420/asynchronous-file-uploading-using-express-and-node-js
+		Jquery Form:
+			http://malsup.com/jquery/form/
+		

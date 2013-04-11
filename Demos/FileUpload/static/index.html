@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="reset.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+
+  
+  
+  	<div>		
+		<form id="uploadForm"
+			  enctype="multipart/form-data"
+			  action="/upload"
+			  method="post">
+		  <input type="file" id="userPhotoInput" name="userPhoto" />
+		</form>
+	 
+		<span id="status" />
+	</div> 
+ 
+	<!-- External Libraries -->
+	<script src="jquery-1.9.0.js"></script>
+	<script src="http://malsup.github.com/jquery.form.js"></script>
+	
+	<!-- My files -->
+	<script src="fileupload.js"></script>
+	</body>
+</html>
