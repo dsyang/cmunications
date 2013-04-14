@@ -1,0 +1,1 @@
+/* client side wrapper functions for ajax requests */
