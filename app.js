@@ -8,14 +8,14 @@
 //
 
 
-//We start by importing essential extrenal libraries needed for the main app.
+//We start by importing essential external libraries needed for the main app.
 //The `passport-facebook` is used to handle facebook authentication for
 //users and `passport-local` is used to roll our own auth for organization
 //accounts.
 var express = require("express"),
     mongo = require('mongodb'),
     passport = require('passport'),
-    FacebookStrategy = require('passport-facebook').Strategy;
+    FacebookStrategy = require('passport-facebook').Strategy,
     LocalStrategy = require('passport-local').Strategy;
 
 
