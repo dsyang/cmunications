@@ -1,0 +1,6 @@
+# set the runtime language; this should be "node" for Node.js workers
+runtime "node"
+# exec is the file that will be executed when you queue a task
+exec "sendText.js" # replace with your file
+
+file "env.js"
