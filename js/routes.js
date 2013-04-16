@@ -28,11 +28,18 @@ module.exports = function(app, passport, db) {
         var data = {event_id: request.params.id};
         code.eventDetailAction(request, response, data)
     });
+    app.post('/events/:id/star/',
+             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+             function(request, response) {
+                 var data = {event_id: request.params.id};
+                 code.starEventAction(request, response, data)
+             });
+
     app.get('/events/starred',
             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
-                code.starredEventsAction(request, response, data);
+                code.listStarredEventsAction(request, response, data);
             });
     app.post('/events/create',
              passport.authenticate('local', { failureRedirect: '/auth/login' }),
@@ -43,7 +50,9 @@ module.exports = function(app, passport, db) {
     app.post('/events/:id/edit',
              passport.authenticate('local', { failureRedirect: '/auth/login' }),
              function(request, response) {
-                 var data = { event: request.body.event };
+                 var data = { event: request.body.event,
+                              event_id: request.params.id
+                            };
                  code.editEventAction(request, response, data);
              });
 

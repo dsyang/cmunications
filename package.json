@@ -17,7 +17,8 @@
         "connect-flash": "0.1.0",
         "passport": "0.1.16",
         "passport-facebook": "*",
-        "passport-local": "*"
+        "passport-local": "*",
+        "async": "*"
    },
     "devDependencies": {
         "qunit": "0.5.16",

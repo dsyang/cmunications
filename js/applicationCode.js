@@ -3,6 +3,8 @@
 // later. Be sure to export any function you write or else it can't be tested.
 
 var utils = require('./utils.js');
+var ObjectID = require('mongo').BSONPure.ObjectID;
+var async = require('async');
 
 function Application(db) {
 
@@ -20,13 +22,13 @@ function Application(db) {
 			throw error;
 		console.log(result);
 	}
-	
+
 	var throwError = function(error){
 		if(error)
 			throw error;
 	}
-		
-	// Calls function with arg, 
+
+	// Calls function with arg,
 	// Special case for find - arrayOfArgs = [query, callback]
 	var getCallbackWithArgs = function(funcName, arrayOfArgs){
 		return (function(error, collection){
@@ -49,7 +51,7 @@ function Application(db) {
 				throw "Invalid function called of insert, find, update, remove";
 		});
 	}
-	
+
 	var isValidCollectionName = function(collectionName){
 		return (collectionName === collUsers ||
 		   collectionName === collOrgs ||
@@ -127,15 +129,16 @@ function Application(db) {
 		var user = new User();
 		user.name = name;
 		user.password = password;
-		
+
 		if(!callback){
 			callback = logger;
 		}
-		
-		db.collection(collUsers, getCallbackWithArgs('insert', [user,{safe:true}, callback]));
+
+		db.collection(collUsers, getCallbackWithArgs('insert', [user,{safe:true}
+                                                            , callback]));
 	}
-	
-	// Creates an org and adds it to the database. 
+
+	// Creates an org and adds it to the database.
 	function createOrganization(name, password, description, callback){
 		var org = new Organization();
 		org.name = name;
@@ -145,12 +148,14 @@ function Application(db) {
 		if(!callback){
 			callback = logger;
 		}
-		
-		db.collection(collOrgs, getCallbackWithArgs('insert', [org, {safe:true}, callback]));
+
+		db.collection(collOrgs, getCallbackWithArgs('insert', [org, {safe:true},
+                                                           callback]));
 	}
-	
-	// Creates an event and adds it to the database. 
-	function createEvent(name, location, description, hostOrgName, startTime, endTime, callback){
+
+	// Creates an event and adds it to the database.
+	function createEvent(name, location, description, hostOrgName, startTime,
+                       endTime, callback){
 		// Check that startTime < endTime
 
 		var event = new Event();
@@ -164,8 +169,9 @@ function Application(db) {
 		if(!callback){
 			callback = logger;
 		}
-		
-		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, callback]));
+
+		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}
+                                                             , callback]));
 	}
 
 	// Creates a tag and adds it to the database.
@@ -176,8 +182,9 @@ function Application(db) {
 		if(!callback){
 			callback = logger;
 		}
-		
-		db.collection(collTags, getCallbackWithArgs('insert', [tag, {safe:true}, callback]));
+
+		db.collection(collTags, getCallbackWithArgs('insert', [tag, {safe:true},
+                                                           callback]));
 	}
 
 	// Search for a field in the database.
@@ -192,8 +199,9 @@ function Application(db) {
 				partialUpdate[field] = value;
 				update['$set'] = partialUpdate;
 				//callback();
-				db.collection(collectionName, 
-						getCallbackWithArgs('update', [query, update,{'multi':true}, callback]));
+				db.collection(collectionName,
+						getCallbackWithArgs('update', [query, update,{'multi':true},
+                                           callback]));
 		}
 	}
 
@@ -204,27 +212,29 @@ function Application(db) {
 	   		var update = {}, partialUpdate = {};
 			partialUpdate[field] = value;
 			update['$addToSet'] = partialUpdate;
-		   
-			db.collection(collectionName, 
-					getCallbackWithArgs('update', [query, update, {'multi':true}, callback]));
-		
+
+			db.collection(collectionName,
+					getCallbackWithArgs('update', [query, update, {'multi':true},
+                                         callback]));
+
 		}
-	}	
-	
+	}
+
 	// Remove from array field in collection
 	function removeFromArrayField(collectionName, query, field, value, callback){
 		if(isValidCollectionName(collectionName)){
 	   		var update = {}, partialUpdate = {};
 			partialUpdate[field] = value;
 			update['$pull'] = partialUpdate;
-		   
-			db.collection(collectionName, 
-					getCallbackWithArgs('update', [query, update, {'multi':true}, callback]));
-		
-		}	
-	}	
-	
-	
+
+			db.collection(collectionName,
+					getCallbackWithArgs('update', [query, update, {'multi':true},
+                                         callback]));
+
+		}
+	}
+
+
 	// -----------------------------------------------------------------------
 	/* User collection operations */
 
@@ -234,7 +244,8 @@ function Application(db) {
 
 		var partialUpdate = {$addToSet : {savedEvents : eventId}};
 
-		db.collection(collUsers, getCallbackWithArgs('update', [query, partialUpdate]));
+		db.collection(collUsers, getCallbackWithArgs('update', [query,
+                                                            partialUpdate]));
 	}
 
 
@@ -243,18 +254,118 @@ function Application(db) {
 
 //*********** Actions
 
+    function success(name, obj) {
+        var res =  {'success': true};
+        res[name] = obj;
+        return res
+    }
+
+    function fail(message) {
+        return {'success': false,
+                'message': message};
+    }
 
     //given data.text, start, end, return all events in the period
     function searchAction(request, response, data) {
+        function cb(err, result) {
+            if(err) response.send(fail{err});
 
+            response.send(success('results', result))
+        }
+        searchDb(collEvents, data.text, cb);
     }
 
     //given data,orgs or data.tags, add to request.user's tags/organizations
     function subscribeAction(request, response, data) {
+        var id = request.user.id;
+        if(data.orgs) {
+            addOrganizationsToUser(id, data.orgs, cb);
+        }
+        function cb(err, result) {
+            if(err) response.send(fail(err));
+            if(data.tags) {
+                addTagsToUser(id, data.tags, cb2);
+            }
+        }
+        function cb2(err, result) {
+            if(err) response.send(fail(err));
+            response.send(success('result', result));
+        }
+    }
+
+    //given data.event_id
+    function eventDetailAction(request, response, data) {
+        var id = ObjectID(data.event_id);
+        searchDb(collEvents, {'_id' : id}, cb);
+        function cb(err, result) {
+            if(err) response.send(fail(err));
+            if(result) response.send(success('event', result));
+            response.send(fail('no event found'))
+        }
+    }
+
+    //given data.event_id
+    function starEventAction(request, response, data) {
+        var event_id = ObjectID(data.event_id);
+        var user_id = ObjectID(request.user.id);
+        searchDb(collEvents, {'_id' : id}, cb);
+        function cb(err, result) {
+            if(err) response.send(fail(err));
+            if(!result) response.send(fail('no event found'));
+            addEventToUser(event_id, user_id);
+        };
+    }
+
+    //return all stared events for request.user
+    function listStarredEventsAction(request, response, data) {
+        var dbCalls = []
+        request.user.savedEvents.forEach(function(event_id) {
+
+        });
+        async.parallel([
+
+
+        ])
+    }
+
+    //given an event in data.event
+    function createEventAction(request, response, data) {
+
+    }
+
+    //given an event in data.event and a data.event_id
+    function editEventAction(request, response, data) {
+
+    }
+
+    //list all organizations
+    function listOrganizationAction(request, response, data) {
 
     }
 
 
+    //list all tags
+    function listTagsAction(request, response, data) {
+
+    }
+
+
+    //given data.name, data.password, data.description
+    function organizationCreateAction(request, response, data) {
+        function cb(err, result) {
+            if err throw err
+
+            response.send( { 'success': true,
+                             'organization': result });
+        });
+
+        createOrganization(data.name, data.password, data.description, cb)
+    }
+
+
+    function loginAction(request, response, data) {
+
+    }
 
     function facebookLoginAction(request, response, data) {
         response.send({"hi" : request.user});
@@ -298,14 +409,14 @@ function Application(db) {
                                   postAction,
                                   facebookLoginAction,
                                   organizationLoginAction,
-								  createUser,
-								  createOrganization,
-								  createEvent,
-								  createTag,
-								  searchDb,
-								  updateStringField,
-								  addToArrayField,
-								  removeFromArrayField
+								                  createUser,
+								                  createOrganization,
+								                  createEvent,
+								                  createTag,
+								                  searchDb,
+								                  updateStringField,
+								                  addToArrayField,
+								                  removeFromArrayField
                                  ]);
 }
 

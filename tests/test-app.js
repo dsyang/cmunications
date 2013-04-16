@@ -2,7 +2,7 @@ QUnit.module("Application", {
     setup: function() {
         this.request = new MockRequest();
         this.response = new MockResponse();
-		var mock = new MockDb();
+		    var mock = new MockDb();
         this.db = mock.client;
         this.app = new Application(this.db);
     },
@@ -73,17 +73,17 @@ test("postAction test fail", function() {
 });
 
 // An asynchronous test which should be used with database calls.
-/* Asynchronous tests automatically execute stop(), async(). 
+/* Asynchronous tests automatically execute stop(), async().
    They expect you to call start() when the test is finished executing.
 	   setup: (Above!)
 			sets up a database but does not open it.
 	   db.runTest(testToRun, arrayOfCollectionsToClear)
 			opens up the database, and calls testToRun to run the test.
 			lets you clear collections when writing test.
-		teardown: 
-		    closes the database for us.			
+		teardown:
+		    closes the database for us.
 */
-asyncTest( "createUser: Add User to Database", function() { 
+asyncTest( "createUser: Add User to Database", function() {
 	var scope = this;
 
 	// Fill in the fields of the object to be created.
@@ -92,21 +92,21 @@ asyncTest( "createUser: Add User to Database", function() {
 	expected.password = 'pass';
 
 	// Check that the database did what we want.
-	var callback = function( error, result ){		
+	var callback = function( error, result ){
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
-	
+
 	function runIt(){
-		scope.app.createUser(expected.name, expected.password, callback);	
+		scope.app.createUser(expected.name, expected.password, callback);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['users']);	
+	this.db.runTest(runIt, ['users']);
 });
 
 
-asyncTest( "createOrganization: Add Org to Database", function() { 
+asyncTest( "createOrganization: Add Org to Database", function() {
 	var scope = this;
 
 	// Fill in the fields of the object to be created.
@@ -116,20 +116,20 @@ asyncTest( "createOrganization: Add Org to Database", function() {
 	expected.description = 'This is the coolest org in the world';
 
 	// Check that the database did what we want.
-	var callback = function( error, result ){		
+	var callback = function( error, result ){
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
-	
+
 	function runIt(){
-		scope.app.createOrganization(expected.name, expected.password, expected.description, callback);	
+		scope.app.createOrganization(expected.name, expected.password, expected.description, callback);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['organizations']);	
+	this.db.runTest(runIt, ['organizations']);
 });
 
-asyncTest( "createEvent: Add Event to Database", function() { 
+asyncTest( "createEvent: Add Event to Database", function() {
 	var scope = this;
 
 	// Fill in the fields of the object to be created.
@@ -140,22 +140,22 @@ asyncTest( "createEvent: Add Event to Database", function() {
 	expected.hostOrg = 'ASA';
 	expected.startTime = new Date();
 	expected.endTime = new Date();
-	
+
 	// Check that the database did what we want.
-	var callback = function( error, result ){		
+	var callback = function( error, result ){
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
-	
+
 	function runIt(){
-		scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, callback);	
+		scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, callback);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['events']);	
+	this.db.runTest(runIt, ['events']);
 });
 
-asyncTest( "createTag: Add Tag to Database", function() { 
+asyncTest( "createTag: Add Tag to Database", function() {
 	var scope = this;
 
 	// Fill in the fields of the object to be created.
@@ -163,20 +163,20 @@ asyncTest( "createTag: Add Tag to Database", function() {
 	expected.name = 'freefood';
 
 	// Check that the database did what we want.
-	var callback = function( error, result ){		
+	var callback = function( error, result ){
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
-	
+
 	function runIt(){
-		scope.app.createTag(expected.name, callback);	
+		scope.app.createTag(expected.name, callback);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['tags']);	
+	this.db.runTest(runIt, ['tags']);
 });
 
-asyncTest( "searchDb: Searches Database for one entry", function() { 
+asyncTest( "searchDb: Searches Database for one entry", function() {
 	var scope = this;
 
 	// Fill in the fields of the object to be created.
@@ -188,31 +188,31 @@ asyncTest( "searchDb: Searches Database for one entry", function() {
 	input.collectionName = 'users'
 	input.query = {};
 	input.query['name'] = 'Dan Yang';
-	
+
 	// Check that the database did what we want.
 	var callback = function( error, result ){
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
-	
+
 	function runIt(){
-		scope.app.searchDb(input.collectionName, input.query, callback);	
+		scope.app.searchDb(input.collectionName, input.query, callback);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);	
+	this.db.runTest(runIt);
 });
 
 
-asyncTest( "updateStringField: check if updates a string field", function() { 
+asyncTest( "updateStringField: check if updates a string field", function() {
 	var scope = this;
-	
+
 	var input = {};
 	input.collectionName = 'users';
 	input.query = {password: 'pass'};
 	input.field = 'name';
 	input.value = 'Mochi';
-	
+
 	// Fill in the fields of the object to be created.
 	var expected = {};
 	expected.name = 'Mochi';
@@ -225,29 +225,29 @@ asyncTest( "updateStringField: check if updates a string field", function() {
 		ok(compareFields(expected, result[0]), result[0] + "    vs.   " + expected);
 	    start();
 	}
-	
+
 	var findResult = function(){
 		scope.app.searchDb(input.collectionName, input.query, callback);
 	}
-	
+
 	function runIt(){
-		scope.app.updateStringField(input.collectionName, input.query, input.field, input.value, findResult);	
+		scope.app.updateStringField(input.collectionName, input.query, input.field, input.value, findResult);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);	
-}); 
+	this.db.runTest(runIt);
+});
 
 
-asyncTest( "addToArrayField: check if updatedArrayField", function() { 
+asyncTest( "addToArrayField: check if updatedArrayField", function() {
 	var scope = this;
-	
+
 	var input = {};
 	input.collectionName = 'users';
 	input.query = {password: 'pass'};
 	input.field = 'savedEvents';
 	input.value = 12345098;
-	
+
 	// Fill in the fields of the object to be created.
 	var expected = {};
 	expected.name = 'Mochi';
@@ -261,28 +261,28 @@ asyncTest( "addToArrayField: check if updatedArrayField", function() {
 		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
 	    start();
 	}
-	
+
 	var findResult = function(){
 		scope.app.searchDb(input.collectionName, input.query, callback);
 	}
-	
-	function runIt(){
-		scope.app.addToArrayField(input.collectionName, input.query, input.field, input.value, findResult);	
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);	
-}); 
 
-asyncTest( "removeFromArrayField: check if updatedArrayField", function() { 
+	function runIt(){
+		scope.app.addToArrayField(input.collectionName, input.query, input.field, input.value, findResult);
+	}
+
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt);
+});
+
+asyncTest( "removeFromArrayField: check if updatedArrayField", function() {
 	var scope = this;
-	
+
 	var input = {};
 	input.collectionName = 'users';
 	input.query = {password: 'pass'};
 	input.field = 'savedEvents';
 	input.value = 12345098;
-	
+
 	// Fill in the fields of the object to be created.
 	var expected = {};
 	expected.name = 'Mochi';
@@ -296,16 +296,16 @@ asyncTest( "removeFromArrayField: check if updatedArrayField", function() {
 		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
 	    start();
 	}
-	
+
 	var findResult = function(){
 		scope.app.searchDb(input.collectionName, input.query, callback);
 	}
-	
+
 	function runIt(){
 		console.log(scope.app);
-		scope.app.removeFromArrayField(input.collectionName, input.query, input.field, input.value, findResult);	
+		scope.app.removeFromArrayField(input.collectionName, input.query, input.field, input.value, findResult);
 	}
-	
+
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);	
-}); 
+	this.db.runTest(runIt);
+});
