@@ -199,14 +199,14 @@ function Application(db) {
 
 
 	// Add to array field in collection
-	function addtoArrayField(collectionName, query, field, value, callback){
+	function addToArrayField(collectionName, query, field, value, callback){
 		if(isValidCollectionName(collectionName)){
 	   		var update = {}, partialUpdate = {};
 			partialUpdate[field] = value;
 			update['$addToSet'] = partialUpdate;
 		   
 			db.collection(collectionName, 
-					getCallbackWithArgs('update', [query, partialUpdate, {'multi':true}, callback]));
+					getCallbackWithArgs('update', [query, update, {'multi':true}, callback]));
 		
 		}
 	}	
@@ -219,7 +219,7 @@ function Application(db) {
 			update['$pull'] = partialUpdate;
 		   
 			db.collection(collectionName, 
-					getCallbackWithArgs('update', [query, partialUpdate, {'multi':true}, callback]));
+					getCallbackWithArgs('update', [query, update, {'multi':true}, callback]));
 		
 		}	
 	}	
@@ -303,7 +303,9 @@ function Application(db) {
 								  createEvent,
 								  createTag,
 								  searchDb,
-								  updateStringField
+								  updateStringField,
+								  addToArrayField,
+								  removeFromArrayField
                                  ]);
 }
 

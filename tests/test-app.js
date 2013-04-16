@@ -16,7 +16,7 @@ QUnit.module("Application", {
 var compareFields = function(expected, actual){
 	var bool = true;
 	for(var x in expected){
-		if(expected[x] !== actual[x]){
+		if(JSON.stringify(expected[x]) !== JSON.stringify(actual[x])){
 			bool = false;
 		}
 	}
@@ -222,7 +222,7 @@ asyncTest( "updateStringField: check if updates a string field", function() {
 	var callback = function( error, result ){
 		//console.log(result[0]);
 		//console.log(expected);
-		ok(compareFields(expected, result[0]), 'Fields not correct');
+		ok(compareFields(expected, result[0]), result[0] + "    vs.   " + expected);
 	    start();
 	}
 	
@@ -239,3 +239,73 @@ asyncTest( "updateStringField: check if updates a string field", function() {
 }); 
 
 
+asyncTest( "addToArrayField: check if updatedArrayField", function() { 
+	var scope = this;
+	
+	var input = {};
+	input.collectionName = 'users';
+	input.query = {password: 'pass'};
+	input.field = 'savedEvents';
+	input.value = 12345098;
+	
+	// Fill in the fields of the object to be created.
+	var expected = {};
+	expected.name = 'Mochi';
+	expected.password = 'pass';
+	expected.savedEvents = [12345098];
+
+	// Check that the database did what we want.
+	var callback = function( error, result ){
+		//console.log(result[0]);
+		//console.log(expected);
+		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
+	    start();
+	}
+	
+	var findResult = function(){
+		scope.app.searchDb(input.collectionName, input.query, callback);
+	}
+	
+	function runIt(){
+		scope.app.addToArrayField(input.collectionName, input.query, input.field, input.value, findResult);	
+	}
+	
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt);	
+}); 
+
+asyncTest( "removeFromArrayField: check if updatedArrayField", function() { 
+	var scope = this;
+	
+	var input = {};
+	input.collectionName = 'users';
+	input.query = {password: 'pass'};
+	input.field = 'savedEvents';
+	input.value = 12345098;
+	
+	// Fill in the fields of the object to be created.
+	var expected = {};
+	expected.name = 'Mochi';
+	expected.password = 'pass';
+	expected.savedEvents = [];
+
+	// Check that the database did what we want.
+	var callback = function( error, result ){
+		//console.log(result[0]);
+		//console.log(expected);
+		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
+	    start();
+	}
+	
+	var findResult = function(){
+		scope.app.searchDb(input.collectionName, input.query, callback);
+	}
+	
+	function runIt(){
+		console.log(scope.app);
+		scope.app.removeFromArrayField(input.collectionName, input.query, input.field, input.value, findResult);	
+	}
+	
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt);	
+}); 
