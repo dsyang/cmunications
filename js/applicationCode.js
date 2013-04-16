@@ -74,7 +74,7 @@ function Application(db) {
 		this.location = "";
 		this.timeStart = new Date();
 		this.timeEnd = new Date();
-3		this.description = "";
+		this.description = "";
 
 		// By Name
 		this.tags = [];
