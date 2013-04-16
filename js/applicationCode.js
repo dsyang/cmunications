@@ -272,6 +272,8 @@ function Application(db) {
 
             response.send(success('results', result));
         }
+		
+		// IS DATA.TXT ACTUALLY A QUERY OBJECT?
         searchDb(collEvents, data.text, cb);
     }
 
@@ -320,7 +322,7 @@ function Application(db) {
     function listStarredEventsAction(request, response, data) {
         var dbCalls = []
         request.user.savedEvents.forEach(function(event_id) {
-
+			
 		});
         async.parallel([
 
@@ -338,11 +340,23 @@ function Application(db) {
 
     //list all organizations
     function listOrganizationAction(request, response, data) {
+		function sendResults(err,listOfDocs){
+            response.send( { 'success': true,
+                             'organizations': listOfDocs });
+		}
+	
+		searchDb(collOrgs, {}, sendResults);
     }
 
 
     //list all tags
     function listTagsAction(request, response, data) {
+		function sendResults(err,listOfDocs){
+            response.send( { 'success': true,
+                             'tags': listOfDocs });
+		}
+	
+		searchDb(collTags, {}, sendResults);	
     }
 
 
