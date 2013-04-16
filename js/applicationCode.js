@@ -13,7 +13,7 @@ function Application(db) {
 	var collTags = 'tags';
 
 	/* Generic Utility Functions that won't be exposed */
-	
+
 	// Callback function to log what happens
 	var logger = function(error, result){
 		if (error)
@@ -25,10 +25,7 @@ function Application(db) {
 		if(error)
 			throw error;
 	}
-	
-
-
-	
+		
 	// Calls function with arg, 
 	// Special case for find - arrayOfArgs = [query, callback]
 	var getCallbackWithArgs = function(funcName, arrayOfArgs){
@@ -59,25 +56,24 @@ function Application(db) {
 		   collectionName === collEvents ||
 		   collectionName === collTags);
 	}
-	
 	/* Templates for the database objects*/
-	
-	
+
+
 	function User(){
 		this.name = "";
 		this.password = "";
 
 		// Saved by name
-		this.tags = [];		
+		this.tags = [];
 
 		// Saved by plaintext
 		this.notifications = [];
-		
+
 		// Saved by reference.
 		this.savedEvents = [];
 		this.orgs = [];
 	}
-	
+
 	function Organization(){
 		this.name = "";
 		this.password = "";
@@ -85,47 +81,47 @@ function Application(db) {
 
 		// Saved by reference.
 		this.events = [];
-		this.subscribers = [];		
+		this.subscribers = [];
 	}
-	
+
 	function Event(){
 		this.name = "";
 		this.location = "";
 		this.timeStart = new Date();
 		this.timeEnd = new Date();
 		this.description = "";
-		
+
 		// By Name
 		this.tags = [];
 
-		this.hostOrg;		
-		
+		this.hostOrg;
+
 		// By reference
 		this.followers = [];
 	}
-	
+
 	function Tag(){
 		this.name = "";
-		
+
 		// By reference
 		this.events = [];
 		this.subscribers = [];
 	}
-	
+
 	/* Some conventions:
 			create - Making a new database object from scratch.
 			delete - Deleting an object completely from the database.
 			add - Add a reference to another part of the database (e.g. addEventToUser)
 			remove - Removing a reference to another part of the database (e.g. removeEventFromUser)
 	*/
-	
+
 	//---------------------------------------------------------------------------------------------
 	/* Here's the set of create functions, used to create database objects.
 	 * We want to separate the database object definition above
 	 * from sanitation checking
 	 *
 	 */
-	
+
 	// Creates a user and adds it to the database.
 	function createUser(name, password, callback){
 		var user = new User();
@@ -156,7 +152,7 @@ function Application(db) {
 	// Creates an event and adds it to the database. 
 	function createEvent(name, location, description, hostOrgName, startTime, endTime, callback){
 		// Check that startTime < endTime
-	
+
 		var event = new Event();
 		event.name = name;
 		event.location = location;
@@ -171,7 +167,7 @@ function Application(db) {
 		
 		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, callback]));
 	}
-	
+
 	// Creates a tag and adds it to the database.
 	function createTag(name, callback){
 		var tag = new Tag();
@@ -200,7 +196,7 @@ function Application(db) {
 						getCallbackWithArgs('update', [query, update,{'multi':true}, callback]));
 		}
 	}
-	
+
 
 	// Add to array field in collection
 	function addtoArrayField(collectionName, query, field, value, callback){
@@ -232,22 +228,34 @@ function Application(db) {
 	// -----------------------------------------------------------------------
 	/* User collection operations */
 
-	
-
-	
 	// Adds an event to a user, by id.
 	function addEventToUser(eventId, userId){
 		var query = {_id: userId};
-		
+
 		var partialUpdate = {$addToSet : {savedEvents : eventId}};
-		
+
 		db.collection(collUsers, getCallbackWithArgs('update', [query, partialUpdate]));
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
+//*********** Actions
+
+
+    //given data.text, start, end, return all events in the period
+    function searchAction(request, response, data) {
+
+    }
+
+    //given data,orgs or data.tags, add to request.user's tags/organizations
+    function subscribeAction(request, response, data) {
+
+    }
+
+
+
     function facebookLoginAction(request, response, data) {
         response.send({"hi" : request.user});
     }

@@ -220,8 +220,8 @@ asyncTest( "updateStringField: check if updates a string field", function() {
 
 	// Check that the database did what we want.
 	var callback = function( error, result ){
-		console.log(result[0]);
-		console.log(expected);
+		//console.log(result[0]);
+		//console.log(expected);
 		ok(compareFields(expected, result[0]), 'Fields not correct');
 	    start();
 	}
