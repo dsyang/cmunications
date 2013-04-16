@@ -3,7 +3,7 @@
 // later. Be sure to export any function you write or else it can't be tested.
 
 var utils = require('./utils.js');
-var ObjectID = require('mongo').BSONPure.ObjectID;
+var ObjectID = require('mongodb').BSONPure.ObjectID;
 var async = require('async');
 
 function Application(db) {
@@ -257,7 +257,7 @@ function Application(db) {
     function success(name, obj) {
         var res =  {'success': true};
         res[name] = obj;
-        return res
+        return res;
     }
 
     function fail(message) {
@@ -268,9 +268,9 @@ function Application(db) {
     //given data.text, start, end, return all events in the period
     function searchAction(request, response, data) {
         function cb(err, result) {
-            if(err) response.send(fail{err});
+            if(err) response.send(fail(err));
 
-            response.send(success('results', result))
+            response.send(success('results', result));
         }
         searchDb(collEvents, data.text, cb);
     }
@@ -321,7 +321,7 @@ function Application(db) {
         var dbCalls = []
         request.user.savedEvents.forEach(function(event_id) {
 
-        });
+		});
         async.parallel([
 
 
@@ -330,41 +330,36 @@ function Application(db) {
 
     //given an event in data.event
     function createEventAction(request, response, data) {
-
     }
 
     //given an event in data.event and a data.event_id
     function editEventAction(request, response, data) {
-
     }
 
     //list all organizations
     function listOrganizationAction(request, response, data) {
-
     }
 
 
     //list all tags
     function listTagsAction(request, response, data) {
-
     }
 
 
     //given data.name, data.password, data.description
     function organizationCreateAction(request, response, data) {
         function cb(err, result) {
-            if err throw err
+            if (err) throw err;
 
             response.send( { 'success': true,
                              'organization': result });
-        });
+        }
 
-        createOrganization(data.name, data.password, data.description, cb)
+        createOrganization(data.name, data.password, data.description, cb);
     }
 
 
-    function loginAction(request, response, data) {
-
+    function loginAction(request, response, data) { 
     }
 
     function facebookLoginAction(request, response, data) {
