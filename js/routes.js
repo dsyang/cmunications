@@ -5,6 +5,7 @@
 module.exports = function(app, passport, db) {
     var code = new require("./applicationCode.js").Application(db);
 
+
     app.post('/search', function(request, response) {
         var data = { text: request.body.text,
                      start: request.body.startDate,
@@ -56,13 +57,6 @@ module.exports = function(app, passport, db) {
         code.listTagsAction(request, response, data);
     });
 
-
-
-    app.get("/", function(request, response) {
-        var data = {};
-        code.defaultAction(request, response, data);
-    });
-
     app.get( '/auth/login', function(requset, response) {
         var data = {};
         code.loginAction(request, response, data);
@@ -85,6 +79,11 @@ module.exports = function(app, passport, db) {
                     description: request.body.description
                    };
         code.organizationCreateAction(request, response, data);
+    });
+
+    app.get("/", function(request, response) {
+        var data = {};
+        code.defaultAction(request, response, data);
     });
 
     // app.get('/auth/organization', function(request, response) {
