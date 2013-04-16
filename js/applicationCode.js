@@ -8,7 +8,7 @@ function Application(db) {
 
 	// The names of the collections which are going to be used with the database.
 	var collUsers = 'users';
-	var collOrgs = 'organization';
+	var collOrgs = 'organizations';
 	var collEvents = 'events';
 	var collTags = 'tags';
 
@@ -21,25 +21,44 @@ function Application(db) {
 		console.log(result);
 	}
 	
+	var throwError = function(error){
+		if(error)
+			throw error;
+	}
+	
+
+
+	
 	// Calls function with arg, 
+	// Special case for find - arrayOfArgs = [query, callback]
 	var getCallbackWithArgs = function(funcName, arrayOfArgs){
 		return (function(error, collection){
 			if (error)
 				throw error;
-			
-			if (funcName !== 'insert')
+
+			//arrayOfArgs.push(throwError);
+			//console.log(arrayOfArgs);
+
+			if (funcName === 'insert')
 				collection.insert.apply(collection, arrayOfArgs);
-			else if (funcName !== 'find')
-				collection.find.apply(collection, arrayOfArgs);
-			else if (funcName !== 'update')
+			else if (funcName === 'find'){
+				var results = collection.find(arrayOfArgs[0]).toArray(arrayOfArgs[1]);
+			}
+			else if (funcName === 'update')
 				collection.update.apply(collection, arrayOfArgs);
-			else if (funcName !== 'remove')
+			else if (funcName === 'remove')
 				collection.remove.apply(collection, arrayOfArgs);
 			else
 				throw "Invalid function called of insert, find, update, remove";
 		});
 	}
 	
+	var isValidCollectionName = function(collectionName){
+		return (collectionName === collUsers ||
+		   collectionName === collOrgs ||
+		   collectionName === collEvents ||
+		   collectionName === collTags);
+	}
 	
 	/* Templates for the database objects*/
 	
@@ -108,26 +127,34 @@ function Application(db) {
 	 */
 	
 	// Creates a user and adds it to the database.
-	function createUser(name, password){
+	function createUser(name, password, callback){
 		var user = new User();
 		user.name = name;
 		user.password = password;
 		
-		db.collection(collUsers, getCallbackWithArgs('insert', [user]));
+		if(!callback){
+			callback = logger;
+		}
+		
+		db.collection(collUsers, getCallbackWithArgs('insert', [user,{safe:true}, callback]));
 	}
 	
 	// Creates an org and adds it to the database. 
-	function createOrganization(name, password, description){
+	function createOrganization(name, password, description, callback){
 		var org = new Organization();
 		org.name = name;
 		org.password = password;
 		org.description = description;
+
+		if(!callback){
+			callback = logger;
+		}
 		
-		db.collection(collOrgs, getCallbackWithArgs('insert', [org]));
+		db.collection(collOrgs, getCallbackWithArgs('insert', [org, {safe:true}, callback]));
 	}
 	
 	// Creates an event and adds it to the database. 
-	function createEvent(name, location, description, hostOrgName, startTime, endTime){
+	function createEvent(name, location, description, hostOrgName, startTime, endTime, callback){
 		// Check that startTime < endTime
 	
 		var event = new Event();
@@ -137,26 +164,76 @@ function Application(db) {
 		event.hostOrg = hostOrgName;
 		event.startTime = startTime;
 		event.endTime = endTime;
+
+		if(!callback){
+			callback = logger;
+		}
 		
-		db.collection(collEvents, getCallbackWithArgs('insert', [event]));
+		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, callback]));
 	}
 	
 	// Creates a tag and adds it to the database.
-	function createTag(name){
+	function createTag(name, callback){
 		var tag = new Tag();
 		tag.name = name;
+
+		if(!callback){
+			callback = logger;
+		}
 		
-		db.collection(collTags, getCallbackWithArgs('insert', [tag]));
+		db.collection(collTags, getCallbackWithArgs('insert', [tag, {safe:true}, callback]));
+	}
+
+	// Search for a field in the database.
+	function searchDb(collectionName, query, callback){
+		db.collection(collectionName, getCallbackWithArgs('find',[query, callback]))
+	}
+
+	// Update field in collection
+	function updateStringField(collectionName, query, field, value, callback){
+		if(isValidCollectionName(collectionName)){
+		   		var update = {}, partialUpdate = {};
+				partialUpdate[field] = value;
+				update['$set'] = partialUpdate;
+				//callback();
+				db.collection(collectionName, 
+						getCallbackWithArgs('update', [query, update,{'multi':true}, callback]));
+		}
 	}
 	
 
+	// Add to array field in collection
+	function addtoArrayField(collectionName, query, field, value, callback){
+		if(isValidCollectionName(collectionName)){
+	   		var update = {}, partialUpdate = {};
+			partialUpdate[field] = value;
+			update['$addToSet'] = partialUpdate;
+		   
+			db.collection(collectionName, 
+					getCallbackWithArgs('update', [query, partialUpdate, {'multi':true}, callback]));
+		
+		}
+	}	
+	
+	// Remove from array field in collection
+	function removeFromArrayField(collectionName, query, field, value, callback){
+		if(isValidCollectionName(collectionName)){
+	   		var update = {}, partialUpdate = {};
+			partialUpdate[field] = value;
+			update['$pull'] = partialUpdate;
+		   
+			db.collection(collectionName, 
+					getCallbackWithArgs('update', [query, partialUpdate, {'multi':true}, callback]));
+		
+		}	
+	}	
+	
+	
 	// -----------------------------------------------------------------------
 	/* User collection operations */
 
-	/* 
-	function updateField(collectionName, name, field, value){
-		
-	}*/
+	
+
 	
 	// Adds an event to a user, by id.
 	function addEventToUser(eventId, userId){
@@ -212,7 +289,13 @@ function Application(db) {
                                   nameAction,
                                   postAction,
                                   facebookLoginAction,
-                                  organizationLoginAction
+                                  organizationLoginAction,
+								  createUser,
+								  createOrganization,
+								  createEvent,
+								  createTag,
+								  searchDb,
+								  updateStringField
                                  ]);
 }
 
