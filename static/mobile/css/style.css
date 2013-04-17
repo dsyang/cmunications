@@ -1,0 +1,25 @@
+.tab {
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 60%;
+	width: 40px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 12px;
+	margin-bottom: 12px;
+	border: 2px solid black;
+}
+
+.nav {
+	clear: both;
+	border: 2px solid black;
+}
+
+.top {
+	float: left;
+}
+
+.body {
+	border: 2px solid block;
+}

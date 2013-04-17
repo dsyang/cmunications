@@ -1,3 +1,9 @@
+/* 
+************************
+Navigation
+************************
+*/
+
 .tab {
 	display: inline-block;
 	background-repeat: no-repeat;
@@ -14,8 +20,51 @@
 .nav {
 	clear: both;
 	border: 2px solid black;
+	text-align: center;
 }
 
-.top {
+/* 
+************************
+Header
+************************
+*/
+
+
+.left_button {
+	display: inline-block;
 	float: left;
 }
+
+.right_button {
+	display: inline-block;
+	float: right;
+}
+
+#header {
+	display: inline-block;
+}
+
+
+#clearfix {
+	clear: both;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
