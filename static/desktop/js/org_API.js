@@ -2,7 +2,7 @@
 
 
 (function(){
-    window.orgAPI = {
+    window.org_API = {
     	/* get all events of the organization to myEvents */
         getAll: function(done){
             var request = $.ajax({ type: "get", url: "/myevents"});

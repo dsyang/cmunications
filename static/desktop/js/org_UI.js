@@ -7,11 +7,12 @@ var UI = function(config){
     this.initDom();
     this.allEvents = [];
     this.edit_mode = false;
+    this.create_mode = false;
 
     //used in org_app.js
     this.org_app = config.events;
     //on clicking the tab show all events BIND THIS?
-    this.dom.tab_myEvents.click(this.org_app.showEvents.bind(this));
+    this.dom.tab_myEvents.click(this.org_app.showEvents);
     this.dom.tab_create.click(this.createEvent.bind(this));
 
 
@@ -21,18 +22,18 @@ UI.prototype =
 {   
     initDom: function(){
         this.dom = {
-            myEvents: $('myevents'),
+            myEvents: $('.myevents'),
             tab_myEvents: $('.ME'),
             tab_create: $('.create'),
             topleft_button: $('#left_button'),
-            topright_button: $('#right_button')
-            thisEvent: $("#eventInfo");
-        }
+            topright_button: $('#right_button'),
+            eventInfo: $("#eventInfo")
+        };
     },
 
     //for events of a particular org
     showEvents: function(allEvents){
-        this.dom.thisEvent.html("");
+        this.dom.eventInfo.html("");
         this.dom.myEvents.html("");
         /* *************************
             gotta bind these click events
@@ -89,7 +90,7 @@ UI.prototype =
     set_edit_save: function(event) {
         this.dom.topright_button.click(function () {
             // does this refer to the same buttons now???
-            this.edit_mode = not this.edit_mode;
+            this.edit_mode = !this.edit_mode;
             //just clicked on edit
             if (this.edit_mode) {
                 $(".location").attr('id',"edit_location").removeAttr('disabled');
@@ -102,12 +103,12 @@ UI.prototype =
             // just clicked save
             else {
                 var content = { "_id": _id,
-                             "location": location.val();
-                             "timeStart": timeStart.val();
-                             "timeEnd": timeEnd.val();
-                             "name": name.val();
-                             "description": description.val();
-                             }
+                             "location": location.val(),
+                             "timeStart": timeStart.val(),
+                             "timeEnd": timeEnd.val(),
+                             "name": name.val(),
+                             "description": description.val()
+                             };
                 //update in database
                 this.org_app.editEvent(_id, content);
                 // set to view mode
@@ -125,28 +126,37 @@ UI.prototype =
     },
 
     createEvent: function () {
-        this.dom.myEvents.html("");
-        this.dom.topleft_button.html("Cancel");
-        this.dom.topright_button.html("Save");
-        this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
+        if (this.create_mode == false) {
+            this.create_mode = true;
+            this.dom.myEvents.html("");
+            this.dom.topleft_button.html("Cancel");
+            this.dom.topright_button.html("Save");
+            this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
 
-        var name = $("<input>").html(event.name).addClass("name");
-        var location = $("<input>").html(event.location).addClass("location");
-        var timeStart = $("<input>").html(event.timeStart).addClass("timeStart");
-        var timeEnd = $("<input>").html(event.timeEnd).addClass("timeEnd");
-        var description = $("<input>").html(event.description).addClass("description");
+            var labelName = $("<label>").html("Name").addClass("name");
+            var name = $("<input>").html(event.name).addClass("name");
+            var labelLocation = $("<label>").html("Location").addClass("location");
+            var location = $("<input>").html(event.location).addClass("location");
+            var labelTimeStart = $("<label>").html("Time").addClass("timeStart");
+            var timeStart = $("<input>").html(event.timeStart).addClass("timeStart");
+            var timeEnd = $("<input>").html(event.timeEnd).addClass("timeEnd");
+            var labelDescription = $("<label>").html("Description").addClass("description");
+            var description = $("<input>").html(event.description).addClass("description");
 
-        this.dom.eventInfo.append(name,location,timeStart,timeEnd,description);
-
+            this.dom.eventInfo.append(labelName,name);
+            this.dom.eventInfo.append(labelLocation,location);
+            this.dom.eventInfo.append(labelTimeStart, timeStart,timeEnd);
+            this.dom.eventInfo.append(labelDescription,description);
+        }
         //Save
         this.dom.topright_button.click(function () {
             var content = { "_id": _id,
-                             "location": location.val();
-                             "timeStart": timeStart.val();
-                             "timeEnd": timeEnd.val();
-                             "name": name.val();
-                             "description": description.val();
-                             }
+                             "location": location.val(),
+                             "timeStart": timeStart.val(),
+                             "timeEnd": timeEnd.val(),
+                             "name": name.val(),
+                             "description": description.val()
+                             };
             //create event in database
             this.org_app.createEvent(content);
             // set to view mode
@@ -155,6 +165,7 @@ UI.prototype =
             timeStart.attr({'id':"display_timeStart", 'disabled':true});
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
+            this.create_mode = false;
             
         }.bind(this));
     }

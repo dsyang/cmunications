@@ -7,10 +7,9 @@ var org_app = function(){
     this.ui = new UI({
         events: {
             showEvents: this.showEvents.bind(this),
-            showEvent: this.showEvent.bind(this);
-            edit: this.editEvent.bind(this);
+            showEvent: this.showEvent.bind(this),
+            edit: this.editEvent.bind(this),
             create: this.createEvent.bind(this),
-            delete: this.deleteEvent.bind(this)
         }
     });
 

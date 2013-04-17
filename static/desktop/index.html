@@ -2,12 +2,17 @@
 <html>
 <head>
 	<title> cmunications - for orgs </title>
-	<script src="/libs/jq/jquery-1.8.2.min.js"></script>
-    <script src="/libs/jq/addEnterJQPlugin.js"></script>
-    <script src="/libs/jq/addTappableJQPlugin.js"></script>
     <script src="js/org_UI.js"></script>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/reset.css" rel="stylesheet" type="text/css">
+    <script src="js/org_app.js"></script>
+    <script src="js/org_API.js"></script>
+    <script src="libs/jq/jquery-1.8.2.min.js"></script>
+    <link href="css/style.css" rel="stylesheet" type="text/css" media = "all">
+    <link href="css/reset.css" rel="stylesheet" type="text/css" media = "all">
+    <script>
+        window.addEventListener('load', function(){
+            new org_app();
+        });
+    </script>
 </head>
 <body>
 	<div id = "topbar">
