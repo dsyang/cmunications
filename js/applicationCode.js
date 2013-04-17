@@ -330,6 +330,11 @@ function Application(db) {
         ])
     }
 
+    //list events for org
+    function listOrgEventsAction(request, response, data){
+
+    }
+
     //given an event in data.event
     function createEventAction(request, response, data) {
     }

@@ -41,6 +41,14 @@ module.exports = function(app, passport, db) {
                 var data = {};
                 code.listStarredEventsAction(request, response, data);
             });
+
+    app.get('/myevents',
+            passport.authenticate('local', { failureRedirect: '/auth/login' }),
+            function(request, response) {
+                var data = {};
+                code.listOrgEventsAction(request, response, data);
+            });
+
     app.post('/events/create',
              passport.authenticate('local', { failureRedirect: '/auth/login' }),
              function(request, response) {
@@ -115,6 +123,11 @@ module.exports = function(app, passport, db) {
     app.post("/post", function(request, response) {
         var data = {"stuff": request.body.stuff}
         code.postAction(request, response, data);
+    });
+
+    // This is for serving files in the static directory
+    app.get("/static/:staticFilename", function (request, response) {
+        response.sendfile("static/desktop/" + request.params.staticFilename);
     });
 
     return app;
