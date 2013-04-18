@@ -124,7 +124,7 @@ function initializeApp() {
 
     // Finally we register all the middleware we'll be using.
     // `passport.session()` allows us to support presistent login sessions.
-    app.use(express.logger());
+//    app.use(express.logger());
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
@@ -132,6 +132,6 @@ function initializeApp() {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(app.router);
-    /*  app.use(express.static(__dirname + '/public'));*/
+    app.use(express.static(__dirname + '/static/desktop'));
 
 };

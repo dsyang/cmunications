@@ -3,9 +3,9 @@
 
 (function(){
     window.org_API = {
-    	/* get all events of the organization to myEvents */
+    	/* get all events */
         getAll: function(done){
-            var request = $.ajax({ type: "get", url: "/myevents"});
+            var request = $.ajax({ type: "get", url: "/events/all/"});
             setupCallback(request, done);
         },
 
@@ -17,8 +17,8 @@
 
         /* create a new event */
         create: function(content, done){
-            var request = $.ajax({ 
-                type: "post", 
+            var request = $.ajax({
+                type: "post",
                 url: "/events/create",
                 data: { content: content }
             });
@@ -27,8 +27,8 @@
 
         /* editing an event with given id */
         update: function(id, content, done){
-            var request = $.ajax({ 
-                type: "put", 
+            var request = $.ajax({
+                type: "put",
                 url: "/events" + id + "edit",
                 data: { content: content }
             });
@@ -57,6 +57,7 @@
     /* on success call done */
     function setupCallback(request, done){
         request.done(function(data) {
+//            console.log("asdfasdf",data);
             if (data.err !== undefined)
                 done(data.err, null);
             else

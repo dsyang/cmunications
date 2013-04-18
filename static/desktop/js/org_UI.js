@@ -18,8 +18,8 @@ var UI = function(config){
 
 }
 
-UI.prototype = 
-{   
+UI.prototype =
+{
     initDom: function(){
         this.dom = {
             myEvents: $('.myevents'),
@@ -32,7 +32,9 @@ UI.prototype =
     },
 
     //for events of a particular org
-    showEvents: function(allEvents){
+    showEvents: function(events){
+        allEvents = events['events'];
+        console.log(allEvents);
         this.dom.eventInfo.html("");
         this.dom.myEvents.html("");
         /* *************************
@@ -54,8 +56,9 @@ UI.prototype =
             li.append(location);
             li.append(infoButton);
             infoButton.click (function () {
+                console.log("hit");
                 this.edit_mode = false;
-                this.org_app.showEvent(item);
+                this.org_app.showEvent(item._id);
             }.bind(this));
 
             this.dom.myEvents.append(li);
@@ -70,15 +73,16 @@ UI.prototype =
         //get back to myevents on clicking "back"
         this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
         // var image??? var tags?
-        var name = $("<input>").html(event.name);
-        var location = $("<input>").html(event.location);
-        var timeStart = $("<input>").html(event.timeStart);
-        var timeEnd = $("<input>").html(event.timeEnd);
-        var description = $("<input>").html(event.description);
-        
+        var name = $("<input>").val(event.name);
+        var location = $("<input>").val(event.location);
+        var timeStart = $("<input>").val(event.timeStart);
+        var timeEnd = $("<input>").val(event.timeEnd);
+        var description = $("<input>").val(event.description);
+
         name.addClass("name").attr({'id':"display_name", 'disabled':true});
         location.addClass("location").attr({'id':"display_location", 'disabled':true});
         timeStart.addClass("timeStart").attr({'id':"display_timeStart", 'disabled':true});
+        timeEnd.addClass("timeEnd").attr({'id':"display_timeEnd", 'disabled':true});
         description.addClass("description").attr({'id':"display_description", 'disabled':true});
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
@@ -166,8 +170,7 @@ UI.prototype =
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;
-            
+
         }.bind(this));
     }
-} 
-
+}

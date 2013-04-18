@@ -28,6 +28,11 @@ module.exports = function(app, passport, db) {
         var data = {event_id: request.params.id};
         code.eventDetailAction(request, response, data)
     });
+
+    app.get('/events/all/', function(request, response) {
+        var data = {};
+        code.listEventsAction(request, response, data);
+    });
     app.post('/events/:id/star/',
              passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
@@ -74,10 +79,11 @@ module.exports = function(app, passport, db) {
         code.listTagsAction(request, response, data);
     });
 
-    app.get( '/auth/login', function(requset, response) {
+    app.get( '/auth/login', function(request, response) {
         var data = {};
         code.loginAction(request, response, data);
     });
+
     app.get('/auth/facebook', passport.authenticate('facebook'), function() {
         //This callback is never called as we're redirected to facebook.
         return;
@@ -98,10 +104,10 @@ module.exports = function(app, passport, db) {
         code.organizationCreateAction(request, response, data);
     });
 
-    app.get("/", function(request, response) {
-        var data = {};
-        code.defaultAction(request, response, data);
-    });
+    // app.get("/", function(request, response) {
+    //     var data = {};
+    //     code.defaultAction(request, response, data);
+    // });
 
     // app.get('/auth/organization', function(request, response) {
     //     var data = {};
@@ -115,10 +121,10 @@ module.exports = function(app, passport, db) {
     //         response.send({"hi" : request.user});
     //     });
 
-    app.get("/:name", function(request, response) {
-        var data = {"name": request.params.name}
-        code.nameAction(request, response, data);
-    });
+    //app.get("/:name", function(request, response) {
+//        var data = {"name": request.params.name}
+//        code.nameAction(request, response, data);
+//    });
 
     app.post("/post", function(request, response) {
         var data = {"stuff": request.body.stuff}

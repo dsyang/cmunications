@@ -252,7 +252,9 @@ function Application(db) {
 
 
 
-//*********** Actions
+//=====================================
+// ACTIONS
+//=====================================
 
     function success(name, obj) {
         var res =  {'success': true};
@@ -272,8 +274,8 @@ function Application(db) {
 
             response.send(success('results', result));
         }
-		
-		// IS DATA.TXT ACTUALLY A QUERY OBJECT?
+
+		    // IS DATA.TXT ACTUALLY A QUERY OBJECT?
         searchDb(collEvents, data.text, cb);
     }
 
@@ -298,11 +300,16 @@ function Application(db) {
     //given data.event_id
     function eventDetailAction(request, response, data) {
         var id = ObjectID(data.event_id);
+        console.log("collecting info about event w/ id" + id);
         searchDb(collEvents, {'_id' : id}, cb);
         function cb(err, result) {
-            if(err) response.send(fail(err));
-            if(result) response.send(success('event', result));
-            response.send(fail('no event found'))
+            if(err){
+                response.send(fail(err));
+            } else if(result[0]){
+                response.send(success('event', result[0]));
+            } else {
+                response.send(fail('no event found'));
+            }
         }
     }
 
@@ -322,7 +329,7 @@ function Application(db) {
     function listStarredEventsAction(request, response, data) {
         var dbCalls = []
         request.user.savedEvents.forEach(function(event_id) {
-			
+
 		});
         async.parallel([
 
@@ -332,36 +339,48 @@ function Application(db) {
 
     //list events for org
     function listOrgEventsAction(request, response, data){
-
+        response.send(success('dummy', 42));
     }
 
     //given an event in data.event
     function createEventAction(request, response, data) {
+        response.send(success('dummy', 42));
     }
 
     //given an event in data.event and a data.event_id
     function editEventAction(request, response, data) {
+        response.send(success('dummy', 42));
     }
+
+    //list all events
+    function listEventsAction(request, response, data) {
+		    function sendResults(err,listOfDocs){
+            response.send( { 'success': true,
+                             'events': listOfDocs });
+		    }
+
+		    searchDb(collEvents, {}, sendResults);
+    };
 
     //list all organizations
     function listOrganizationAction(request, response, data) {
-		function sendResults(err,listOfDocs){
+		    function sendResults(err,listOfDocs){
             response.send( { 'success': true,
                              'organizations': listOfDocs });
-		}
-	
-		searchDb(collOrgs, {}, sendResults);
+		    }
+
+		    searchDb(collOrgs, {}, sendResults);
     }
 
 
     //list all tags
     function listTagsAction(request, response, data) {
-		function sendResults(err,listOfDocs){
+		    function sendResults(err,listOfDocs){
             response.send( { 'success': true,
                              'tags': listOfDocs });
-		}
-	
-		searchDb(collTags, {}, sendResults);	
+		    }
+
+		    searchDb(collTags, {}, sendResults);
     }
 
 
@@ -378,7 +397,8 @@ function Application(db) {
     }
 
 
-    function loginAction(request, response, data) { 
+    function loginAction(request, response, data) {
+        response.send(success('dummy', 42));
     }
 
     function facebookLoginAction(request, response, data) {
@@ -421,8 +441,22 @@ function Application(db) {
     return utils.exportFunctions([defaultAction,
                                   nameAction,
                                   postAction,
+                                  searchAction,
+                                  subscribeAction,
+                                  eventDetailAction,
+                                  starEventAction,
+                                  listStarredEventsAction,
+                                  listOrgEventsAction,
+                                  createEventAction,
+                                  editEventAction,
+                                  listEventsAction,
+                                  listOrganizationAction,
+                                  listTagsAction,
+                                  loginAction,
                                   facebookLoginAction,
                                   organizationLoginAction,
+
+
 								                  createUser,
 								                  createOrganization,
 								                  createEvent,

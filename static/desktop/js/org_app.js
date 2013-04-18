@@ -24,7 +24,7 @@ org_app.prototype = {
     showEvents: function(){
         window.org_API.getAll(function (err, data_array) {
         	if (err)
-        		throw err;
+             throw err;
         	//data returned in array form, store locally
         	this.myEvents = data_array;
         	this.ui.showEvents(data_array);
@@ -32,10 +32,12 @@ org_app.prototype = {
     },
 
     showEvent: function(_id) {
-        window.org_API.get(_id, function(err, event) {
+        console.log("grabbing event details");
+        window.org_API.get(_id, function(err, result) {
+            console.log("grabbed", err, result);
             if (err)
                 throw err;
-            this.ui.showEvent(event);
+            this.ui.showEvent(result.event);
         }.bind(this));
     },
 
@@ -63,10 +65,9 @@ org_app.prototype = {
         window.org_API.delete(_id, function(err, result){
             if (err)
                 throw err;
-            // show all events now, once that's deleted 
+            // show all events now, once that's deleted
             this.showEvents();
 
         }.bind(this));
     } */
 }
-
