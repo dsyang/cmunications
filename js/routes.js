@@ -1,7 +1,7 @@
  // This file hold all the routes for the app, describing our api endpoints
 
 //`applicationCode.js` holds all the logic for our application.
-
+var async = require("async");
 module.exports = function(app, passport, db) {
     var code = new require("./applicationCode.js").Application(db);
 
@@ -134,6 +134,81 @@ module.exports = function(app, passport, db) {
     // This is for serving files in the static directory
     app.get("/static/:staticFilename", function (request, response) {
         response.sendfile("static/desktop/" + request.params.staticFilename);
+    });
+
+    app.get("/populatedb", function (request, response) {
+        var database = db;
+        testUser = {
+            name: "Test User",
+            password: "237",
+            savedEvents: [],
+            tags: [],
+            orgs: [],
+            subscriptions: [],
+            notifications: []
+        };
+
+        testOrg = {
+            name: "Test Org",
+            password: "237",
+            description: "Just another Organization",
+            events: [],
+            subscribers: [],
+        };
+
+        testTag = {
+            name: "Test Tag",
+            events: [],
+            subscribers: []
+        };
+
+        async.parallel([
+            function(callback) {
+                database.collection("users", function(err, col) {
+                    if(err) throw err;
+                    col.insert(testUser, callback);
+                });
+            },
+            function(callback) {
+                database.collection("organizations", function(err, col) {
+                    if(err) throw err;
+                    col.insert(testOrg, callback);
+                });
+            },
+            function(callback) {
+                database.collection("tags", function(err, col) {
+                    if(err) throw err;
+                    col.insert(testTag, callback);
+                });
+            }
+        ],
+                       function (err, results) {
+                           if(err) throw err;
+                           testEvent = {
+                               name: "Test Event",
+                               location: "Location",
+                               description: "Something cool",
+                               timeStart: Date(2013,3,20,10,30),
+                               timeEnd: Date(2013, 3, 21, 10, 30),
+                               tags: [results[2][0]._id],
+                               followers: [results[0][0]._id],
+                               hostOrg: results[1][0]._id
+                           };
+                           database.collection("events", function(err, col) {
+                               if(err) throw err;
+                               col.insert(testEvent, function(e, r) {
+                                   if(e) throw e;
+                                   console.log(results);
+                                   console.log(r);
+                                   response.send({results: results,
+                                                  event: r});
+                               });
+                           });
+                       });
+
+
+
+
     });
 
     return app;
