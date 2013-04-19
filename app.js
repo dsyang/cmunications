@@ -129,10 +129,8 @@ function initializeApp(db) {
                                              { message: "Organization Login Failed"});
                              }
                          });
-            }
-
-        })
-                );
+            })
+        }));
 
 
     // Finally we register all the middleware we'll be using.
