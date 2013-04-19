@@ -48,7 +48,6 @@ var MongoClient = mongo.MongoClient;
 // The following code only runs if we execute the file using node or foreman.
 // This way we can load the code as a library if we want.
 if(__filename == process.argv[1]) {
-    initializeApp();
 
     MongoClient.connect(connectionURI, dbConnectCallback);
 
@@ -56,6 +55,7 @@ if(__filename == process.argv[1]) {
         if(err) {
             console.log("ERROR opening database:  "+err);
         } else {
+            initializeApp(database);
             console.log("Database connection established. Starting app");
 
             //`app`, `passport`, and `database` are needed to initialize routes
@@ -71,7 +71,7 @@ if(__filename == process.argv[1]) {
 
 //`initializeApp()` does all the heavy lifting in configuring and initializing
 // thrid party libraries.
-function initializeApp() {
+function initializeApp(db) {
 
     //Passport session setup.
     // This function is used to serialize the user object so we can access it
@@ -116,8 +116,21 @@ function initializeApp() {
     //will be passed into this function as `username` and `password`.
     passport.use('local', new LocalStrategy(
         function(username, password, done) {
-            console.log(username, password);
-            return done(null, {'provider': 'local', "user": username});
+            db.collection("organizations", function(err, col) {
+                if(err) throw err;
+                col.find({name: username, password: password},
+                         function (err, result) {
+                             console.log(result);
+                             if(err) return done(err);
+                             if(result){
+                                 return done(null, result);
+                             } else {
+                                 return done(null, false,
+                                             { message: "Organization Login Failed"});
+                             }
+                         });
+            }
+
         })
                 );
 
