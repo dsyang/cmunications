@@ -96,16 +96,23 @@ UI.prototype =
             // does this refer to the same buttons now???
             this.edit_mode = !this.edit_mode;
             //just clicked on edit
+            var location = $('.location');
+            var name = $('.name');
+            var timeStart = $('.timeStart');
+            var timeEnd = $('.timeEnd');
+            var description = $('.description');
             if (this.edit_mode) {
                 $(".location").attr('id',"edit_location").removeAttr('disabled');
                 $(".name").attr('id',"edit_name").removeAttr('disabled');
                 $(".timeStart").attr('id',"edit_timeStart").removeAttr('disabled');
+                $(".timeEnd").attr('id',"edit_timeEnd").removeAttr('disabled');
                 $(".description").attr('id',"edit_description").removeAttr('disabled');
 
                 this.dom.topright_button.html("Save");
             }
             // just clicked save
             else {
+                var _id = event._id;
                 var content = { "_id": _id,
                              "location": location.val(),
                              "timeStart": timeStart.val(),
@@ -154,8 +161,7 @@ UI.prototype =
         }
         //Save
         this.dom.topright_button.click(function () {
-            var content = { "_id": _id,
-                             "location": location.val(),
+            var content = {  "location": location.val(),
                              "timeStart": timeStart.val(),
                              "timeEnd": timeEnd.val(),
                              "name": name.val(),
@@ -167,6 +173,7 @@ UI.prototype =
             location.attr({'id':"display_location", 'disabled':true});
             name.attr({'id':"display_name", 'disabled':true});
             timeStart.attr({'id':"display_timeStart", 'disabled':true});
+            timeEnd.attr({'id':"display_timeEnd", 'disabled':true});
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;

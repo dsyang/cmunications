@@ -205,6 +205,19 @@ function Application(db) {
 		}
 	}
 
+	// Update fields in collection
+	function updateFields(collectionName, query, fields, callback){
+		if(isValidCollectionName(collectionName)){
+		   		var update = {}, partialUpdate = {};
+				partialUpdate = fields
+				update['$set'] = partialUpdate;
+				//callback();
+				db.collection(collectionName,
+						getCallbackWithArgs('update', [query, update,{'multi':true},
+                                           callback]));
+		}
+	}
+
 
 	// Add to array field in collection
 	function addToArrayField(collectionName, query, field, value, callback){
@@ -317,7 +330,7 @@ function Application(db) {
     function starEventAction(request, response, data) {
         var event_id = ObjectID(data.event_id);
         var user_id = ObjectID(request.user.id);
-        searchDb(collEvents, {'_id' : id}, cb);
+        searchDb(collEvents, {'_id' : event_id}, cb);
         function cb(err, result) {
             if(err) response.send(fail(err));
             if(!result) response.send(fail('no event found'));
@@ -344,12 +357,44 @@ function Application(db) {
 
     //given an event in data.event
     function createEventAction(request, response, data) {
+        console.log("stuff");
+        var dStart = new Date(data.event.timeStart);
+        var dEnd = new Date(data.event.timeEnd);
+        createEvent(data.event.name, data.event.location, data.event.description,
+                    null, dStart, dEnd, cb);
+
+        function cb(err, result) {
+            if(err) throw err;
+            console.log(result);
+            response.send(success('_id', result));
+        }
+
+        console.log(data.event);
         response.send(success('dummy', 42));
     }
 
     //given an event in data.event and a data.event_id
     function editEventAction(request, response, data) {
-        response.send(success('dummy', 42));
+        var event_id = ObjectID(data.event_id);
+        searchDb(collEvents, {'_id': event_id}, cb);
+        function cb(err, result) {
+            if(err) throw err;
+            console.log(result);
+            var dStart = new Date(data.event.timeStart);
+            var dEnd = new Date(data.event.timeEnd);
+            data.event.timeStart = dStart;
+            data.event.timeEnd = new Date();
+            delete data.event._id;
+            updateFields(collEvents, {'_id' : event_id}, data.event, cb2);
+            function cb2(err, result) {
+                if(err) throw err;
+                response.send(success('event', {'event_id': event_id,
+                                                'result': result
+                                               }
+                                     ));
+            }
+        }
+
     }
 
     //list all events
@@ -398,6 +443,7 @@ function Application(db) {
 
 
     function loginAction(request, response, data) {
+        console.log("stuff");
         response.send(success('dummy', 42));
     }
 

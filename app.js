@@ -13,12 +13,8 @@
 //users and `passport-local` is used to roll our own auth for organization
 //accounts.
 var express = require("express"),
-    mongo = require('mongodb'),
-    passport = require('passport'),
-    FacebookStrategy = require('passport-facebook').Strategy,
-    LocalStrategy = require('passport-local').Strategy;
-
-
+    mongo   = require('mongodb'),
+    Auth    = require('./our-express-auth/lib/mongoExpressAuth.js');
 
 //These configuration variables are necessary to hook the app to the correct
 //services. `process.env` is used here so we can store sensitive data in a
@@ -55,15 +51,22 @@ if(__filename == process.argv[1]) {
         if(err) {
             console.log("ERROR opening database:  "+err);
         } else {
-            initializeApp(database);
+            initializeApp();
             console.log("Database connection established. Starting app");
 
-            //`app`, `passport`, and `database` are needed to initialize routes
-            // so we case attach routes to the app, declare which ones require
-            // authentication, and interact with the database.
-            initializeRoutes(app, passport, database);
-            app.listen(port);
-            console.log("Created server on port: "+port);
+            Auth.init({
+                db: database,
+                collections: ['users', 'organizations']
+            }, function (err) {
+                if(err) throw err;
+
+                //`app`, `passport`, and `database` are needed to initialize routes
+                // so we case attach routes to the app, declare which ones require
+                // authentication, and interact with the database.
+                initializeRoutes(app, database);
+                app.listen(port);
+                console.log("Created server on port: "+port);
+            });
         }
     }
 
@@ -71,77 +74,16 @@ if(__filename == process.argv[1]) {
 
 //`initializeApp()` does all the heavy lifting in configuring and initializing
 // thrid party libraries.
-function initializeApp(db) {
-
-    //Passport session setup.
-    // This function is used to serialize the user object so we can access it
-    // later. Whatever you pass to `done` in `serializeUser` is
-    // `obj` in `deserializeUser`
-    // And whatever you pass to `done` in `deseerializeUser` is
-    // `request.user`
-
-    /* Typically this will be as simple as storing the user
-       ID when serializing, and finding the user by ID when deserializing.
-     */
-    passport.serializeUser(function(user, done) {
-        done(null, user);
-    });
-
-    passport.deserializeUser(function(obj, done) {
-        done(null, obj);
-    });
-
-
-    //This sets up facebook authentication.
-    // Strategies in Passport require a `verify` function, which accept
-    // credentials (in this case, an accessToken, refreshToken, and Facebook
-    // profile), and invoke a callback with a user object.
-    passport.use('facebook', new FacebookStrategy({
-        clientID: FACEBOOK_APP_ID,
-        clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: facebookCallbackUrl
-    }, function(accessToken, refreshToken, profile, done) {
-        /* In a typical application, you would want
-           to associate the Facebook account with a user record in your database,
-           and return that user instead.
-        */
-        return done(null, profile);
-    }
-                                                 ));
-
-
-    // This sets up the local strategy, used for organization accounts.
-    // whatever data passed as `username=x&password=y` to the POST
-    //request that calls `passport.authenticate('local')` middleware
-    //will be passed into this function as `username` and `password`.
-    passport.use('local', new LocalStrategy(
-        function(username, password, done) {
-            db.collection("organizations", function(err, col) {
-                if(err) throw err;
-                col.find({name: username, password: password},
-                         function (err, result) {
-                             console.log(result);
-                             if(err) return done(err);
-                             if(result){
-                                 return done(null, result);
-                             } else {
-                                 return done(null, false,
-                                             { message: "Organization Login Failed"});
-                             }
-                         });
-            })
-        }));
-
+function initializeApp() {
 
     // Finally we register all the middleware we'll be using.
     // `passport.session()` allows us to support presistent login sessions.
-//    app.use(express.logger());
+    //  app.use(express.logger());
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.session({ secret: 'ahsdjfhiwehfuiahdkf' }));
-    app.use(passport.initialize());
-    app.use(passport.session());
+
     app.use(app.router);
     app.use(express.static(__dirname + '/static/desktop'));
 
