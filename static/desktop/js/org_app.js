@@ -34,6 +34,7 @@ org_app.prototype = {
     showEvent: function(_id) {
         console.log("grabbing event details");
         window.org_API.get(_id, function(err, result) {
+            console.log("grabbed", err, result);
             if (err)
                 throw err;
             this.ui.showEvent(result.event);

@@ -1,4 +1,4 @@
-/* 
+/*
 ************************
 Navigation
 ************************
@@ -67,7 +67,7 @@ Navigation
 
 
 
-/* 
+/*
 ************************
 Header
 ************************
@@ -80,7 +80,7 @@ Header
 }
 
 
-.left_button {
+#left_button {
 	cursor: pointer;
 	display: inline-block;
 	float: left;
@@ -98,7 +98,7 @@ Header
   	margin: 5px;
 }
 
-.right_button {
+#right_button {
 	display: inline-block;
 	float: right;
 	cursor: pointer;
@@ -137,7 +137,7 @@ Header
 }
 
 
-/* 
+/*
 ************************
 Create Event
 ************************
@@ -147,18 +147,3 @@ Create Event
 	display: block;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
