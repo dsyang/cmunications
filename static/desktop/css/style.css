@@ -128,7 +128,6 @@ Header
 	display: inline-block;
 	font-size: 40px;
 	padding: 10px 20px;
-	padding-left: 30%;
 }
 
 
@@ -147,3 +146,82 @@ Create Event
 	display: block;
 
 }
+
+
+
+/*
+************************
+Each Event
+************************
+*/
+
+body {
+	font-family: 'Noto Sans', sans-serif;
+}
+
+.myevents li {
+	padding: 10px;
+	border: 1px solid black;
+	color: #696969;
+}
+
+/* event name */
+.myevents li h3 {
+	font-size: 20px;
+	color: #65a9d7;
+}
+
+.myevents .time, .myevents .location {
+	padding-bottom: 10px;
+	color: #696969;
+}
+
+.myevents a {
+	margin-top: 20px;
+	text-decoration: underline;
+}
+/*
+************************
+Create Event
+************************
+*/
+
+#eventInfo {
+	padding: 40px;
+}
+
+#eventInfo .name, #eventInfo .location, .timeStart, .timeEnd, .description {
+	display: block;
+  	font-size: 15px;
+  	background-color: inherit;
+	margin-top: 5px;
+	padding: 0px;
+	width: 100%;
+	resize: none;
+	border: none;
+	border-top: 1px solid grey;
+	overflow: auto;
+  	border-radius: 5px;
+}
+
+.description {
+	overflow: scroll;
+  	font-size: 15px;
+  	background-color: inherit;
+	margin-top: 5px;
+	padding: 0px;
+	width: 100%;
+	height: 140px;
+	resize: none;
+	border: none;
+	border-top: 1px solid grey;
+	overflow: auto;
+  	border-radius: 5px;
+}
+
+
+
+
+
+
+
