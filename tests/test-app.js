@@ -205,7 +205,7 @@ asyncTest( "searchDb: Searches Database for one entry", function() {
 
 
 asyncTest( "updateStringField: check if updates a string field", function() {
-	var scope = this;
+	var scope = this; 
 
 	var input = {};
 	input.collectionName = 'users';
@@ -309,3 +309,101 @@ asyncTest( "removeFromArrayField: check if updatedArrayField", function() {
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
 	this.db.runTest(runIt);
 });
+
+// Next should be a series of followup tests for the actions.
+asyncTest( "Populate Database test. This puts a bunch of items in the database to test.", function() {
+	var scope = this;
+	
+	var index = 0;
+	
+	var user1 = ['Mochi', '123'];
+	var user2 = ['Shikha', '123'];
+	var user3 = ['Dan Yang', '123'];
+
+	var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
+	var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
+	var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"] 
+
+	var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling somasas', 'Mayur Sasa', new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+
+	var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', 'Activities Board', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+
+	var event3 = ['TSA Club Party', 'Static', 'Best club party of the year', 'Taiwanese Student Association', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+
+	var tag1 = ['party'];
+	var tag2 = ['food'];
+	
+	
+	var users = [user1, user2, user3];
+	var orgs = [org1, org2, org3];
+	var events = [event1, event2, event3];
+	var tags = [tag1, tag2];
+	
+	// Check that the database did what we want.
+	var callback = function( error, result ){
+		if(error){throw error;}
+		else{
+			ok(true);
+			start();
+		}	
+	}
+	
+	function addUsers(){
+		if(index === users.length){
+			callback();
+		}
+		else{
+			var cur = users[index];
+			//console.log("Index: " + index + "Curr: " + cur);
+			index = index + 1;
+			scope.app.createUser(cur[0], cur[1], addUsers);
+		}
+	}
+	
+	function addOrgs(){
+		if(index === orgs.length){
+			index = 0;
+			addUsers();
+		}
+		else{
+			var cur = orgs[index];
+			index = index + 1;
+			scope.app.createOrganization(cur[0], cur[1], cur[2], addOrgs);
+		}
+	}
+
+	function addEvents(){
+		if(index === events.length){
+			index = 0;
+			addOrgs();
+		}
+		else{
+			var cur = events[index];
+			index = index + 1;
+			scope.app.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+		}
+	}
+
+	function addTags(){
+		if(index === tags.length){
+			index = 0;
+			addEvents();
+		}
+		else{
+			var cur = tags[index];
+			index = index + 1;
+			scope.app.createTag(cur[0], addTags);
+		}
+	}	
+
+	function runIt(){
+		index = 0;
+		addTags();	
+	}
+
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt, ['users', 'organizations', 'events', 'tags']);
+});
+
+
+
