@@ -9,20 +9,28 @@
     <script src="js/org_UI.js"></script>
     <script src="js/org_app.js"></script>
     <script src="js/org_API.js"></script>
-    <link href="css/style.css" rel="stylesheet" type="text/css" media = "all">
-    <link href="css/reset.css" rel="stylesheet" type="text/css" media = "all">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+  	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+
+  	<link rel="apple-touch-icon-precomposed" href="/mobile/icon.png" />
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/reset.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <script>
         window.addEventListener('load', function(){
            app = new org_app();
         });
     </script>
 </head>
+
+
 <body>
 	<div id = "topbar">
-		<button class = "top" id="left_button"> Settings </button>
-		<div class = "top" id = "header"> CMUnications </div>
-		<button class = "top" id="right_button"> Login </button>
+		<button class = "top_button" id="left_button"> Settings </button>
+		CMUnications 
+		<button class = "top_button" id="right_button"> Login </button>
 	</div>
 	<div id = "clearfix"> </div>
 	<ul class = "myevents">

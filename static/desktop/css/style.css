@@ -1,5 +1,44 @@
 /*
 ************************
+General
+************************
+*/
+
+
+/* turn off the annoying highlight on a tap (we provide our own visual feedback) */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+}
+
+/* prevent the user from highlighting any text */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* allow highlighting text in inputs */
+input {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+body {
+    font-size: 1em;
+    color: #ccc;
+	font-family: 'Lato', sans-serif;
+}
+
+
+
+
+/*
+************************
 Navigation
 ************************
 */
@@ -8,42 +47,29 @@ Navigation
 	display: inline-block;
 	background-repeat: no-repeat;
 	background-position: center;
-	height: 40px;
-	width: 40px;
-	margin-left: 40px;
-	margin-right: 40px;
-	margin-top: 12px;
-	margin-bottom: 12px;
+	height: 30px;
+	width: 23%;
+	vertical-align: middle;
+	margin: 15px 0px;
 	background-size: contain;
-	cursor: pointer;
 }
 
 .nav {
+	position: fixed;
+	height: 60px;
+	bottom: 0px;
+	width: 100%;
 	clear: both;
 	text-align: center;
-	  /* This lets the user know you can click something. */
+	background-color: #e6e6e6;
+	background-repeat: no-repeat;
+	background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
+	background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+	background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
 
+	border: 1px solid #ccc;
+	border-top-color: #bbb;
 
-	  /* Set a default background color in case the user doesn't see the gradient */
-	  background-color: #e6e6e6;
-	  background-repeat: no-repeat;
-	  background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
-	  background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-	  background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-
-	  /* Make the button larger (and easier to click) */
-	  padding: 5px 14px 6px;
-
-	  border: 1px solid #ccc;
-	  border-top-color: #bbb;
-
-	  /* Rounded corners */
-	  -webkit-border-radius: 4px;
-	  -moz-border-radius: 4px;
-	  border-radius: 4px;
-
-	  /* Emphasize the text slightly */
-	  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
 }
 
 .tab.ME {
@@ -55,7 +81,7 @@ Navigation
 }
 
 .tab.notify {
-	background-image: url('img/rss.png');
+	background-image: url('img/globe.png');
 }
 
 .tab.create {
@@ -73,62 +99,57 @@ Header
 ************************
 */
 
+/* also "CMUnications" text is center aligned */
 #topbar {
-	padding: 5px 14px 6px;
-	height: 40px;
-	margin-bottom: 20px;
+	background-color: #017fd6;
+  	background-image: -moz-linear-gradient(top, #049cdb, #014c81);
+  	background-image: -webkit-linear-gradient(top, #049cdb, #014c81);
+  	background-image: linear-gradient(top, #049cdb, #014c81);
+	height: 50px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 1.2em;
+	font-weight: bold;
+	font-family: 'Lato', sans-serif;
+	letter-spacing: 0.01em;
+	width: 100%;
+	color: #fefefe;
 }
 
-
-#left_button {
-	cursor: pointer;
+/* doesn't fucking work center align 
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);*/
+#topbar:before {
+	content: '';
 	display: inline-block;
-	float: left;
+	height: 100%;
+	vertical-align: middle;
+	margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+.top_button {
+	font-family: inherit;
+	vertical-align: middle;
 	color: #FFF;
-  	background-color: #0064cd;
-  	background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
-  	background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
-  	background-image: linear-gradient(top, #049cdb, #0064cd);
+	padding: 8px;
+	margin: 6px;
+  	font-size: 0.8em;
+	background-color: #017fd6;
+  	background-image: -moz-linear-gradient(top, #049cdb, #014c81);
+  	background-image: -webkit-linear-gradient(top, #049cdb, #014c81);
+  	background-image: linear-gradient(top, #049cdb, #014c81);
   	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   	border-color: #0064cd #0064cd #003f81;
   	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  	font-size: 20px;
-  	padding: 10px 20px;
-  	margin: 5px;
+}
+
+#left_button {
+	float: left;
 }
 
 #right_button {
-	display: inline-block;
 	float: right;
-	cursor: pointer;
-	color: #FFF;
-  	background-color: #0064cd;
-  	background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
-  	background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
-  	background-image: linear-gradient(top, #049cdb, #0064cd);
-  	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  	border-color: #0064cd #0064cd #003f81;
-  	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  	font-size: 20px;
-  	padding: 10px 20px;
-  	margin: 5px;
 }
 
-.left_button:hover{
-	  color: #FFF;
-}
-
-.right_button:hover{
-	  color: #FFF;
-}
-
-#header {
-	display: inline-block;
-	font-size: 40px;
-	padding: 10px 20px;
-}
 
 
 #clearfix {
@@ -155,19 +176,22 @@ Each Event
 ************************
 */
 
-body {
-	font-family: 'Noto Sans', sans-serif;
-}
+
 
 .myevents li {
 	padding: 10px;
-	border: 1px solid black;
+	margin: 10px;
+	background-color: #fefefe;
 	color: #696969;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
 }
 
 /* event name */
 .myevents li h3 {
-	font-size: 20px;
+	display: inline-block;
+	font-size: 1.4em;
 	color: #65a9d7;
 }
 
@@ -176,9 +200,38 @@ body {
 	color: #696969;
 }
 
+.myevents .time {
+	padding-top: 4px;
+	font-size: 0.8em;
+}
+
+.myevents .location {
+	font-size: 1em;
+	margin-left: 40px;
+}
+
 .myevents a {
 	margin-top: 20px;
 	text-decoration: underline;
+}
+
+.myevents .starred {
+	background-image: url('img/favorites.png');
+	display: inline;
+	float: left;
+	background-size: contain;
+	height: 30px;
+	width: 30px;
+}
+
+.myevents .more {
+	background-image: url("img/arrow.png");
+	display: inline-block;
+	vertical-align: middle;
+	float: right;
+	background-size: contain;
+	height: 30px;
+	width: 30px;
 }
 /*
 ************************

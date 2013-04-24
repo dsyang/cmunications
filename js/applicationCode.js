@@ -156,24 +156,47 @@ function Application(db) {
 	}
 
 	// Creates an event and adds it to the database.
-	function createEvent(name, location, description, hostOrgName, startTime,
-                       endTime, callback){
+	function createEvent(name, location, description, startTime,
+                       endTime, hostOrgId, callback){
 		// Check that startTime < endTime
 
 		var event = new Event();
 		event.name = name;
 		event.location = location;
 		event.description = description;
-		event.hostOrg = hostOrgName;
+		event.hostOrg = '';
 		event.startTime = startTime;
 		event.endTime = endTime;
 
 		if(!callback){
 			callback = logger;
 		}
-
-		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}
-                                                             , callback]));
+		
+		// This function is necessary to make sure our function is called
+		// with the full event object.
+		function callbackContext(){
+			callback(null, [event]);
+		}
+		
+		function updateOrg(err, listOfDocs){
+			event._id = listOfDocs[0]._id;
+			
+			addEventsToOrg(hostOrgId, [event._id], callbackContext);
+		}
+													
+		function insertEvent(err, results){
+			if(err){ throw err;}
+			
+			event.hostOrg = results[0].name;
+			
+			db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
+		}
+													
+		function getHostOrgName(){
+			searchDb(collOrgs, {'_id':hostOrgId}, insertEvent)
+		}						 
+		
+		getHostOrgName();
 	}
 
 	// Creates a tag and adds it to the database.
@@ -333,12 +356,14 @@ function Application(db) {
         };
 	*/
     function subscribeAction(request, response, data) {
-        var id = request.user.id;
+        var id = ObjectID(request.user.id);
 		var finalResult = {};
 		//console.log(data.orgids, data.tags);
+		
+		var orgids = data.orgids.map(function(elem){return ObjectID(elem)});
 
-        if(data.orgids) {
-            addOrganizationsToUser(id, data.orgids, cb);
+        if(orgids) {
+            addOrganizationsToUser(id, orgids, cb);
         }
 		else{
 			cb();
@@ -404,28 +429,9 @@ function Application(db) {
 
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
-		/*
-        var dbCalls = [];
-
-		//console.log(request);
-
-
-        request.user.savedEvents.forEach(function(event_id) {
-			dbCalls.push(function(callback){
-
-				searchDb(collEvents, {'_id' : event_id}, callback);
-			});
-			//console.log(event_id);
+		var savedEvents = request.user.savedEvents.map(function(elem){
+			return ObjectID(elem);
 		});
-        async.parallel(dbCalls, finalCallback);
-
-		function finalCallback(err, results){
-			if(err){ throw err;}
-			response.send(success('results', results));
-		}*/
-
-
-		var savedEvents = request.user.savedEvents;
 		var query = {'_id': {'$in': savedEvents}};
 		searchDb(collEvents, query, finalCallback);
 
@@ -439,7 +445,7 @@ function Application(db) {
     function listOrgEventsAction(request, response, data){
 		var scope = this;
 
-		var orgid = request.org.id;
+		var orgid = ObjectID(request.org.id);
         searchDb(collOrgs, {'_id' : orgid}, cb);
 
 		function cb(err, results){
@@ -460,8 +466,7 @@ function Application(db) {
         console.log("stuff");
         var dStart = new Date(data.event.timeStart);
         var dEnd = new Date(data.event.timeEnd);
-        createEvent(data.event.name, data.event.location, data.event.description,
-                    null, dStart, dEnd, cb);
+        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), cb);
 
         function cb(err, result) {
             if(err) throw err;
