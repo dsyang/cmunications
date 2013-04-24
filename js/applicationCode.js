@@ -30,6 +30,7 @@ function Application(db) {
 
 	// Calls function with arg,
 	// Special case for find - arrayOfArgs = [query, callback]
+			//funcName: 'insert', 'find', 'update', 'remove'
 	var getCallbackWithArgs = function(funcName, arrayOfArgs){
 		return (function(error, collection){
 			if (error)
@@ -113,7 +114,7 @@ function Application(db) {
 	/* Some conventions:
 			create - Making a new database object from scratch.
 			delete - Deleting an object completely from the database.
-			add - Add a reference to another part of the database (e.g. addEventToUser)
+			add - Add a reference to another part of the database (e.g. addEventsToUser)
 			remove - Removing a reference to another part of the database (e.g. removeEventFromUser)
 	*/
 
@@ -207,10 +208,12 @@ function Application(db) {
 
 
 	// Add to array field in collection
+	// value is expected to be an array of values toAdd
 	function addToArrayField(collectionName, query, field, value, callback){
 		if(isValidCollectionName(collectionName)){
-	   		var update = {}, partialUpdate = {};
-			partialUpdate[field] = value;
+	   		var update = {}, partialUpdate = {}, partialpartialUpdate = {};
+			partialpartialUpdate['$each'] = value;
+			partialUpdate[field] = partialpartialUpdate;
 			update['$addToSet'] = partialUpdate;
 
 			db.collection(collectionName,
@@ -235,22 +238,36 @@ function Application(db) {
 	}
 
 
-	// -----------------------------------------------------------------------
-	/* User collection operations */
-
+	//=====================================
+	// UTILITIES FOR ACTIONS
+	//=====================================
+	// These functions don't do any sanitation checking. All things passed here need to be safe!
+	
 	// Adds an event to a user, by id.
-	function addEventToUser(eventId, userId){
-		var query = {_id: userId};
+	function addEventsToUser(userid, eventids, cb){
+		var query = {};
+		query['_id'] = userid;
 
-		var partialUpdate = {$addToSet : {savedEvents : eventId}};
-
-		db.collection(collUsers, getCallbackWithArgs('update', [query,
-                                                            partialUpdate]));
+		addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
 	}
 
+	// Adds organizations to a user.
+    function addOrganizationsToUser(userid, orgids, cb){
+		var query = {};
+		query['_id'] = userid;	
+	
+		addToArrayField(collUsers, query, 'orgs', orgids, cb);
+	}
 
-
-
+	// Adds organizations to a user.
+    function addTagsToUser(userid, tags, cb){
+		var query = {};
+		query['_id'] = userid;	
+	
+		addToArrayField(collUsers, query, 'tags', tags, cb);
+	}
+	
+	
 
 //=====================================
 // ACTIONS
@@ -268,38 +285,66 @@ function Application(db) {
     }
 
     //given data.text, start, end, return all events in the period
+	/*data = { text: request.body.text,
+                     start: request.body.startDate,
+                     end: request.body.endDate
+                   };
+	*/
     function searchAction(request, response, data) {
         function cb(err, result) {
             if(err) response.send(fail(err));
 
             response.send(success('results', result));
         }
-
+	
+		var query = {};
+		query['name'] = data.text;
+		
 		    // IS DATA.TXT ACTUALLY A QUERY OBJECT?
-        searchDb(collEvents, data.text, cb);
+        searchDb(collEvents, query, cb);
     }
 
     //given data,orgs or data.tags, add to request.user's tags/organizations
+	/*
+		{orgids: request.body.orgids,
+         tags: request.body.tags
+        };
+	*/
     function subscribeAction(request, response, data) {
         var id = request.user.id;
-        if(data.orgs) {
-            addOrganizationsToUser(id, data.orgs, cb);
+		var finalResult = {};
+		//console.log(data.orgids, data.tags);
+		
+        if(data.orgids) {
+            addOrganizationsToUser(id, data.orgids, cb);
         }
+		else{
+			cb();
+		}
         function cb(err, result) {
-            if(err) response.send(fail(err));
+		
+            if(err){ response.send(fail(err));}
+			finalResult = result;
+			
+			
             if(data.tags) {
                 addTagsToUser(id, data.tags, cb2);
             }
+			else{
+				cb2(err, result);
+			}
         }
         function cb2(err, result) {
-            if(err) response.send(fail(err));
+            if(err){ response.send(fail(err));}
+		
+			finalResult = result;
             response.send(success('result', result));
         }
     }
 
     //given data.event_id
     function eventDetailAction(request, response, data) {
-        var id = ObjectID(data.event_id);
+        var id = data.event_id;
         console.log("collecting info about event w/ id" + id);
         searchDb(collEvents, {'_id' : id}, cb);
         function cb(err, result) {
@@ -315,26 +360,46 @@ function Application(db) {
 
     //given data.event_id
     function starEventAction(request, response, data) {
-        var event_id = ObjectID(data.event_id);
-        var user_id = ObjectID(request.user.id);
+        var event_id = data.event_id;
+        var user_id = request.user.id;
         searchDb(collEvents, {'_id' : id}, cb);
         function cb(err, result) {
             if(err) response.send(fail(err));
             if(!result) response.send(fail('no event found'));
-            addEventToUser(event_id, user_id);
-        };
+            addEventsToUser( user_id, [event_id], cb2);
+        }
+		function cb2(err, result) {
+            if(err){
+                response.send(fail(err));
+            } else if(result[0]){
+                response.send(success('success', true));
+            } else {
+                response.send(fail('no event found'));
+            }
+        }
+
     }
 
-    //return all stared events for request.user
+    //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
-        var dbCalls = []
+		
+        var dbCalls = [];
+
+		//console.log(request);
+		
         request.user.savedEvents.forEach(function(event_id) {
-
+			dbCalls.push(function(callback){
+				
+				searchDb(collEvents, {'_id' : event_id}, callback);
+			});
+			//console.log(event_id);
 		});
-        async.parallel([
-
-
-        ])
+        async.parallel(dbCalls, finalCallback);
+		
+		function finalCallback(err, results){
+			if(err){ throw err;}
+			response.send(success('results', results));
+		}
     }
 
     //list events for org
@@ -355,8 +420,8 @@ function Application(db) {
     //list all events
     function listEventsAction(request, response, data) {
 		    function sendResults(err,listOfDocs){
-            response.send( { 'success': true,
-                             'events': listOfDocs });
+				response.send( { 'success': true,
+								 'events': listOfDocs });
 		    }
 
 		    searchDb(collEvents, {}, sendResults);
@@ -464,7 +529,10 @@ function Application(db) {
 								                  searchDb,
 								                  updateStringField,
 								                  addToArrayField,
-								                  removeFromArrayField
+								                  removeFromArrayField,
+												  addEventsToUser,
+												  addOrganizationsToUser,
+												  addTagsToUser,
                                  ]);
 }
 

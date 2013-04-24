@@ -17,7 +17,7 @@ module.exports = function(app, passport, db) {
     app.post('/subscribe',
              passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
-                 var data = {orgs: request.body.organizations,
+                 var data = {orgids: request.body.orgids,
                              tags: request.body.tags
                             };
                  code.subscribeAction(request, response, data);
