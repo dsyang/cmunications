@@ -190,6 +190,7 @@ Each Event
 
 /* event name */
 .myevents li h3 {
+	display: inline-block;
 	font-size: 1.4em;
 	color: #65a9d7;
 }
@@ -206,6 +207,7 @@ Each Event
 
 .myevents .location {
 	font-size: 1em;
+	margin-left: 40px;
 }
 
 .myevents a {
@@ -215,7 +217,17 @@ Each Event
 
 .myevents .starred {
 	background-image: url('img/favorites.png');
+	display: inline;
+	float: left;
+	background-size: contain;
+	height: 30px;
+	width: 30px;
+}
+
+.myevents .more {
+	background-image: url("img/arrow.png");
 	display: inline-block;
+	vertical-align: middle;
 	float: right;
 	background-size: contain;
 	height: 30px;
