@@ -10,5 +10,7 @@ testrunner.run({
     code: dirname + "/../js/applicationCode.js", // The code to test
     tests:dirname + "/test-app.js" // The testing code
 }, function(err, report) {
-    if(err) throw err;
+    if(err) {
+        console.log(err);
+    }
 });

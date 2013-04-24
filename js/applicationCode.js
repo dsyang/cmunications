@@ -6,6 +6,7 @@ var utils = require('./utils.js');
 var ObjectID = require('mongodb').BSONPure.ObjectID;
 var async = require('async');
 
+
 function Application(db) {
 
 	// The names of the collections which are going to be used with the database.
@@ -365,8 +366,8 @@ function Application(db) {
 
     //given data.event_id
     function eventDetailAction(request, response, data) {
-        var id = data.event_id;
-        console.log("collecting info about event w/ id" + id);
+        var id = ObjectID(data.event_id);
+
         searchDb(collEvents, {'_id' : id}, cb);
         function cb(err, result) {
             if(err){

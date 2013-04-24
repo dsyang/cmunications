@@ -6,24 +6,24 @@ QUnit.module("Application", {
         this.db = mock.client;
         this.app = new Application(this.db);
     },
-	teardown: function(){
-		this.db.closeDb();
-	}
+	  teardown: function(){
+		    this.db.closeDb();
+	  }
 });
 
 var emptyCallback = function(error, results){
-	if(error) throw error;
+	  if(error) throw error;
 }
 
 // Checks that all of the fields in expected are present and equal in actual. expected is a subset of actual.
 var compareFields = function(expected, actual){
-	var bool = true;
-	for(var x in expected){
-		if(JSON.stringify(expected[x]) !== JSON.stringify(actual[x])){
-			bool = false;
-		}
-	}
-	return bool;
+	  var bool = true;
+	  for(var x in expected){
+		    if(JSON.stringify(expected[x]) !== JSON.stringify(actual[x])){
+			      bool = false;
+		    }
+	  }
+	  return bool;
 }
 
 //things defined by `this` in the setup function can be accessed by `this`
@@ -78,754 +78,751 @@ test("postAction test fail", function() {
 // An asynchronous test which should be used with database calls.
 /* Asynchronous tests automatically execute stop(), async().
    They expect you to call start() when the test is finished executing.
-	   setup: (Above!)
-			sets up a database but does not open it.
-	   db.runTest(testToRun, arrayOfCollectionsToClear)
-			opens up the database, and calls testToRun to run the test.
-			lets you clear collections when writing test.
-		teardown:
-		    closes the database for us.
+	 setup: (Above!)
+	 sets up a database but does not open it.
+	 db.runTest(testToRun, arrayOfCollectionsToClear)
+	 opens up the database, and calls testToRun to run the test.
+	 lets you clear collections when writing test.
+	 teardown:
+	 closes the database for us.
 */
 asyncTest( "createUser: Add User to Database", function() {
-	var scope = this;
+	  var scope = this;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Dan Yang';
-	expected.password = 'pass';
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Dan Yang';
+	  expected.password = 'pass';
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		ok(compareFields(expected, result[0]), 'Fields not correct');
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function runIt(){
-		scope.app.createUser(expected.name, expected.password, callback);
-	}
+	  function runIt(){
+		    scope.app.createUser(expected.name, expected.password, callback);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['users']);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['users']);
 });
 
 
 asyncTest( "createOrganization: Add Org to Database", function() {
-	var scope = this;
+	  var scope = this;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'ASA';
-	expected.password = 'pass';
-	expected.description = 'This is the coolest org in the world';
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'ASA';
+	  expected.password = 'pass';
+	  expected.description = 'This is the coolest org in the world';
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		ok(compareFields(expected, result[0]), 'Fields not correct');
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function runIt(){
-		scope.app.createOrganization(expected.name, expected.password, expected.description, callback);
-	}
+	  function runIt(){
+		    scope.app.createOrganization(expected.name, expected.password, expected.description, callback);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['organizations']);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['organizations']);
 });
 
 asyncTest( "createEvent: Add Event to Database", function() {
-	var scope = this;
+	  var scope = this;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'ASA Bake Sale';
-	expected.location = 'UC';
-	expected.description = 'This is the coolest event around';
-	expected.hostOrg = 'ASA';
-	expected.startTime = new Date();
-	expected.endTime = new Date();
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'ASA Bake Sale';
+	  expected.location = 'UC';
+	  expected.description = 'This is the coolest event around';
+	  expected.hostOrg = 'ASA';
+	  expected.startTime = new Date();
+	  expected.endTime = new Date();
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		ok(compareFields(expected, result[0]), 'Fields not correct');
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function runIt(){
-		scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, callback);
-	}
+	  function runIt(){
+		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, callback);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['events']);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['events']);
 });
 
 asyncTest( "createTag: Add Tag to Database", function() {
-	var scope = this;
+	  var scope = this;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'freefood';
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'freefood';
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		ok(compareFields(expected, result[0]), 'Fields not correct');
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function runIt(){
-		scope.app.createTag(expected.name, callback);
-	}
+	  function runIt(){
+		    scope.app.createTag(expected.name, callback);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['tags']);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['tags']);
 });
 
 asyncTest( "searchDb: Searches Database for one entry", function() {
-	var scope = this;
+	  var scope = this;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Dan Yang';
-	expected.password = 'pass';
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Dan Yang';
+	  expected.password = 'pass';
 
-	var input = {};
-	input.collectionName = 'users'
-	input.query = {};
-	input.query['name'] = 'Dan Yang';
+	  var input = {};
+	  input.collectionName = 'users'
+	  input.query = {};
+	  input.query['name'] = 'Dan Yang';
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		ok(compareFields(expected, result[0]), 'Fields not correct');
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function runIt(){
-		scope.app.searchDb(input.collectionName, input.query, callback);
-	}
+	  function runIt(){
+		    scope.app.searchDb(input.collectionName, input.query, callback);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
 });
 
 
 asyncTest( "updateStringField: check if updates a string field", function() {
-	var scope = this; 
+	  var scope = this;
 
-	var input = {};
-	input.collectionName = 'users';
-	input.query = {password: 'pass'};
-	input.field = 'name';
-	input.value = 'Mochi';
+	  var input = {};
+	  input.collectionName = 'users';
+	  input.query = {password: 'pass'};
+	  input.field = 'name';
+	  input.value = 'Mochi';
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Mochi';
-	expected.password = 'pass';
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Mochi';
+	  expected.password = 'pass';
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		//console.log(result[0]);
-		//console.log(expected);
-		ok(compareFields(expected, result[0]), result[0] + "    vs.   " + expected);
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    //console.log(result[0]);
+		    //console.log(expected);
+		    ok(compareFields(expected, result[0]), result[0] + "    vs.   " + expected);
+	      start();
+	  }
 
-	var findResult = function(){
-		scope.app.searchDb(input.collectionName, input.query, callback);
-	}
+	  var findResult = function(){
+		    scope.app.searchDb(input.collectionName, input.query, callback);
+	  }
 
-	function runIt(){
-		scope.app.updateStringField(input.collectionName, input.query, input.field, input.value, findResult);
-	}
+	  function runIt(){
+		    scope.app.updateStringField(input.collectionName, input.query, input.field, input.value, findResult);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
 });
 
 
 asyncTest( "addToArrayField: check if updatedArrayField", function() {
-	var scope = this;
+	  var scope = this;
 
-	var input = {};
-	input.collectionName = 'users';
-	input.query = {password: 'pass'};
-	input.field = 'savedEvents';
-	input.value = [12345098];
+	  var input = {};
+	  input.collectionName = 'users';
+	  input.query = {password: 'pass'};
+	  input.field = 'savedEvents';
+	  input.value = [12345098];
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Mochi';
-	expected.password = 'pass';
-	expected.savedEvents = [12345098];
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Mochi';
+	  expected.password = 'pass';
+	  expected.savedEvents = [12345098];
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		//console.log(result[0]);
-		//console.log(expected);
-		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    //console.log(result[0]);
+		    //console.log(expected);
+		    ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
+	      start();
+	  }
 
-	var findResult = function(){
-		scope.app.searchDb(input.collectionName, input.query, callback);
-	}
+	  var findResult = function(){
+		    scope.app.searchDb(input.collectionName, input.query, callback);
+	  }
 
-	function runIt(){
-		scope.app.addToArrayField(input.collectionName, input.query, input.field, input.value, findResult);
-	}
+	  function runIt(){
+		    scope.app.addToArrayField(input.collectionName, input.query, input.field, input.value, findResult);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
 });
 
 asyncTest( "removeFromArrayField: check if updatedArrayField", function() {
-	var scope = this;
+	  var scope = this;
 
-	var input = {};
-	input.collectionName = 'users';
-	input.query = {password: 'pass'};
-	input.field = 'savedEvents';
-	input.value = 12345098;
+	  var input = {};
+	  input.collectionName = 'users';
+	  input.query = {password: 'pass'};
+	  input.field = 'savedEvents';
+	  input.value = 12345098;
 
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Mochi';
-	expected.password = 'pass';
-	expected.savedEvents = [];
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Mochi';
+	  expected.password = 'pass';
+	  expected.savedEvents = [];
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		//console.log(result[0]);
-		//console.log(expected);
-		ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
-	    start();
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    //console.log(result[0]);
+		    //console.log(expected);
+		    ok(compareFields(expected, result[0]), 'Fields not correct: ' + expected + '  vs.  ' + result[0]);
+	      start();
+	  }
 
-	var findResult = function(){
-		scope.app.searchDb(input.collectionName, input.query, callback);
-	}
+	  var findResult = function(){
+		    scope.app.searchDb(input.collectionName, input.query, callback);
+	  }
 
-	function runIt(){
-		console.log(scope.app);
-		scope.app.removeFromArrayField(input.collectionName, input.query, input.field, input.value, findResult);
-	}
+	  function runIt(){
+		    console.log(scope.app);
+		    scope.app.removeFromArrayField(input.collectionName, input.query, input.field, input.value, findResult);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt);
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
 });
 
 asyncTest( "eventDetailAction: Fetch Event Info From database", function() {
-	var scope = this;
-	
-	scope.data = {};
-	scope.data['event_id'] = {};
-	
-	// Fill in the fields of the object to be created.
-	var expected = {};
-	expected.name = 'Capture the flag';
-	expected.location = 'Resnik House';
-	expected.description = 'Everybody come see resnik house';
-	expected.hostOrg = 'Mayur Sasa';
-	expected.startTime = new Date(2013, 07, 03, 5, 0, 0);
-	expected.endTime = new Date(2013, 07, 03, 8, 0, 0);
-	
-	var callback = function(){
-	}
-	
-	setTimeout(function() {	
+	  var scope = this;
 
-		ok(compareFields(expected, scope.response.things_sent.event), 'Fields not correct');		
-		
-       //Make assertion 
-       // After the assertion called, restart the test
-       start();
+	  scope.data = {};
+	  scope.data['event_id'] = {};
+
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'Capture the flag';
+	  expected.location = 'Resnik House';
+	  expected.description = 'Everybody come see resnik house';
+	  expected.hostOrg = 'Mayur Sasa';
+	  expected.startTime = new Date(2013, 07, 03, 5, 0, 0);
+	  expected.endTime = new Date(2013, 07, 03, 8, 0, 0);
+
+
+	  setTimeout(function() {
+		    ok(compareFields(expected, scope.response.things_sent.event), 'Fields not correct');
+        //Make assertion
+        // After the assertion called, restart the test
+        start();
     }, 1000);
-	
-	var getEventId = function( error, result ){
-		scope.data.event_id = result[0]._id;
-		
-		scope.app.eventDetailAction(scope.request, scope.response, scope.data);
-	}
 
-	function runIt(){
-		scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, getEventId);
-	}
+	  var getEventId = function( error, result ){
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['events']);
+		    scope.data.event_id = result[0]._id.toString();
+
+		    scope.app.eventDetailAction(scope.request, scope.response, scope.data);
+	  }
+
+	  function runIt(){
+		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, getEventId);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['events']);
 });
 
 // Next should be a series of followup tests for the actions.
 asyncTest( "Populate Database test. This puts a bunch of items in the database to test.", function() {
-	var scope = this;
-	
-	var index = 0;
-	
-	var user1 = ['Mochi', '123'];
-	var user2 = ['Shikha', '123'];
-	var user3 = ['Dan Yang', '123'];
+	  var scope = this;
 
-	var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
-	var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
-	var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"] 
+	  var index = 0;
 
-	var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas', 'Mayur Sasa', new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+	  var user1 = ['Mochi', '123'];
+	  var user2 = ['Shikha', '123'];
+	  var user3 = ['Dan Yang', '123'];
 
-	var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', 'Activities Board', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+	  var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
+	  var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
+	  var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"]
 
-	var event3 = ['TSA Club Party', 'Static', 'Best club party of the year', 'Taiwanese Student Association', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+	  var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas', 'Mayur Sasa', new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
 
-	var tag1 = ['party'];
-	var tag2 = ['food'];
-	
-	
-	var users = [user1, user2, user3];
-	var orgs = [org1, org2, org3];
-	var events = [event1, event2, event3];
-	var tags = [tag1, tag2];
-	
-	// Check that the database did what we want.
-	var callback = function( error, result ){
-		if(error){throw error;}
-		else{
-			ok(true);
-			start();
-		}	
-	}
-	
-	function addUsers(){
-		if(index === users.length){
-			callback();
-		}
-		else{
-			var cur = users[index];
-			//console.log("Index: " + index + "Curr: " + cur);
-			index = index + 1;
-			scope.app.createUser(cur[0], cur[1], addUsers);
-		}
-	}
-	
-	function addOrgs(){
-		if(index === orgs.length){
-			index = 0;
-			addUsers();
-		}
-		else{
-			var cur = orgs[index];
-			index = index + 1;
-			scope.app.createOrganization(cur[0], cur[1], cur[2], addOrgs);
-		}
-	}
+	  var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', 'Activities Board', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
 
-	function addEvents(){
-		if(index === events.length){
-			index = 0;
-			addOrgs();
-		}
-		else{
-			var cur = events[index];
-			index = index + 1;
-			scope.app.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
-		}
-	}
+	  var event3 = ['TSA Club Party', 'Static', 'Best club party of the year', 'Taiwanese Student Association', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
 
-	function addTags(){
-		if(index === tags.length){
-			index = 0;
-			addEvents();
-		}
-		else{
-			var cur = tags[index];
-			index = index + 1;
-			scope.app.createTag(cur[0], addTags);
-		}
-	}	
+	  var tag1 = ['party'];
+	  var tag2 = ['food'];
 
-	function runIt(){
-		index = 0;
-		addTags();	
-	}
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, ['users', 'organizations', 'events', 'tags']);
+	  var users = [user1, user2, user3];
+	  var orgs = [org1, org2, org3];
+	  var events = [event1, event2, event3];
+	  var tags = [tag1, tag2];
+
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    if(error){throw error;}
+		    else{
+			      ok(true);
+			      start();
+		    }
+	  }
+
+	  function addUsers(){
+		    if(index === users.length){
+			      callback();
+		    }
+		    else{
+			      var cur = users[index];
+			      //console.log("Index: " + index + "Curr: " + cur);
+			      index = index + 1;
+			      scope.app.createUser(cur[0], cur[1], addUsers);
+		    }
+	  }
+
+	  function addOrgs(){
+		    if(index === orgs.length){
+			      index = 0;
+			      addUsers();
+		    }
+		    else{
+			      var cur = orgs[index];
+			      index = index + 1;
+			      scope.app.createOrganization(cur[0], cur[1], cur[2], addOrgs);
+		    }
+	  }
+
+	  function addEvents(){
+		    if(index === events.length){
+			      index = 0;
+			      addOrgs();
+		    }
+		    else{
+			      var cur = events[index];
+			      index = index + 1;
+			      scope.app.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+		    }
+	  }
+
+	  function addTags(){
+		    if(index === tags.length){
+			      index = 0;
+			      addEvents();
+		    }
+		    else{
+			      var cur = tags[index];
+			      index = index + 1;
+			      scope.app.createTag(cur[0], addTags);
+		    }
+	  }
+
+	  function runIt(){
+		    index = 0;
+		    addTags();
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, ['users', 'organizations', 'events', 'tags']);
 });
 
 // This just tests a basic string search (no substrings) of the name field of event. As better search is added, more will be featured here.
 asyncTest("Basic Search by name of Event", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Samosa Sale",
-                    "location": "Doherty Hall",
-					"description": "Selling samosas"
-                   };
-	
-	scope.data = {};
-    scope.data['text'] = "Samosa Sale";
-	
-    setTimeout(function() {		
-		ok(compareFields(scope.expected, scope.response.things_sent.results[0]), 'Fields not correct');		
-		
-       //Make assertion 
-       //ok(true);
-       // After the assertion called, restart the test
-       start();
-    }, 1000);
-	
-	function runIt(){
-		scope.app.searchAction(scope.request, scope.response, scope.data);
-	}
+                      "location": "Doherty Hall",
+					            "description": "Selling samosas"
+                     };
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  scope.data = {};
+    scope.data['text'] = "Samosa Sale";
+
+    setTimeout(function() {
+		    ok(compareFields(scope.expected, scope.response.things_sent.results[0]), 'Fields not correct');
+
+        //Make assertion
+        //ok(true);
+        // After the assertion called, restart the test
+        start();
+    }, 1000);
+
+	  function runIt(){
+		    scope.app.searchAction(scope.request, scope.response, scope.data);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 // This tests a basic org and subscription action.
 asyncTest("addTagsToUser", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Mochi",
-					  "password" : '123',
-					  'tags' : ['party','food']
+					            "password" : '123',
+					            'tags' : ['party','food']
                      };
-					 
-	scope.tags = ['party', 'food'];
-	scope.userid = {};
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){	
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');		
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.userid;
-		scope.app.searchDb('users', query, callback);
-	}
-	
-	function saveUserId(err, result){
-		scope.userid = result[0]._id;
-		
-		scope.app.addTagsToUser(scope.userid, scope.tags, callback1);			
-	}
-	
-	function runIt(){
-		scope.app.searchDb('users',{'name' : "Mochi"}, saveUserId);
-	}
+	  scope.tags = ['party', 'food'];
+	  scope.userid = {};
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
+	      start();
+	  }
+
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.userid;
+		    scope.app.searchDb('users', query, callback);
+	  }
+
+	  function saveUserId(err, result){
+		    scope.userid = result[0]._id;
+
+		    scope.app.addTagsToUser(scope.userid, scope.tags, callback1);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('users',{'name' : "Mochi"}, saveUserId);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 // This tests a basic org and subscription action.
 asyncTest("addOrganizationsToUser", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Mochi",
-					  "password" : '123',
-					  'orgs':''
+					            "password" : '123',
+					            'orgs':''
                      };
-					 
-	scope.orgids = [];
-	scope.userid = {};
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){	
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');	
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.userid;
-		scope.app.searchDb('users', query, callback);
-	}
-	
-	function saveUserId(err, result){
-		scope.userid = result[0]._id;
+	  scope.orgids = [];
+	  scope.userid = {};
 
-		scope.expected['orgs'] = scope.orgids;
-		
-		scope.app.addOrganizationsToUser(scope.userid, scope.orgids, callback1);
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function saveOrgIds(err, results){
-		results.forEach(function(elem){
-			scope.orgids.push(elem._id);
-		});
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.userid;
+		    scope.app.searchDb('users', query, callback);
+	  }
 
-		
-		scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('organizations',{},saveOrgIds);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  function saveUserId(err, result){
+		    scope.userid = result[0]._id;
+
+		    scope.expected['orgs'] = scope.orgids;
+
+		    scope.app.addOrganizationsToUser(scope.userid, scope.orgids, callback1);
+	  }
+
+	  function saveOrgIds(err, results){
+		    results.forEach(function(elem){
+			      scope.orgids.push(elem._id);
+		    });
+
+
+		    scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('organizations',{},saveOrgIds);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 // This tests a basic org and subscription action.
 asyncTest("addEventsToUser", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Mochi",
-					  "password" : '123',
-					  'savedEvents':''
+					            "password" : '123',
+					            'savedEvents':''
                      };
-					 
-	scope.eventids = [];
-	scope.userid = {};
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){	
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');	
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.userid;
-		scope.app.searchDb('users', query, callback);
-	}
-	
-	function saveUserId(err, result){
-		scope.userid = result[0]._id;
+	  scope.eventids = [];
+	  scope.userid = {};
 
-		scope.expected['savedEvents'] = scope.eventids;
-		
-		scope.app.addEventsToUser(scope.userid, scope.eventids, callback1);
-	}
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-	function saveEventIds(err, results){
-		results.forEach(function(elem){
-			scope.eventids.push(elem._id);
-		});
-		
-		scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('events',{},saveEventIds);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.userid;
+		    scope.app.searchDb('users', query, callback);
+	  }
+
+	  function saveUserId(err, result){
+		    scope.userid = result[0]._id;
+
+		    scope.expected['savedEvents'] = scope.eventids;
+
+		    scope.app.addEventsToUser(scope.userid, scope.eventids, callback1);
+	  }
+
+	  function saveEventIds(err, results){
+		    results.forEach(function(elem){
+			      scope.eventids.push(elem._id);
+		    });
+
+		    scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('events',{},saveEventIds);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 // This tests a basic org and subscription action.
 asyncTest("addEventsToOrg", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Mayur Sasa",
-					  "password" : 'abc',
-					  "description":"Indian haven on campus",
-					  'events':''
+					            "password" : 'abc',
+					            "description":"Indian haven on campus",
+					            'events':''
                      };
-					 
-	scope.eventids = [];
-	scope.orgid = {};
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){	
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');	
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.orgid;
-		scope.app.searchDb('organizations', query, callback);
-	}
-	
-	function saveOrgId(err, result){
-		scope.orgid = result[0]._id;
-		
-		scope.app.addEventsToOrg(scope.orgid, scope.eventids, callback1);
-	}
+	  scope.eventids = [];
+	  scope.orgid = {};
 
-	function saveEventIds(err, results){
-		results.forEach(function(elem){
-			scope.eventids.push(elem._id);
-		});
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
+	      start();
+	  }
 
-		scope.expected['events'] = scope.eventids;
-		
-		scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveOrgId);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('events',{},saveEventIds);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
-}); 
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.orgid;
+		    scope.app.searchDb('organizations', query, callback);
+	  }
+
+	  function saveOrgId(err, result){
+		    scope.orgid = result[0]._id;
+
+		    scope.app.addEventsToOrg(scope.orgid, scope.eventids, callback1);
+	  }
+
+	  function saveEventIds(err, results){
+		    results.forEach(function(elem){
+			      scope.eventids.push(elem._id);
+		    });
+
+		    scope.expected['events'] = scope.eventids;
+
+		    scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveOrgId);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('events',{},saveEventIds);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
+});
 
 
 // This tests a basic org and subscription action.
 asyncTest("Basic Search by name of Event", function() {
-	var scope = this;
+	  var scope = this;
 
     scope.expected = {"name": "Dan Yang",
-					  "password" : '123',
-					  'tags' : ['party','food']
+					            "password" : '123',
+					            'tags' : ['party','food']
                      };
-	
-	scope.data = {};
-	scope.data.orgids = [];
-	scope.data.tags = ['party', 'food'];
-	
-	scope.request = {};
-	scope.request.user = {};
 
-	// Check that the database did what we want.
-	var callback = function( error, result ){	
-		//ok(true);
+	  scope.data = {};
+	  scope.data.orgids = [];
+	  scope.data.tags = ['party', 'food'];
 
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.request.user.id;
-		scope.app.searchDb('users', query, callback);
-	}
+	  scope.request = {};
+	  scope.request.user = {};
 
-    setTimeout(function() {		
-		callback1();
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+		    //ok(true);
+
+		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
+	      start();
+	  }
+
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.request.user.id;
+		    scope.app.searchDb('users', query, callback);
+	  }
+
+    setTimeout(function() {
+		    callback1();
     }, 3000);
 
-	function saveUserId(err, result){
-		scope.request.user.id = result[0]._id;
-		
-		scope.app.subscribeAction(scope.request, scope.response, scope.data);			
-	}
+	  function saveUserId(err, result){
+		    scope.request.user.id = result[0]._id;
 
-	function saveOrgIds(err, results){
-		results.forEach(function(elem){
-			scope.data.orgids.push(elem._id);
-		});
-		
-		scope.expected['orgs'] = scope.data['orgids'];
-		
-		scope.app.searchDb('users',{'name' : "Dan Yang"},saveUserId);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('organizations',{},saveOrgIds);
-	}
+		    scope.app.subscribeAction(scope.request, scope.response, scope.data);
+	  }
 
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  function saveOrgIds(err, results){
+		    results.forEach(function(elem){
+			      scope.data.orgids.push(elem._id);
+		    });
+
+		    scope.expected['orgs'] = scope.data['orgids'];
+
+		    scope.app.searchDb('users',{'name' : "Dan Yang"},saveUserId);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('organizations',{},saveOrgIds);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 // This tests a basic org and subscription action.
 asyncTest("starEventAction", function() {
-	var scope = this;
-					 
-	scope.request.user = {};
-	scope.request.user.id = {};
-	scope.data = {};
-	scope.data.event_id;
-	
-	// Check that the database did what we want.
-	var callback = function( error, result ){		
-		ok(compareFields(result[0].savedEvents[0], scope.data.event_id), 'Fields not correct');	
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.request.user.id;
-		scope.app.searchDb('users', query, callback);
-	}
-	
-	setTimeout(function() {		
-		callback1();
-    }, 1000);
-	
-	function saveUserId(err, result){
-		scope.request.user.id = result[0]._id;
-		
-		scope.app.starEventAction(scope.request, scope.response, scope.data);
-	}
+	  var scope = this;
 
-	function saveEventIds(err, results){
-		scope.data.event_id = results[0]._id;		
-		scope.app.searchDb('users',{'name' : "Shikha"},saveUserId);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('events',{},saveEventIds);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  scope.request.user = {};
+	  scope.request.user.id = {};
+	  scope.data = {};
+	  scope.data.event_id;
+
+	  // Check that the database did what we want.
+	  var callback = function( error, result ){
+
+		    ok(result[0].savedEvents[0].toString() ===  scope.data.event_id, 'Fields not correct');
+	      start();
+	  }
+
+	  var callback1 = function(){
+		    var query = {};
+		    query['_id'] = scope.request.user.id_obj;
+		    scope.app.searchDb('users', query, callback);
+	  }
+
+	  setTimeout(function() {
+		    callback1();
+    }, 1000);
+
+	  function saveUserId(err, result){
+		    scope.request.user.id = result[0]._id.toString();
+        scope.request.user.id_obj = result[0]._id;
+		    scope.app.starEventAction(scope.request, scope.response, scope.data);
+	  }
+
+	  function saveEventIds(err, results){
+		    scope.data.event_id = results[0]._id.toString();
+		    scope.app.searchDb('users',{'name' : "Shikha"},saveUserId);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('events',{},saveEventIds);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
 
 
 // This tests a basic listStarredEvents Actions.
 asyncTest("listStarredEventsAction", function() {
-	var scope = this;
-					 
-	scope.eventids = [];
-	
-	scope.data = {};
-	scope.request.user = {};
-	// Check that the database did what we want.
-	
-    setTimeout(function() {	
-		//console.log(scope.response.things_sent.results);
-		ok(scope.response.things_sent.results.length === 3);
-		start();
+	  var scope = this;
+
+	  scope.eventids = [];
+
+	  scope.data = {};
+	  scope.request.user = {};
+	  // Check that the database did what we want.
+
+    setTimeout(function() {
+		    //console.log(scope.response.things_sent.results);
+		    ok(scope.response.things_sent.results.length === 3);
+		    start();
     }, 3000);
-	
-	function saveUserId(err, result){
-		if(err){ throw err;}
-	
-		scope.request.user = result[0];
 
-		scope.app.listStarredEventsAction(scope.request, scope.response, scope.data);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  function saveUserId(err, result){
+		    if(err){ throw err;}
+
+		    scope.request.user = result[0];
+
+		    scope.app.listStarredEventsAction(scope.request, scope.response, scope.data);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
-
 // This tests a basic listOrgEvents Actions.
 asyncTest("listOrgEventsAction", function() {
-	var scope = this;
-				 
-	scope.eventids = [];
-	
-	scope.data = {};
-	scope.request.org = {};
-	// Check that the database did what we want.
-		
-    setTimeout(function() {	
-		//console.log(scope.response.things_sent.results);
-		ok(scope.response.things_sent.results.length === 3);
-		start();
-    }, 3000);
-	
-	function saveUserId(err, result){
-		if(err){ throw err;}
-	
-		scope.request.org.id = result[0]._id;
+	  var scope = this;
 
-		scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
-	}
-	
-	function runIt(){
-		scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveUserId);
-	}
-	
-	// Call this to open the database, and run the test. ONLY CALL ONCE!
-	this.db.runTest(runIt, []);
+	  scope.eventids = [];
+
+	  scope.data = {};
+	  scope.request.org = {};
+	  // Check that the database did what we want.
+
+    setTimeout(function() {
+		    //console.log(scope.response.things_sent.results);
+		    ok(scope.response.things_sent.results.length === 3);
+		    start();
+    }, 3000);
+
+	  function saveUserId(err, result){
+		    if(err){ throw err;}
+
+		    scope.request.org.id = result[0]._id;
+
+		    scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
+	  }
+
+	  function runIt(){
+		    scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveUserId);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
 });
