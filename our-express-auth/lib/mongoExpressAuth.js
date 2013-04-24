@@ -24,3 +24,6 @@ exports.login = expressAuthAccountManager.login;
 exports.logout = expressAuthAccountManager.logout;
 exports.register = expressAuthAccountManager.register;
 exports.getUsername = expressAuthAccountManager.getUsername;
+
+// Used for testing
+exports.hashPassword = mongoAccountManager.hashPassword;

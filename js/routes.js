@@ -92,7 +92,7 @@ module.exports = function(app, db, Auth) {
             if(err) response.send({success: false, message: err});
             else response.send({success: true,
                                 account: account});
-        });
+        }, 'users');
     });
 
     app.post( '/auth/logout', function(request, response) {

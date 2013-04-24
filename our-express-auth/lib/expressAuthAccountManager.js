@@ -105,9 +105,10 @@ exports.login = function(req, res, done){
 
 }
 
-exports.register = function(req, done){
+exports.register = function(req, done, userType){
     var username = req.body.username;
     var password = req.body.password;
+    console.log(userType);
     g.accountManager.createAccount(username, password, function(err, account){
         if (err && typeof err === 'string')
             done(err);
@@ -116,6 +117,6 @@ exports.register = function(req, done){
         else {
             done(null, account);
         }
-    });
+    }, userType);
 
 }
