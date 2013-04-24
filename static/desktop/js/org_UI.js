@@ -54,18 +54,19 @@ UI.prototype =
         for (var i = 0; i < allEvents.length; i++) {
             var item = allEvents[i];
             var li = $("<li>");
+            var starred = $("<span>").addClass('starred');
             var name = $("<h3>").html(item.name);
-            var starred = $("<span>").html("")
+            var infoButton = $("<span>").addClass('more').html("<a> </a>");
+
             var location = $("<p>").html(item.location);
             var timeStart = $("<p>").html(item.timeStart);
-            var infoButton = $("<a>").html("More");
             location.addClass("location");
             timeStart.addClass("time");
             li.append(name);
             li.append(starred);
+            li.append(infoButton);
             li.append(timeStart);
             li.append(location);
-            li.append(infoButton);
             infoButton.click (function () {
                 console.log("hit");
                 this.edit_mode = false;
