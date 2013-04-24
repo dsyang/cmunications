@@ -10,9 +10,11 @@
     <script src="js/login_app.js"></script>
     <script src="js/login_API.js"></script>
     <script src="libs/jq/jquery-1.8.2.min.js"></script>
+    <link href="css/reset.css" rel="stylesheet" type="text/css" media = "all">
     <link href="css/style.css" rel="stylesheet" type="text/css" media = "all">
     <link href="css/login.css" rel="stylesheet" type="text/css" media = "all">
-    <link href="css/reset.css" rel="stylesheet" type="text/css" media = "all">
+
+     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
     <script>
         window.addEventListener('load', function(){
@@ -21,19 +23,19 @@
     </script>
 </head>
 <body>
-	<div id = "topbar">
-		<button class = "top" id="left_button"> Settings </button>
-		<div class = "top" id = "header"> CMUnications </div>
-		<button class = "top" id="right_button"> Login </button>
-	</div>
+    <div id = "topbar">
+        <button class = "top_button" id="left_button"> Settings </button>
+        CMUnications 
+        <button class = "top_button" id="right_button"> Login </button>
+    </div>
 	<div id = "clearfix"> </div>
-  <div id="message"></div>
-    <label> Username: </label>
-    <input type="text" name="name"  id="username" class = "login"><br>
-    <label> Password: </label>
-    <input type="text" name="password" id="password" class = "login"><br>
-    <input type="submit" value="Organization Login" id="login_button">
-    <a href="/auth/facebook/" id="facebook">Student Login</a> 
+    <div id="message"></div>
+    <div class = "login_fields">
+        <input type="text" name="name"  id="username" class = "login" placeholder = "Username"><br>
+        <input type="text" name="password" id="password" class = "login" placeholder = "Password"><br>
+        <input type="submit" class = "top_button" value="Organization Login" id="login_button">
+    </div>
+
 	<div class = "nav">
 		<div class = "tab ME"> </div>
 		<div class = "tab search"> </div>
