@@ -99,7 +99,7 @@ exports.login = function(req, res, done){
             res.cookie('username', username, { maxAge: C.MaxCookieAge });
             res.cookie('password', password, { maxAge: C.MaxCookieAge });
             req.session.username = username;
-            done(null);
+            done(null, account);
         }
     });
 
@@ -114,7 +114,7 @@ exports.register = function(req, done){
         else if (err)
             done('unknown error');
         else {
-            done(null);
+            done(null, account);
         }
     });
 

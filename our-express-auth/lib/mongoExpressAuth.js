@@ -1,7 +1,7 @@
 /*=====================================================
      express authentication with mongo
 
-    
+
     must include the following middleware to use:
         app.use(express.bodyParser());
         app.use(express.cookieParser());
@@ -15,7 +15,7 @@ var mongoAccountManager = require('./mongoAccountManager.js');
 expressAuthAccountManager.init(mongoAccountManager);
 
 exports.init = function(config, done){
-    mongoAccountManager.init(config, done);
+    mongoAccountManager.init(config, done(exports));
 }
 
 exports.checkLogin = expressAuthAccountManager.checkLogin;

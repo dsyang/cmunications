@@ -113,7 +113,6 @@ exports.createAccount = function(username, password, done){
 function initMongo(mongoConfig, done){
 
     g.mongoClient = mongoConfig.db;
-
     openCollections(mongoConfig.collections, done);
 }
 

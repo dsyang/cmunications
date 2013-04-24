@@ -57,15 +57,18 @@ if(__filename == process.argv[1]) {
             Auth.init({
                 db: database,
                 collections: ['users', 'organizations']
-            }, function (err) {
-                if(err) throw err;
+            }, function (auth) {
+                return function (err) {
+                    if(err) throw err;
 
-                //`app`, `passport`, and `database` are needed to initialize routes
-                // so we case attach routes to the app, declare which ones require
-                // authentication, and interact with the database.
-                initializeRoutes(app, database);
-                app.listen(port);
-                console.log("Created server on port: "+port);
+                    //`app`, `passport`, and `database` are needed to initialize routes
+                    // so we case attach routes to the app, declare which ones require
+                    // authentication, and interact with the database.
+                    console.log(auth);
+                    initializeRoutes(app, database, auth);
+                    app.listen(port);
+                    console.log("Created server on port: "+port);
+                };
             });
         }
     }
