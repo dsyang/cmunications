@@ -156,24 +156,47 @@ function Application(db) {
 	}
 
 	// Creates an event and adds it to the database.
-	function createEvent(name, location, description, hostOrgName, startTime,
-                       endTime, callback){
+	function createEvent(name, location, description, startTime,
+                       endTime, hostOrgId, callback){
 		// Check that startTime < endTime
 
 		var event = new Event();
 		event.name = name;
 		event.location = location;
 		event.description = description;
-		event.hostOrg = hostOrgName;
+		event.hostOrg = '';
 		event.startTime = startTime;
 		event.endTime = endTime;
 
 		if(!callback){
 			callback = logger;
 		}
-
-		db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}
-                                                             , callback]));
+		
+		// This function is necessary to make sure our function is called
+		// with the full event object.
+		function callbackContext(){
+			callback(null, [event]);
+		}
+		
+		function updateOrg(err, listOfDocs){
+			event._id = listOfDocs[0]._id;
+			
+			addEventsToOrg(hostOrgId, [event._id], callbackContext);
+		}
+													
+		function insertEvent(err, results){
+			if(err){ throw err;}
+			
+			event.hostOrg = results[0].name;
+			
+			db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
+		}
+													
+		function getHostOrgName(){
+			searchDb(collOrgs, {'_id':hostOrgId}, insertEvent)
+		}						 
+		
+		getHostOrgName();
 	}
 
 	// Creates a tag and adds it to the database.
@@ -443,8 +466,7 @@ function Application(db) {
         console.log("stuff");
         var dStart = new Date(data.event.timeStart);
         var dEnd = new Date(data.event.timeEnd);
-        createEvent(data.event.name, data.event.location, data.event.description,
-                    null, dStart, dEnd, cb);
+        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), cb);
 
         function cb(err, result) {
             if(err) throw err;
