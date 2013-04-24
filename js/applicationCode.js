@@ -404,28 +404,9 @@ function Application(db) {
 
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
-		/*
-        var dbCalls = [];
-
-		//console.log(request);
-
-
-        request.user.savedEvents.forEach(function(event_id) {
-			dbCalls.push(function(callback){
-
-				searchDb(collEvents, {'_id' : event_id}, callback);
-			});
-			//console.log(event_id);
+		var savedEvents = request.user.savedEvents.map(function(elem){
+			return ObjectID(elem);
 		});
-        async.parallel(dbCalls, finalCallback);
-
-		function finalCallback(err, results){
-			if(err){ throw err;}
-			response.send(success('results', results));
-		}*/
-
-
-		var savedEvents = request.user.savedEvents;
 		var query = {'_id': {'$in': savedEvents}};
 		searchDb(collEvents, query, finalCallback);
 
@@ -439,7 +420,7 @@ function Application(db) {
     function listOrgEventsAction(request, response, data){
 		var scope = this;
 
-		var orgid = request.org.id;
+		var orgid = ObjectID(request.org.id);
         searchDb(collOrgs, {'_id' : orgid}, cb);
 
 		function cb(err, results){

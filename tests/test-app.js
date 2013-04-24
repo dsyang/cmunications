@@ -784,6 +784,8 @@ asyncTest("listStarredEventsAction", function() {
 		    if(err){ throw err;}
 
 		    scope.request.user = result[0];
+			
+			scope.request.user.savedEvents = scope.request.user.savedEvents.map(function(elem){return elem.toString();})
 
 		    scope.app.listStarredEventsAction(scope.request, scope.response, scope.data);
 	  }
@@ -814,7 +816,7 @@ asyncTest("listOrgEventsAction", function() {
 	  function saveUserId(err, result){
 		    if(err){ throw err;}
 
-		    scope.request.org.id = result[0]._id;
+		    scope.request.org.id = result[0]._id.toString();
 
 		    scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
 	  }
