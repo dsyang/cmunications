@@ -8,8 +8,8 @@ var org_app = function(){
         events: {
             showEvents: this.showEvents.bind(this),
             showEvent: this.showEvent.bind(this),
-            edit: this.editEvent.bind(this),
-            create: this.createEvent.bind(this),
+            editEvent: this.editEvent.bind(this),
+            createEvent: this.createEvent.bind(this),
         }
     });
 
@@ -43,20 +43,21 @@ org_app.prototype = {
 
 
     createEvent: function(content){
-        window.org_API.create(content, function(err, _id){
+        window.org_API.create(content, function(err, data){
             if (err)
                 throw err;
             var newEvent = {
                 content: content,
-                _id: _id
+                _id: data._id
             }
         }.bind(this));
     },
 
     editEvent: function(_id,content) {
-    	window.org_API.update(_id,content, function (err, _id) {
+    	window.org_API.update(_id,content, function (err, data) {
     		if (err)
     			throw err;
+        console.log(data);
     		//take the content object and edit the respective fields with the data
     	}.bind(this));
     },

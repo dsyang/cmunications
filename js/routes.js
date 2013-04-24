@@ -2,7 +2,7 @@
 
 //`applicationCode.js` holds all the logic for our application.
 var async = require("async");
-module.exports = function(app, passport, db) {
+module.exports = function(app, db) {
     var code = new require("./applicationCode.js").Application(db);
 
 
@@ -15,9 +15,9 @@ module.exports = function(app, passport, db) {
     });
 
     app.post('/subscribe',
-             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+//             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
-                 var data = {orgs: request.body.organizations,
+                 var data = {orgids: request.body.orgids,
                              tags: request.body.tags
                             };
                  code.subscribeAction(request, response, data);
@@ -34,34 +34,34 @@ module.exports = function(app, passport, db) {
         code.listEventsAction(request, response, data);
     });
     app.post('/events/:id/star/',
-             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+//             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = {event_id: request.params.id};
                  code.starEventAction(request, response, data)
              });
 
     app.get('/events/starred',
-            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+//            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listStarredEventsAction(request, response, data);
             });
 
     app.get('/myevents',
-            passport.authenticate('local', { failureRedirect: '/auth/login' }),
+//            passport.authenticate('local', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listOrgEventsAction(request, response, data);
             });
 
     app.post('/events/create',
-             passport.authenticate('local', { failureRedirect: '/auth/login' }),
+//             passport.authenticate('local', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = { event: request.body.event };
                  code.createEventAction(request, response, data);
              });
-    app.post('/events/:id/edit',
-             passport.authenticate('local', { failureRedirect: '/auth/login' }),
+    app.put('/events/:id/edit',
+//             passport.authenticate('local', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = { event: request.body.event,
                               event_id: request.params.id
@@ -79,18 +79,23 @@ module.exports = function(app, passport, db) {
         code.listTagsAction(request, response, data);
     });
 
-    app.get( '/auth/login', function(request, response) {
-        var data = {};
-        code.loginAction(request, response, data);
+    app.post( '/auth/login',
+/*              passport.authenticate('local', {failureRedirect: '/auth/fail',
+                                              failureFlash: true,
+                                              successRedirect: '/index.html'
+                                             }),
+*/              function(request, response) {
+                  var data = {};
+                  code.loginAction(request, response, data);
     });
 
-    app.get('/auth/facebook', passport.authenticate('facebook'), function() {
+    app.get('/auth/facebook', /*passport.authenticate('facebook'),*/ function() {
         //This callback is never called as we're redirected to facebook.
         return;
     });
     app.get(
         '/auth/facebook/callback',
-        passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+//        passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
         function(request, response) {
             var data = {};
             code.facebookLoginAction(request, response, data);

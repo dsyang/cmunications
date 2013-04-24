@@ -20,7 +20,7 @@
             var request = $.ajax({
                 type: "post",
                 url: "/events/create",
-                data: { content: content }
+                data: { event: content }
             });
             setupCallback(request, done);
         },
@@ -29,8 +29,8 @@
         update: function(id, content, done){
             var request = $.ajax({
                 type: "put",
-                url: "/events" + id + "edit",
-                data: { content: content }
+                url: "/events/" + id + "/edit",
+                data: { event: content }
             });
             setupCallback(request, done);
         },
