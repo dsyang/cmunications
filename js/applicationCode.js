@@ -333,12 +333,14 @@ function Application(db) {
         };
 	*/
     function subscribeAction(request, response, data) {
-        var id = request.user.id;
+        var id = ObjectID(request.user.id);
 		var finalResult = {};
 		//console.log(data.orgids, data.tags);
+		
+		var orgids = data.orgids.map(function(elem){return ObjectID(elem)});
 
-        if(data.orgids) {
-            addOrganizationsToUser(id, data.orgids, cb);
+        if(orgids) {
+            addOrganizationsToUser(id, orgids, cb);
         }
 		else{
 			cb();

@@ -686,7 +686,7 @@ asyncTest("Basic Search by name of Event", function() {
 
 	  var callback1 = function(){
 		    var query = {};
-		    query['_id'] = scope.request.user.id;
+		    query['_id'] = scope.request.user.id_obj;
 		    scope.app.searchDb('users', query, callback);
 	  }
 
@@ -695,14 +695,15 @@ asyncTest("Basic Search by name of Event", function() {
     }, 3000);
 
 	  function saveUserId(err, result){
-		    scope.request.user.id = result[0]._id;
-
+		    scope.request.user.id = result[0]._id.toString();
+			scope.request.user.id_obj = result[0]._id;
+			
 		    scope.app.subscribeAction(scope.request, scope.response, scope.data);
 	  }
 
 	  function saveOrgIds(err, results){
 		    results.forEach(function(elem){
-			      scope.data.orgids.push(elem._id);
+			      scope.data.orgids.push(elem._id.toString());
 		    });
 
 		    scope.expected['orgs'] = scope.data['orgids'];
