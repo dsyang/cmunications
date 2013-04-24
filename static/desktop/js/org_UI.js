@@ -14,7 +14,10 @@ var UI = function(config){
     //on clicking the tab show all events BIND THIS?
     this.dom.tab_myEvents.click(this.org_app.showEvents);
     this.dom.tab_create.click(this.createEvent.bind(this));
-
+    this.dom.topleft_button.click(function() {
+        alert("to be implemented");
+    });
+    this.dom.topright_button.click(this.loginPage.bind(this));
 
 }
 
@@ -29,6 +32,13 @@ UI.prototype =
             topright_button: $('#right_button'),
             eventInfo: $("#eventInfo")
         };
+
+
+        if(window.app_API.isLoggedIn() === false) {
+            this.dom.topright_button.html("Login");
+        } else {
+            this.dom.topright_button.html("Logout");
+        }
     },
 
     //for events of a particular org
@@ -41,7 +51,6 @@ UI.prototype =
             gotta bind these click events
            ************************* */
         this.dom.topleft_button.html("Settings");
-        this.dom.topright_button.html("Log Out");
         for (var i = 0; i < allEvents.length; i++) {
             var item = allEvents[i];
             var li = $("<li>");
@@ -182,5 +191,9 @@ UI.prototype =
             this.create_mode = false;
 
         }.bind(this));
+    },
+
+    loginPage: function() {
+        window.location = 'login.html';
     }
 }

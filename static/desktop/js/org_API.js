@@ -1,6 +1,5 @@
 /* client side wrapper functions for ajax requests */
 
-
 (function(){
     window.org_API = {
     	/* get all events */

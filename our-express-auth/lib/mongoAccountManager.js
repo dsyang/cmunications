@@ -88,12 +88,18 @@ exports.getAccount = function(username, password, done){
 
 }
 
-exports.createAccount = function(username, password, done){
-    collection = 'users';
+exports.createAccount = function(username, password, done, collection){
+    if(collection !== 'users' && collection !== 'organizations')
+        done('invalid collection');
     g.mongoCollections[collection].insert(
         {
             username: username,
-            hashedPassword: passwordTools.saltAndHash(password)
+            hashedPassword: passwordTools.saltAndHash(password),
+            savedEvents : [ ],
+            tags : [ ],
+            orgs : [ ],
+            subscriptions : [ ],
+            notifications : [ ],
         },
         function(err, result){
             if (err && err.err.indexOf('duplicate key error') !== -1)
@@ -106,6 +112,10 @@ exports.createAccount = function(username, password, done){
     );
 }
 
+exports.hashPassword = function(password) {
+    return passwordTools.saltAndHash(password);
+}
+
 //===========================
 //  MONGO INIT
 //===========================
@@ -113,7 +123,6 @@ exports.createAccount = function(username, password, done){
 function initMongo(mongoConfig, done){
 
     g.mongoClient = mongoConfig.db;
-
     openCollections(mongoConfig.collections, done);
 }
 

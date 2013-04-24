@@ -2,7 +2,7 @@
 
 //`applicationCode.js` holds all the logic for our application.
 var async = require("async");
-module.exports = function(app, db) {
+module.exports = function(app, db, Auth) {
     var code = new require("./applicationCode.js").Application(db);
 
 
@@ -79,17 +79,27 @@ module.exports = function(app, db) {
         code.listTagsAction(request, response, data);
     });
 
-    app.post( '/auth/login',
-/*              passport.authenticate('local', {failureRedirect: '/auth/fail',
-                                              failureFlash: true,
-                                              successRedirect: '/index.html'
-                                             }),
-*/              function(request, response) {
-                  var data = {};
-                  code.loginAction(request, response, data);
+    app.post( '/auth/login', function(request, response) {
+        Auth.login(request, response, function(err, account) {
+            if(err) response.send({success: false, message: err});
+            else response.send({success: true,
+                                account: account});
+        });
     });
 
-    app.get('/auth/facebook', /*passport.authenticate('facebook'),*/ function() {
+    app.post( '/auth/register', function(request, response) {
+        Auth.register(request,  function(err, account) {
+            if(err) response.send({success: false, message: err});
+            else response.send({success: true,
+                                account: account});
+        }, 'users');
+    });
+
+    app.post( '/auth/logout', function(request, response) {
+        Auth.logout(request, response);
+        response.send({success:true});
+    });
+/*    app.get('/auth/facebook', /*passport.authenticate('facebook'), function() {
         //This callback is never called as we're redirected to facebook.
         return;
     });
@@ -100,7 +110,7 @@ module.exports = function(app, db) {
             var data = {};
             code.facebookLoginAction(request, response, data);
         }
-    );
+    );*/
     app.post('/auth/create', function(request, response) {
         var data = {name: request.body.name,
                     password: request.body.password,

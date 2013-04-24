@@ -99,23 +99,24 @@ exports.login = function(req, res, done){
             res.cookie('username', username, { maxAge: C.MaxCookieAge });
             res.cookie('password', password, { maxAge: C.MaxCookieAge });
             req.session.username = username;
-            done(null);
+            done(null, account);
         }
     });
 
 }
 
-exports.register = function(req, done){
+exports.register = function(req, done, userType){
     var username = req.body.username;
     var password = req.body.password;
+    console.log(userType);
     g.accountManager.createAccount(username, password, function(err, account){
         if (err && typeof err === 'string')
             done(err);
         else if (err)
             done('unknown error');
         else {
-            done(null);
+            done(null, account);
         }
-    });
+    }, userType);
 
 }
