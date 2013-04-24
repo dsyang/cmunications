@@ -5,8 +5,7 @@
 	margin: 0 auto;
 }
 
-.login, #login-button {
-	width: 80%;
+.login, #login_button, #register_button {
 	height: 40px;
 	font-size: 1.2em;
 
@@ -18,14 +17,15 @@
 	padding-left: 10px;
 	vertical-align: middle;
 	margin: 5px;
+	width: 80%;
 	background: #f7f7f7;
 	box-shadow: inset 0 0 5px 2px #cecccc;
 	border-radius: 5px;
 	border: none;
 }
 
-#login_button {
-	width: 80%;
+#login_button, #register_button {
+	width: 40%;
 	margin: 20px 5px 5px 5px;
 }
 
