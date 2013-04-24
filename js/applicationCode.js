@@ -251,6 +251,14 @@ function Application(db) {
 		addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
 	}
 
+		// Adds an event to a user, by id.
+	function addEventsToOrg(orgid, eventids, cb){
+		var query = {};
+		query['_id'] = orgid;
+
+		addToArrayField(collOrgs, query, 'events', eventids, cb);
+	}
+	
 	// Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
 		var query = {};
@@ -382,10 +390,11 @@ function Application(db) {
 
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
-		
+		/*
         var dbCalls = [];
 
 		//console.log(request);
+	
 		
         request.user.savedEvents.forEach(function(event_id) {
 			dbCalls.push(function(callback){
@@ -399,12 +408,37 @@ function Application(db) {
 		function finalCallback(err, results){
 			if(err){ throw err;}
 			response.send(success('results', results));
-		}
+		}*/
+		
+		
+		var savedEvents = request.user.savedEvents;
+		var query = {'_id': {'$in': savedEvents}};
+		searchDb(collEvents, query, finalCallback);
+
+		function finalCallback(err, results){
+			if(err){ throw err;}
+			response.send(success('results', results));
+		}		
     }
 
-    //list events for org
+    //list events for request.org.id
     function listOrgEventsAction(request, response, data){
-        response.send(success('dummy', 42));
+		var scope = this;
+		
+		var orgid = request.org.id;
+        searchDb(collOrgs, {'_id' : orgid}, cb);
+
+		function cb(err, results){
+			if(err){ throw err;}
+
+			var query = {'_id': {'$in': results[0].events}};
+			searchDb(collEvents, query, finalCallback);
+		}
+
+		function finalCallback(err, results){
+			if(err){ throw err;}
+			response.send(success('results', results));
+		}		
     }
 
     //given an event in data.event
@@ -531,6 +565,7 @@ function Application(db) {
 								                  addToArrayField,
 								                  removeFromArrayField,
 												  addEventsToUser,
+												  addEventsToOrg,
 												  addOrganizationsToUser,
 												  addTagsToUser,
                                  ]);

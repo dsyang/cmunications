@@ -613,6 +613,55 @@ asyncTest("addEventsToUser", function() {
 	this.db.runTest(runIt, []);
 });
 
+// This tests a basic org and subscription action.
+asyncTest("addEventsToOrg", function() {
+	var scope = this;
+
+    scope.expected = {"name": "Mayur Sasa",
+					  "password" : 'abc',
+					  "description":"Indian haven on campus",
+					  'events':''
+                     };
+					 
+	scope.eventids = [];
+	scope.orgid = {};
+
+	// Check that the database did what we want.
+	var callback = function( error, result ){	
+		ok(compareFields(scope.expected, result[0]), 'Fields not correct');	
+	    start();
+	}	
+	
+	var callback1 = function(){
+		var query = {};
+		query['_id'] = scope.orgid;
+		scope.app.searchDb('organizations', query, callback);
+	}
+	
+	function saveOrgId(err, result){
+		scope.orgid = result[0]._id;
+		
+		scope.app.addEventsToOrg(scope.orgid, scope.eventids, callback1);
+	}
+
+	function saveEventIds(err, results){
+		results.forEach(function(elem){
+			scope.eventids.push(elem._id);
+		});
+
+		scope.expected['events'] = scope.eventids;
+		
+		scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveOrgId);
+	}
+	
+	function runIt(){
+		scope.app.searchDb('events',{},saveEventIds);
+	}
+	
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt, []);
+}); 
+
 
 // This tests a basic org and subscription action.
 asyncTest("Basic Search by name of Event", function() {
@@ -720,28 +769,12 @@ asyncTest("starEventAction", function() {
 // This tests a basic listStarredEvents Actions.
 asyncTest("listStarredEventsAction", function() {
 	var scope = this;
-
-    scope.expected = {"name": "Mochi",
-					  "password" : '123',
-					  'savedEvents':''
-                     };
 					 
 	scope.eventids = [];
 	
 	scope.data = {};
 	scope.request.user = {};
 	// Check that the database did what we want.
-	
-	var callback = function( error, result ){	
-		ok(compareFields(scope.expected, result[0]), 'Fields not correct');	
-	    start();
-	}	
-	
-	var callback1 = function(){
-		var query = {};
-		query['_id'] = scope.userid;
-		scope.app.searchDb('users', query, callback);
-	}
 	
     setTimeout(function() {	
 		//console.log(scope.response.things_sent.results);
@@ -759,6 +792,38 @@ asyncTest("listStarredEventsAction", function() {
 	
 	function runIt(){
 		scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
+	}
+	
+	// Call this to open the database, and run the test. ONLY CALL ONCE!
+	this.db.runTest(runIt, []);
+});
+
+// This tests a basic listOrgEvents Actions.
+asyncTest("listOrgEventsAction", function() {
+	var scope = this;
+				 
+	scope.eventids = [];
+	
+	scope.data = {};
+	scope.request.org = {};
+	// Check that the database did what we want.
+		
+    setTimeout(function() {	
+		//console.log(scope.response.things_sent.results);
+		ok(scope.response.things_sent.results.length === 3);
+		start();
+    }, 3000);
+	
+	function saveUserId(err, result){
+		if(err){ throw err;}
+	
+		scope.request.org.id = result[0]._id;
+
+		scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
+	}
+	
+	function runIt(){
+		scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveUserId);
 	}
 	
 	// Call this to open the database, and run the test. ONLY CALL ONCE!
