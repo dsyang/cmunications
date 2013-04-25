@@ -4,22 +4,27 @@ Create Event
 ************************
 */
 
-#eventInfo {
-	visibility: hidden;
-	margin: 20px;
-	padding: 20px 0;
-	border: 1px solid #e0e1e2;
-	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
-	box-shadow: 0 0 5px #888;
+.on {
+	/* transition: <property> <duration> <timing-function> <delay>; */
+	overflow: hidden;
+	height: 800px;
+    -webkit-transition: all 1s linear 0s; 
+    transition: all 1s linear 0s;
 }
+
+
+
 #eventInfo li {
 	list-style-type: none;
 	margin: 0px 10px;
+	border-bottom: 1px solid #e0e1e2;
 }
+
+
 
 #eventInfo li label {
 	color: #696969;
+	font-family: 'Lato', sans-serif;
 	display: inline-block;
 	width: 10%;
 	padding: 0px 10px;
@@ -33,8 +38,6 @@ Create Event
 	height: 40px;
   	border:none;
   	margin-bottom: 4px;
-	border-bottom: 1px solid #e0e1e2;
-	border-left: 1px solid #e0e1e2;
   	font-size: 15px;
   	color: #373535;
 }
@@ -48,7 +51,7 @@ Create Event
 
 
 #eventInfo li #description {
-	overflow: scroll;
+	overflow: visible; /***** fix ********/
   	font-size: 15px;
   	background-color: inherit;
 	width: 80%;
@@ -58,6 +61,7 @@ Create Event
 
 
 #eventInfo li label[for=description] {
+	margin-top: 10px;
 	float: left; /* to make it appear at the top hmm */
 }
 

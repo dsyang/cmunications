@@ -180,6 +180,7 @@ Each Event
 
 
 .myevents li {
+	font-family: 'Lato', sans-serif;
 	padding: 10px;
 	margin: 10px;
 	background-color: #fefefe;
@@ -193,6 +194,7 @@ Each Event
 .myevents li h3 {
 	display: inline-block;
 	font-size: 1.4em;
+	font-family: inherit;
 	color: #65a9d7;
 }
 
@@ -236,7 +238,59 @@ Each Event
 	width: 30px;
 }
 
+/*
+************************
+More Info
+************************
+*/
 
 
+.info{
+	margin: 15px;
+	display: block;
+	width: 100%;
+}
 
+.info.display {
+	border: none;
+}
 
+#display_name {
+	font-size: 2em;
+	font-family: 
+	border: none;
+}
+
+#display_location, #display_timeStart {
+	font-size: 1em;
+	background-repeat: no-repeat;
+	background-size: contain;
+	padding-left: 30px;
+}
+
+#display_location {
+	background-image: url("img/location2.png");
+}
+
+#display_timeStart {
+	background-image: url("img/calendar.png");
+}
+
+/* edit */
+#display_description {
+	background-image: url("img/desc.png");
+	font-size: 1em;
+	background-repeat: no-repeat;
+	overflow: visible;
+	resize: none;
+	padding-left: 30px;
+	width: 90%;
+	min-height: 100px;
+}
+
+#display_location:before {
+	content: url("img/location2.png");
+	background-size: contain;
+	height: 20px;
+	width: 20px;
+}
