@@ -11,8 +11,12 @@ var UI = function(config){
 
     //used in org_app.js
     this.org_app = config.events;
+
     //on clicking the tab show all events BIND THIS?
+
+    //Bind all the tabs relavent to show/create/edit events.
     this.dom.tab_myEvents.click(this.org_app.showEvents);
+
     this.dom.tab_create.click(function() {
         if(window.app_API.getAccountObject() !== null &&
            window.app_API.getAccountObject().accountType !== "organizations") {
@@ -30,9 +34,21 @@ var UI = function(config){
 UI.prototype =
 {
     initDom: function(){
+        //create necessary dom elements and append into $('#app') if they
+        //don't exist:
+        if($('.myevents').length === 0) { // .myevents does not exist
+            var app = $('#app');
+            console.log('app');
+            app.html("");
+            app.append($('<ul class="myevents">'));
+            if($('#eventInfo').length === 0)
+                app.append($('<div id="eventInfo">'));
+            console.log("creating elements");
+        }
         this.dom = {
             myEvents: $('.myevents'),
             tab_myEvents: $('.ME'),
+            tab_search: $('.search'),
             tab_create: $('.create'),
             topleft_button: $('#left_button'),
             topright_button: $('#right_button'),
@@ -45,6 +61,8 @@ UI.prototype =
 
     //for events of a particular org
     showEvents: function(events){
+        //initiate DOM in case it was over written
+        this.initDom();
         //bind left/right buttons
         this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.html('settings');
@@ -101,6 +119,7 @@ UI.prototype =
 
     //show a particular event/edit it
     showEvent: function(event) {
+        this.initDom();
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
         //get back to myevents on clicking "back"

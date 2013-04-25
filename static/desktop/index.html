@@ -9,6 +9,10 @@
     <script src="js/org_UI.js"></script>
     <script src="js/org_app.js"></script>
     <script src="js/org_API.js"></script>
+    <script src="js/search_UI.js"></script>
+    <script src="js/search_app.js"></script>
+    <script src="js/search_API.js"></script>
+
     <meta name="apple-mobile-web-app-capable" content="yes" />
   	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
@@ -22,6 +26,7 @@
     <script>
         window.addEventListener('load', function(){
            app = new org_app();
+           search = new Search_app();
         });
     </script>
 </head>
@@ -30,15 +35,17 @@
 <body>
 	<div id = "topbar">
 		<button class = "top_button" id="left_button"> Settings </button>
-		CMUnications 
+		CMUnications
 		<button class = "top_button" id="right_button"> Login </button>
 	</div>
 	<div id = "clearfix"> </div>
-	<ul class = "myevents">
-	</ul> 
-	<div id = "eventInfo">
+  <div id="app">
+	  <ul class = "myevents">
+	  </ul>
+	  <div id = "eventInfo">
 
-	</div>
+	  </div>
+  </div>
 	<div class = "nav">
 		<div class = "tab ME"> </div>
 		<div class = "tab search"> </div>
