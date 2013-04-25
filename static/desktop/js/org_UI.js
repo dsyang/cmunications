@@ -36,13 +36,14 @@ UI.prototype =
     initDom: function(){
         //create necessary dom elements and append into $('#app') if they
         //don't exist:
-        if($('.myevents').length === 0) { // .myevents does not exist
-            var app = $('#app');
+        if($('#starredEventsPage').length === 0) { // just entering star page
+            var page = $('<div id="starredEventsPage">');
             console.log('app');
-            app.html("");
-            app.append($('<ul class="myevents">'));
+            $('#app').html("").append(page);
+
+            page.append($('<ul class="myevents">'));
             if($('#eventInfo').length === 0)
-                app.append($('<div id="eventInfo">'));
+                page.append($('<div id="eventInfo">'));
             console.log("creating elements");
         }
         this.dom = {
@@ -54,8 +55,6 @@ UI.prototype =
             topright_button: $('#right_button'),
             eventInfo: $("#eventInfo")
         };
-
-
 
     },
 
@@ -89,32 +88,37 @@ UI.prototype =
         this.dom.topleft_button.html("Settings");
         for (var i = 0; i < allEvents.length; i++) {
             var item = allEvents[i];
-            var li = $("<li>");
-            var starred = $("<span>").addClass('starred');
-            var name = $("<h3>").html(item.name);
-            var infoButton = $("<span>").addClass('more').html("<a> </a>");
 
-            var location = $("<p>").html(item.location);
-            var timeStart = $("<p>").html(item.timeStart);
-            location.addClass("location");
-            timeStart.addClass("time");
-            li.append(name);
-            li.append(starred);
-            li.append(infoButton);
-            li.append(timeStart);
-            li.append(location);
-            (function() {
-                var event = item;
-                var that = this;
-                infoButton.click (function () {
-                    that.edit_mode = false;
-                    that.org_app.showEvent(event._id);
-                });
-            }.bind(this))();
+            var li = this.generate_listing(item);
 
             this.dom.myEvents.append(li);
-            //this.allEvents.push(item);
         }
+    },
+
+    generate_listing: function(event) {
+        var li = $("<li>");
+        var starred = $("<span>").addClass('starred');
+        var name = $("<h3>").html(event.name);
+        var infoButton = $("<span>").addClass('more').html("<a> </a>");
+
+        var location = $("<p>").html(event.location);
+        var timeStart = $("<p>").html(event.timeStart);
+        location.addClass("location");
+        timeStart.addClass("time");
+        li.append(name);
+        li.append(starred);
+        li.append(infoButton);
+        li.append(timeStart);
+        li.append(location);
+        (function() {
+            var that = this;
+            infoButton.click (function () {
+                that.edit_mode = false;
+                that.org_app.showEvent(event._id);
+            });
+        }.bind(this))();
+
+        return li;
     },
 
     //show a particular event/edit it

@@ -2,10 +2,11 @@
     window.search_API = {
         /* get a particular event with given id */
         doSearch: function(query, done){
+
             console.log("doing search");
             var request = $.ajax({ type: "post",
                                    url: "/search",
-                                   data: query
+                                   data: {text: query}
                                  });
             setupCallback(request, done);
         }
