@@ -1,4 +1,4 @@
- // This file hold all the routes for the app, describing our api endpoints
+// This file hold all the routes for the app, describing our api endpoints
 
 //`applicationCode.js` holds all the logic for our application.
 var async = require("async");
@@ -15,7 +15,7 @@ module.exports = function(app, db, Auth) {
     });
 
     app.post('/subscribe',
-//             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+             //             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = {orgids: request.body.orgids,
                              tags: request.body.tags
@@ -34,40 +34,40 @@ module.exports = function(app, db, Auth) {
         code.listEventsAction(request, response, data);
     });
     app.post('/events/:id/star/',
-//             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+             //             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = {event_id: request.params.id};
                  code.starEventAction(request, response, data)
              });
 
     app.get('/events/starred',
-//            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+            //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listStarredEventsAction(request, response, data);
             });
 
     app.get('/myevents',
-//            passport.authenticate('local', { failureRedirect: '/auth/login' }),
+            //            passport.authenticate('local', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listOrgEventsAction(request, response, data);
             });
 
     app.post('/events/create',
-//             passport.authenticate('local', { failureRedirect: '/auth/login' }),
+             //             passport.authenticate('local', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = { event: request.body.event };
                  code.createEventAction(request, response, data);
              });
     app.put('/events/:id/edit',
-//             passport.authenticate('local', { failureRedirect: '/auth/login' }),
-             function(request, response) {
-                 var data = { event: request.body.event,
-                              event_id: request.params.id
-                            };
-                 code.editEventAction(request, response, data);
-             });
+            //             passport.authenticate('local', { failureRedirect: '/auth/login' }),
+            function(request, response) {
+                var data = { event: request.body.event,
+                             event_id: request.params.id
+                           };
+                code.editEventAction(request, response, data);
+            });
 
 
     app.get('/orgs/list', function(request, response) {
@@ -99,17 +99,17 @@ module.exports = function(app, db, Auth) {
         Auth.logout(request, response);
         response.send({success:true});
     });
-/*    app.get('/auth/facebook', /*passport.authenticate('facebook'), function() {
-        //This callback is never called as we're redirected to facebook.
-        return;
+    /*    app.get('/auth/facebook', /*passport.authenticate('facebook'), function() {
+    //This callback is never called as we're redirected to facebook.
+    return;
     });
     app.get(
-        '/auth/facebook/callback',
-//        passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
-        function(request, response) {
-            var data = {};
-            code.facebookLoginAction(request, response, data);
-        }
+    '/auth/facebook/callback',
+    //        passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+    function(request, response) {
+    var data = {};
+    code.facebookLoginAction(request, response, data);
+    }
     );*/
     app.post('/auth/create', function(request, response) {
         var data = {name: request.body.name,
@@ -137,9 +137,9 @@ module.exports = function(app, db, Auth) {
     //     });
 
     //app.get("/:name", function(request, response) {
-//        var data = {"name": request.params.name}
-//        code.nameAction(request, response, data);
-//    });
+    //        var data = {"name": request.params.name}
+    //        code.nameAction(request, response, data);
+    //    });
 
     app.post("/post", function(request, response) {
         var data = {"stuff": request.body.stuff}
@@ -224,162 +224,191 @@ module.exports = function(app, db, Auth) {
 
 
     app.get("/populatedb2", function (request, response) {
-		  var database = db;
-		  var scope = this;
-		  var index = 0;
+        var database = db;
+        var scope = this;
+        var index = 0;
+        var long_dummy_text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
 
-		  var user1 = ['Mochi', '123'];
-		  var user2 = ['Shikha', '123'];
-		  var user3 = ['Dan Yang', '123'];
+        var user1 = ['Mochi', '123'];
+        var user2 = ['Shikha', '123'];
+        var user3 = ['Dan Yang', '123'];
 
-		  var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
-		  var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
-		  var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"]
+        var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
+        var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
+        var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"]
 
-		  var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var event3 = ['TSA Club Party', 'Diesel', 'Best club party of the year', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        var event4 = ['ASA Club Party', 'Static', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                      new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event5 = ['Lupe Fiasco', 'The Cut', 'The Show must go on.', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var event6 = ['That one lecture', 'DH 2210', long_dummy_text, new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 4, 12, 0, 0, 0)];
+        var event7 = ['Final Exam relaxation', 'GHC 7', 'Massages',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event8 = ['SDC primal scream', 'The Cut', long_dummy_text, new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var event9 = ['Tepper Spirit Day', 'Merson Courtyard', 'All of the free hotdogs.', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        var event10 = ['#riPHI', 'Panther Hollow Inn', 'Saying goodbye to an era',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event11 = ['Bond Movie Marathon', 'McConomy', 'For your eyes only', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var event12 = ['Free Food', 'GHC 6', long_dummy_text, new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        var event13 = ['University Lecture Series', 'McConomy', 'Obama is coming!',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+        var event14 = ['Shot for Shot', 'Doherty Hall', 'The best movie festival ever', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var event15 = ['Reading Day Fun', 'Everywhere', 'Best fun you will ever have during finals week.', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
 
-		  var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+        var tag1 = ['party'];
+        var tag2 = ['food'];
 
-		  var event3 = ['TSA Club Party', 'Static', 'Best club party of the year', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        // Org1 corresponds to event1 and so on. Change this by changing assignHostOrgIds below.
+        var users = [user1, user2, user3];
+        var orgs = [org1, org2, org3];
+        var events = [event1, event2, event3, event4,
+                      event5, event6, event7, event8,
+                      event9, event10, event11, event12,
+                      event13, event14, event15];
+        var tags = [tag1, tag2];
 
-		  var tag1 = ['party'];
-		  var tag2 = ['food'];
+        // Check that the database did what we want.
+        var callback = function( error, result ){
+            console.log("Return the list of events.");
 
-		  // Org1 corresponds to event1 and so on. Change this by changing assignHostOrgIds below.
-		  var users = [user1, user2, user3];
-		  var orgs = [org1, org2, org3];
-		  var events = [event1, event2, event3];
-		  var tags = [tag1, tag2];
+            if(error){throw error;}
+            code.listEventsAction(request, response, undefined);
+        }
 
-		  // Check that the database did what we want.
-		  var callback = function( error, result ){
-				console.log("Return the list of events.");
+        function addUsers(err, result){
+            if(err) {throw err;}
+            console.log("Add users.");
 
-				if(error){throw error;}
-				code.listEventsAction(request, response, undefined);
-		  }
+            if(index === users.length){
+                callback();
+            }
+            else{
+                var cur = users[index];
+                console.log("Index: " + index + "Curr: " + cur);
+                index = index + 1;
+                var password = Auth.hashPassword(cur[1]);
+                code.createUser(cur[0], password, addUsers);
+            }
+        }
 
-		  function addUsers(err, result){
-          if(err) {throw err;}
-				console.log("Add users.");
+        function addEvents(){
+            console.log("Add Events.");
 
-				if(index === users.length){
-					  callback();
-				}
-				else{
-					  var cur = users[index];
-					  console.log("Index: " + index + "Curr: " + cur);
-					  index = index + 1;
-					  code.createUser(cur[0], cur[1], addUsers);
-				}
-		  }
+            if(index === events.length){
+                index = 0;
+                addUsers();
+            }
+            else{
+                var cur = events[index];
+                index = index + 1;
+                code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+            }
+        }
 
-		  function addEvents(){
-				console.log("Add Events.");
+        function addTags(){
+            console.log("Add tags.");
 
-				if(index === events.length){
-					  index = 0;
-					  addUsers();
-				}
-				else{
-					  var cur = events[index];
-					  index = index + 1;
-					  code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
-				}
-		  }
+            if(index === tags.length){
+                index = 0;
+                addEvents();
+            }
+            else{
+                var cur = tags[index];
+                index = index + 1;
+                code.createTag(cur[0], addTags);
+            }
+        }
 
-		  function addTags(){
-				console.log("Add tags.");
+        function assignHostOrgIds(err, results){
+            if(err){ throw err;}
 
-				if(index === tags.length){
-					  index = 0;
-					  addEvents();
-				}
-				else{
-					  var cur = tags[index];
-					  index = index + 1;
-					  code.createTag(cur[0], addTags);
-				}
-		  }
-
-		  function assignHostOrgIds(err, results){
-			if(err){ throw err;}
-
-			console.log("assignHostOrgIds.");
-			console.log(results.length);
-			console.log(results[0]);
-
-
-			var ids = results.map(function(elem){ return elem._id;});
-
-			console.log(ids);
-
-			event1.push(ids[0]);
-			event2.push(ids[0]);
-			event3.push(ids[0]);
-
-			addTags();
-		  }
-
-		  function addOrgs(err, result){
-          if(err) {throw err;}
-				console.log("AddOrgs " + index);
-				if(index === orgs.length){
-					  index = 0;
-					  code.searchDb('organizations',{},assignHostOrgIds);
-				}
-				else{
-					  var cur = orgs[index];
-					  index = index + 1;
-
-					  console.log(cur[0], cur[1], cur[2]);
-
-					  code.createOrganization(cur[0], cur[1], cur[2], addOrgs);
-				}
-		  }
+            console.log("assignHostOrgIds.");
+            console.log(results.length);
+            console.log(results[0]);
 
 
-		  function runIt(){
-				console.log("Run it.");
-				index = 0;
-				addOrgs();
-		  }
+            var ids = results.map(function(elem){ return elem._id;});
 
-		// Meant to clear the collection before starting the test.
-		function clearDbs(){
-			var arrayCollsToClear = ['users', 'organizations', 'events', 'tags'];
+            console.log(ids);
 
-			var index = 0;
-			console.log("Clearing Dbs");
-			// Clears the collections in collsToClear
-			function clearCol(err, result){
-          if(err) {throw err;}
-          console.log(result);
-				if(index >=0 && index >= arrayCollsToClear.length){
-					runIt();
-				}
-				else{
-					database.collection(arrayCollsToClear[index], function(error, collection){
-						if(error)
-							error;
+            event1.push(ids[0]);
+            event2.push(ids[0]);
+            event3.push(ids[0]);
+            event4.push(ids[1]);
+            event5.push(ids[1]);
+            event6.push(ids[1]);
+            event7.push(ids[1]);
+            event8.push(ids[0]);
+            event9.push(ids[2]);
+            event10.push(ids[2]);
+            event11.push(ids[2]);
+            event12.push(ids[0]);
+            event13.push(ids[2]);
+            event14.push(ids[2]);
+            event15.push(ids[0]);
 
-						console.log("Cleared Collection: " + arrayCollsToClear[index]);
-						index++;
 
-						collection.remove({},{},clearCol);
-					});
-				}
-			}
+            addTags();
+        }
 
-			clearCol();
-		}
+        function addOrgs(err, result){
+            if(err) {throw err;}
+            console.log("AddOrgs " + index);
+            if(index === orgs.length){
+                index = 0;
+                code.searchDb('organizations',{},assignHostOrgIds);
+            }
+            else{
+                var cur = orgs[index];
+                index = index + 1;
 
-		console.log("Code Compiled");
+                console.log(cur[0], cur[1], cur[2]);
+
+                code.createOrganization(cur[0], cur[1], cur[2], addOrgs);
+            }
+        }
+
+
+        function runIt(){
+            console.log("Run it.");
+            index = 0;
+            addOrgs();
+        }
+
+        // Meant to clear the collection before starting the test.
+        function clearDbs(){
+            var arrayCollsToClear = ['users', 'organizations', 'events', 'tags'];
+
+            var index = 0;
+            console.log("Clearing Dbs");
+            // Clears the collections in collsToClear
+            function clearCol(err, result){
+                if(err) {throw err;}
+                console.log(result);
+                if(index >=0 && index >= arrayCollsToClear.length){
+                    runIt();
+                }
+                else{
+                    database.collection(arrayCollsToClear[index], function(error, collection){
+                        if(error)
+                            error;
+
+                        console.log("Cleared Collection: " + arrayCollsToClear[index]);
+                        index++;
+
+                        collection.remove({},{},clearCol);
+                    });
+                }
+            }
+
+            clearCol();
+        }
+
+        console.log("Code Compiled");
         clearDbs();
 
-		//response.send( { 'success': true});
+        //response.send( { 'success': true});
 
-	});
+    });
 
 
     return app;
