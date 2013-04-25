@@ -13,7 +13,17 @@ var UI = function(config){
     this.org_app = config.events;
     //on clicking the tab show all events BIND THIS?
     this.dom.tab_myEvents.click(this.org_app.showEvents);
-    this.dom.tab_create.click(this.createEvent.bind(this));
+    this.dom.tab_create.click(function() {
+        if(window.app_API.getAccountObject() !== null &&
+           window.app_API.getAccountObject().accountType !== "organizations") {
+            alert('You can only create an event if you login as an organzation.'+
+                  ' Contact cmunications@andrew.cmu.edu to receive organization'+
+                  ' account credentials.');
+        } else {
+        this.createEvent();
+
+        }
+    }.bind(this));
     this.dom.topleft_button.click(function() {
         alert("to be implemented");
     });

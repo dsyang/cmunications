@@ -56,7 +56,6 @@
     /* on success call done */
     function setupCallback(request, done){
         request.done(function(data) {
-//            console.log("asdfasdf",data);
             if (data.err !== undefined)
                 done(data.err, null);
             else

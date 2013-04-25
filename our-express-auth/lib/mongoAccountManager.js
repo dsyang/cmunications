@@ -52,7 +52,7 @@ exports.getAccount = function(username, password, done){
                           done("user doesn't exist", null);
                       } else if (count === 1) {
                           if(!passwordTools.validatePassword(password,
-                                                            account.hashedPassword)) {
+                                                            account.password)) {
                               console.log("fail");
                               done('bad password', null);
                           } else {
@@ -70,7 +70,7 @@ exports.getAccount = function(username, password, done){
         callback(null, function(cb) {
             console.log("about to find");
             item.col.findOne(
-                {username: username} ,
+                {name: username} ,
                 function(err, result) {
                     console.log(result)
                     if(err) {
@@ -78,7 +78,7 @@ exports.getAccount = function(username, password, done){
                     } else if( result === null) {
                         cb(null, null);
                     } else {
-                        result.fromCollection = item.name;
+                        result.accountType = item.name;
                         cb(err, result);
                     }
                 });

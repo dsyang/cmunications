@@ -58,6 +58,7 @@ exports.logout = function(req, res){
     var password = req.body.password;
     res.clearCookie('username');
     res.clearCookie('password');
+    res.clearCookie('account');
     delete req.session.username;
 }
 
@@ -72,6 +73,7 @@ exports.cookieLogin = function(req, res, done){
             if (err){
                 res.clearCookie('username');
                 res.clearCookie('password');
+                res.clearCookie('account');
                 if (typeof err === 'string'){
                     done(err);
                 }
@@ -98,6 +100,7 @@ exports.login = function(req, res, done){
         else {
             res.cookie('username', username, { maxAge: C.MaxCookieAge });
             res.cookie('password', password, { maxAge: C.MaxCookieAge });
+            res.cookie('account', JSON.stringify(account), { maxAge: C.MaxCookieAge });
             req.session.username = username;
             done(null, account);
         }

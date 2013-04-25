@@ -171,31 +171,32 @@ function Application(db) {
 		if(!callback){
 			callback = logger;
 		}
-		
+
 		// This function is necessary to make sure our function is called
 		// with the full event object.
 		function callbackContext(){
 			callback(null, [event]);
 		}
-		
+
 		function updateOrg(err, listOfDocs){
 			event._id = listOfDocs[0]._id;
-			
+
 			addEventsToOrg(hostOrgId, [event._id], callbackContext);
 		}
-													
+
 		function insertEvent(err, results){
 			if(err){ throw err;}
-			
+        console.log("from insert Event");
+			  console.log(results);
 			event.hostOrg = results[0].name;
-			
+
 			db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
 		}
-													
+
 		function getHostOrgName(){
 			searchDb(collOrgs, {'_id':hostOrgId}, insertEvent)
-		}						 
-		
+		}
+
 		getHostOrgName();
 	}
 
@@ -359,7 +360,7 @@ function Application(db) {
         var id = ObjectID(request.user.id);
 		var finalResult = {};
 		//console.log(data.orgids, data.tags);
-		
+
 		var orgids = data.orgids.map(function(elem){return ObjectID(elem)});
 
         if(orgids) {

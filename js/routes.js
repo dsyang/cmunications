@@ -362,8 +362,8 @@ module.exports = function(app, db, Auth) {
                 index = index + 1;
 
                 console.log(cur[0], cur[1], cur[2]);
-
-                code.createOrganization(cur[0], cur[1], cur[2], addOrgs);
+                var password = Auth.hashPassword(cur[1]);
+                code.createOrganization(cur[0], password, cur[2], addOrgs);
             }
         }
 

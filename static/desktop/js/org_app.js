@@ -43,10 +43,12 @@ org_app.prototype = {
 
 
     createEvent: function(content){
+        content.hostOrgId = window.app_API.getAccountObject()._id;
         window.org_API.create(content, function(err, data){
             if (err)
                 throw err;
-            var newEvent = {
+            console.log(data);
+           var newEvent = {
                 content: content,
                 _id: data._id
             }
