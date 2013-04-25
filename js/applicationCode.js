@@ -343,20 +343,30 @@ function Application(db) {
             response.send(success('results', result));
         }
 
-        var regex = {
-            $regex: data.text,
-            $options: 'i'
-        };
-        var query = {
-            $or: [
-                { name: regex},
-                { location: regex},
-                { description: regex},
-                { hostOrg: regex}
-            ]};
+
+        var query = {};
+
+        var regexPat = ".*" + data.text + ".*";
+        var regexMod = 'i'
+
+        var patt = new RegExp(regexPat,regexMod);
+
+        query['$or'] = [{'name' : patt},
+                        {'description' : patt}, {'location' : patt}, {'hostOrg' : patt}];
+
+        if(data.startDate){
+            var startTime = new Date(data.startDate);
+            console.log(startTime);
+            query['startTime'] = {'$gte': startTime};
+        }
+        if(data.endDate){
+            var endTime = new Date(data.endDate);
+            console.log(endTime);
+            query['endTime'] = {'$lte': endTime};
+        }
 
         // IS DATA.TXT ACTUALLY A QUERY OBJECT?
-        console.log(query);
+
         searchDb(collEvents, query, cb);
     }
 

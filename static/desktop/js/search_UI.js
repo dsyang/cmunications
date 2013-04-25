@@ -18,8 +18,6 @@ var Search_UI = function(config) {
 
 Search_UI.prototype = {
     initDom: function() {
-        //blow away $('#app') to make room for search DOM
-        console.log("blowin");
         //create necessary dom elements and append into $('#app') if they
         //don't exist:
         if($('#searchEventsPage').length === 0) { //just entering search page
@@ -50,8 +48,7 @@ Search_UI.prototype = {
         console.log("show events!");
         this.initDom();
 
-        console.log(this.dom.searchbar.val());
-        console.log(this.dom.searchbarDate.val());
+
         this.dom.submit.click(function() {
             window.search_API.doSearch(this.dom.searchbar.val(),
                                        function(err, results) {

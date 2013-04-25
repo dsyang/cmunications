@@ -5,7 +5,7 @@
 
             console.log("doing search");
             var request = $.ajax({ type: "post",
-                                   url: "/search",
+                                   url: "/events/search",
                                    data: {text: query}
                                  });
             setupCallback(request, done);
