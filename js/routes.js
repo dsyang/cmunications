@@ -8,8 +8,8 @@ module.exports = function(app, db, Auth) {
 
     app.post('/events/search', function(request, response) {
         var data = { text: request.body.text,
-                     start: request.body.startDate,
-                     end: request.body.endDate
+                     startDate: request.body.startDate,
+                     endDate: request.body.endDate
                    };
         code.searchAction(request, response, data);
     });

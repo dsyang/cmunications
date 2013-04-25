@@ -24,7 +24,19 @@
             setupCallback(request, done);
         },
 
-        /* search for an event */
+        /* search for an event (case insensitive through all fields) */
+        /* 
+            content.text = '' to get everything, or "searchString"
+            content.startDate = new Date() or undefined;
+            content.endDate = new Date() or undefined;
+           
+            if undefined, means that you ignore search parameter.
+            
+            Try it in console!
+                >content = {text:'hall', endDate: new Date()};
+                >window.org_API.search(content,function(err, log){ console.log(log);})
+        */       
+        
         search: function(content, done){
             var request = $.ajax({
                 type: "post",

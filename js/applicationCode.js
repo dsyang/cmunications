@@ -354,13 +354,15 @@ function Application(db) {
 		query['$or'] = [{'name' : patt},
         {'description' : patt}, {'location' : patt}, {'hostOrg' : patt}];
 
-        if(data.start){
-            var startTime = data.start; //new Date(data.start);
-            //query['startTime'] = {'$gte': startTime};        
+        if(data.startDate){
+            var startTime = new Date(data.startDate); 
+            console.log(startTime);
+            query['startTime'] = {'$gte': startTime};        
         }
-        if(data.end){
-            var endTime = data.end; //new Date(data.end);
-            //query['endTime'] = {'$lte': endTime};
+        if(data.endDate){
+            var endTime = new Date(data.endDate);
+            console.log(endTime);
+            query['endTime'] = {'$lte': endTime};
         }
                 
 		    // IS DATA.TXT ACTUALLY A QUERY OBJECT?
