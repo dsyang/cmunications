@@ -11,21 +11,22 @@ var UI = function(config){
 
     //used in org_app.js
     this.org_app = config.events;
+
     //on clicking the tab show all events BIND THIS?
+
+    //Bind all the tabs relavent to show/create/edit events.
     this.dom.tab_myEvents.click(this.org_app.showEvents);
-    this.dom.tab_search.click(function () {
-            this.searchEvents();
-    }.bind(this));
-    this.dom.tab_create.click(function() { /*
+    this.dom.tab_create.click(function() { 
         if(window.app_API.getAccountObject() !== null &&
            window.app_API.getAccountObject().accountType !== "organizations") {
             alert('You can only create an event if you login as an organzation.'+
                   ' Contact cmunications@andrew.cmu.edu to receive organization'+
                   ' account credentials.');
-        } else { */
+        } 
+        else { 
         this.createEvent();
 
-       /* } */
+        } 
     }.bind(this));
 
 }
@@ -33,9 +34,22 @@ var UI = function(config){
 UI.prototype =
 {
     initDom: function(){
+        //create necessary dom elements and append into $('#app') if they
+        //don't exist:
+        if($('#starredEventsPage').length === 0) { // just entering star page
+            var page = $('<div id="starredEventsPage">');
+            console.log('app');
+            $('#app').html("").append(page);
+
+            page.append($('<ul class="myevents">'));
+            if($('#eventInfo').length === 0)
+                page.append($('<div id="eventInfo">'));
+            console.log("creating elements");
+        }
         this.dom = {
             myEvents: $('.myevents'),
             tab_myEvents: $('.ME'),
+            tab_search: $('.search'),
             tab_create: $('.create'),
             tab_search: $('.search'),
             topleft_button: $('#left_button'),
@@ -43,8 +57,6 @@ UI.prototype =
             eventInfo: $("#eventInfo"),
             esearch: $(".esearch")
         };
-
-
 
     },
 
@@ -67,6 +79,8 @@ UI.prototype =
 
     //for events of a particular org
     showEvents: function(events){
+        //initiate DOM in case it was over written
+        this.initDom();
         //bind left/right buttons
         this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.html('settings');
@@ -93,36 +107,42 @@ UI.prototype =
         this.dom.topleft_button.html("Settings");
         for (var i = 0; i < allEvents.length; i++) {
             var item = allEvents[i];
-            var li = $("<li>");
-            var starred = $("<span>").addClass('starred');
-            var name = $("<h3>").html(item.name);
-            var infoButton = $("<span>").addClass('more').html("<a> </a>");
 
-            var location = $("<p>").html(item.location);
-            var timeStart = $("<p>").html((new Date(item.timeStart)).toDateString());
-            location.addClass("location");
-            timeStart.addClass("time");
-            li.append(name);
-            li.append(starred);
-            li.append(infoButton);
-            li.append(timeStart);
-            li.append(location);
-            (function() {
-                var event = item;
-                var that = this;
-                infoButton.click (function () {
-                    that.edit_mode = false;
-                    that.org_app.showEvent(event._id);
-                });
-            }.bind(this))();
+            var li = this.generate_listing(item);
 
             this.dom.myEvents.append(li);
-            //this.allEvents.push(item);
         }
+    },
+
+    generate_listing: function(event) {
+        var li = $("<li>");
+        var starred = $("<span>").addClass('starred');
+        var name = $("<h3>").html(event.name);
+        var infoButton = $("<span>").addClass('more').html("<a> </a>");
+
+        var location = $("<p>").html(event.location);
+        var timeStart = $("<p>").html(event.timeStart);
+        location.addClass("location");
+        timeStart.addClass("time");
+        li.append(name);
+        li.append(starred);
+        li.append(infoButton);
+        li.append(timeStart);
+        li.append(location);
+        (function() {
+            var that = this;
+            infoButton.click (function () {
+                that.edit_mode = false;
+                that.org_app.showEvent(event._id);
+            });
+        }.bind(this))();
+
+        return li;
     },
 
     //show a particular event/edit it
     showEvent: function(event) {
+        this.initDom();
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
         //get back to myevents on clicking "back"

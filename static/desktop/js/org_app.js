@@ -10,6 +10,7 @@ var org_app = function(){
             showEvent: this.showEvent.bind(this),
             editEvent: this.editEvent.bind(this),
             createEvent: this.createEvent.bind(this),
+            searchEvents: this.searchEvents.bind(this),
         }
     });
 
@@ -52,6 +53,15 @@ org_app.prototype = {
                 content: content,
                 _id: data._id
             }
+        }.bind(this));
+    },
+
+    searchEvents: function(content) {
+        window.org_API.search(content, function (err, data) {
+            if (err)
+                throw err;
+            console.log(data);
+            this.ui.showEvents(data);
         }.bind(this));
     },
 
