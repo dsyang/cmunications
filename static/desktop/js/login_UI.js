@@ -21,9 +21,6 @@ Login_UI.prototype =
 
         if(window.app_API.isLoggedIn() !== false) {
             var app = $('#app');
-            var logout = $('<button>').html("Logout").attr({id: 'logout_button'});
-            app.html("Are you sure?");
-            app.append(logout);
         }
     },
 

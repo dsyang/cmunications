@@ -47,6 +47,7 @@ UI.prototype =
         console.log(allEvents);
         this.dom.eventInfo.html("");
         this.dom.myEvents.html("");
+        this.dom.eventInfo.css({"visibility": "hidden"});
         /* *************************
             gotta bind these click events
            ************************* */
@@ -87,18 +88,19 @@ UI.prototype =
         // var image??? var tags?
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
-        var timeStart = $("<input>").val(event.timeStart);
-        var timeEnd = $("<input>").val(event.timeEnd);
+        var timeStart = $("<input>").val(event.timeStart); 
+        var timeEnd = $("<input>").val(event.timeEnd); 
         var description = $("<input>").val(event.description);
 
         name.addClass("name").attr({'id':"display_name", 'disabled':true});
         location.addClass("location").attr({'id':"display_location", 'disabled':true});
         timeStart.addClass("timeStart").attr({'id':"display_timeStart", 'disabled':true});
-        timeEnd.addClass("timeEnd").attr({'id':"display_timeEnd", 'disabled':true});
+        timeEnd.addClass("timeEnd").attr({'id':"display_timeEnd", 'disabled':true}); 
         description.addClass("description").attr({'id':"display_description", 'disabled':true});
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
         this.dom.eventInfo.append(name,location,timeStart,timeEnd,description);
+        this.dom.eventInfo.css({"visibility": "visible"});
         //insert everything in the event Info div
         this.set_edit_save(event);
     },
@@ -111,13 +113,13 @@ UI.prototype =
             var location = $('.location');
             var name = $('.name');
             var timeStart = $('.timeStart');
-            var timeEnd = $('.timeEnd');
+            var timeEnd = $('.timeEnd'); 
             var description = $('.description');
             if (this.edit_mode) {
                 $(".location").attr('id',"edit_location").removeAttr('disabled');
                 $(".name").attr('id',"edit_name").removeAttr('disabled');
                 $(".timeStart").attr('id',"edit_timeStart").removeAttr('disabled');
-                $(".timeEnd").attr('id',"edit_timeEnd").removeAttr('disabled');
+                $(".timeEnd").attr('id',"edit_timeEnd").removeAttr('disabled'); 
                 $(".description").attr('id',"edit_description").removeAttr('disabled');
 
                 this.dom.topright_button.html("Save");
@@ -128,7 +130,7 @@ UI.prototype =
                 var content = { "_id": _id,
                              "location": location.val(),
                              "timeStart": timeStart.val(),
-                             "timeEnd": timeEnd.val(),
+                             "timeEnd": timeEnd.val(), 
                              "name": name.val(),
                              "description": description.val()
                              };
@@ -152,24 +154,27 @@ UI.prototype =
         if (this.create_mode == false) {
             this.create_mode = true;
             this.dom.myEvents.html("");
+            this.dom.eventInfo.html("");
             this.dom.topleft_button.html("Cancel");
             this.dom.topright_button.html("Save");
             this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
 
-            var labelName = $("<label>").html("Name").addClass("name");
-            var name = $("<input>").html(event.name).addClass("name");
-            var labelLocation = $("<label>").html("Location").addClass("location");
-            var location = $("<input>").html(event.location).addClass("location");
-            var labelTimeStart = $("<label>").html("Time").addClass("timeStart");
-            var timeStart = $("<input>").html(event.timeStart).addClass("timeStart");
-            var timeEnd = $("<input>").html(event.timeEnd).addClass("timeEnd");
-            var labelDescription = $("<label>").html("Description").addClass("description");
-            var description = $("<input>").html(event.description).addClass("description");
+            var labelName = $("<label>").html("Name").attr({"for": "name"});
+            var name = $("<input>").html(event.name).addClass("info").attr({"type": "text", "id": "name", "placeholder": "Hey Marseilles"});
+            var labelLocation = $("<label>").html("Location").attr({"for": "info"});
+            var location = $("<input>").html(event.location).addClass("info").attr({"type": "text", "id": "location"});
+            var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
+            var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
+            var timeEnd = $("<input>").html(event.timeEnd).addClass("info").attr({"type": "date", "id": "timeEnd"}); 
+            var labelDescription = $("<label>").html("Description").attr({"for": "description"});
+            var description = $("<textarea>").html(event.description).addClass("info").attr({"id": "description"});
 
-            this.dom.eventInfo.append(labelName,name);
-            this.dom.eventInfo.append(labelLocation,location);
-            this.dom.eventInfo.append(labelTimeStart, timeStart,timeEnd);
-            this.dom.eventInfo.append(labelDescription,description);
+
+            this.dom.eventInfo.append($("<li>").append(labelName, name));
+            this.dom.eventInfo.append($("<li>").append(labelLocation,location));
+            this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
+            this.dom.eventInfo.append($("<li>").append(labelDescription,description)); 
+            this.dom.eventInfo.css({"visibility": "visible"});
         }
         //Save
         this.dom.topright_button.click(function () {
@@ -185,7 +190,8 @@ UI.prototype =
             location.attr({'id':"display_location", 'disabled':true});
             name.attr({'id':"display_name", 'disabled':true});
             timeStart.attr({'id':"display_timeStart", 'disabled':true});
-            timeEnd.attr({'id':"display_timeEnd", 'disabled':true});
+            
+            timeEnd.attr({'id':"display_timeEnd", 'disabled':true}); 
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;

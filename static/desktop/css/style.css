@@ -235,46 +235,6 @@ Each Event
 	height: 30px;
 	width: 30px;
 }
-/*
-************************
-Create Event
-************************
-*/
-
-#eventInfo {
-	padding: 40px;
-}
-
-#eventInfo .name, #eventInfo .location, .timeStart, .timeEnd, .description {
-	display: block;
-  	font-size: 15px;
-  	background-color: inherit;
-	margin-top: 5px;
-	padding: 0px;
-	width: 100%;
-	resize: none;
-	border: none;
-	border-top: 1px solid grey;
-	overflow: auto;
-  	border-radius: 5px;
-}
-
-.description {
-	overflow: scroll;
-  	font-size: 15px;
-  	background-color: inherit;
-	margin-top: 5px;
-	padding: 0px;
-	width: 100%;
-	height: 140px;
-	resize: none;
-	border: none;
-	border-top: 1px solid grey;
-	overflow: auto;
-  	border-radius: 5px;
-}
-
-
 
 
 
