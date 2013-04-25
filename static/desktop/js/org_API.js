@@ -24,6 +24,19 @@
             setupCallback(request, done);
         },
 
+        /* search for an event */
+        search: function(content, done){
+            var request = $.ajax({
+                type: "post",
+                url: "/events/search",
+                data: { 'text': content.text,
+                        'startDate': content.startDate,
+                        'endDate': content.endDate
+                      }
+            });
+            setupCallback(request, done);
+        },
+        
         /* editing an event with given id */
         update: function(id, content, done){
             var request = $.ajax({

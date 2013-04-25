@@ -331,7 +331,8 @@ function Application(db) {
     }
 
     //given data.text, start, end, return all events in the period
-	/*data = { text: request.body.text,
+    // Right now does case insensitive search through all fields
+	/*data = {       text: request.body.text,
                      start: request.body.startDate,
                      end: request.body.endDate
                    };

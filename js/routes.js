@@ -6,7 +6,7 @@ module.exports = function(app, db, Auth) {
     var code = new require("./applicationCode.js").Application(db);
 
 
-    app.post('/search', function(request, response) {
+    app.post('/events/search', function(request, response) {
         var data = { text: request.body.text,
                      start: request.body.startDate,
                      end: request.body.endDate
