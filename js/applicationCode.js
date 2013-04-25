@@ -186,8 +186,8 @@ function Application(db) {
 
 		function insertEvent(err, results){
 			if(err){ throw err;}
-        console.log("from insert Event");
-			  console.log(results);
+        //console.log("from insert Event");
+			  //console.log(results);
 			event.hostOrg = results[0].name;
 
 			db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
@@ -344,8 +344,24 @@ function Application(db) {
         }
 
 		var query = {};
-		query['name'] = data.text;
+ 
+        var regexPat = ".*" + data.text + ".*";
+        var regexMod = 'i'
+        
+        var patt = new RegExp(regexPat,regexMod); 
+        
+		query['$or'] = [{'name' : patt},
+        {'description' : patt}, {'location' : patt}, {'hostOrg' : patt}];
 
+        if(data.start){
+            var startTime = data.start; //new Date(data.start);
+            //query['startTime'] = {'$gte': startTime};        
+        }
+        if(data.end){
+            var endTime = data.end; //new Date(data.end);
+            //query['endTime'] = {'$lte': endTime};
+        }
+                
 		    // IS DATA.TXT ACTUALLY A QUERY OBJECT?
         searchDb(collEvents, query, cb);
     }

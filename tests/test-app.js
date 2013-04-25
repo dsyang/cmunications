@@ -132,34 +132,6 @@ asyncTest( "createOrganization: Add Org to Database", function() {
 	  this.db.runTest(runIt, ['organizations']);
 });
 
-/*
-asyncTest( "createEvent: Add Event to Database", function() {
-	  var scope = this;
-
-	  // Fill in the fields of the object to be created.
-	  var expected = {};
-	  expected.name = 'ASA Bake Sale';
-	  expected.location = 'UC';
-	  expected.description = 'This is the coolest event around';
-	  expected.hostOrg = 'ASA';
-	  expected.startTime = new Date();
-	  expected.endTime = new Date();
-
-	  // Check that the database did what we want.
-	  var callback = function( error, result ){
-		    ok(compareFields(expected, result[0]), 'Fields not correct');
-	      start();
-	  }
-
-	  function runIt(){
-		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.hostOrg, expected.startTime, expected.endTime, callback);
-	  }
-
-	  // Call this to open the database, and run the test. ONLY CALL ONCE!
-	  this.db.runTest(runIt, ['events']);
-});
-*/
-
 
 asyncTest( "createEvent: Add Event to Database", function() {
 	  var scope = this;
@@ -506,6 +478,33 @@ asyncTest("Basic Search by name of Event", function() {
 	  // Call this to open the database, and run the test. ONLY CALL ONCE!
 	  this.db.runTest(runIt, []);
 });
+
+// This tests an advanced substring search, but doesn't limit date ranges.
+asyncTest("Advanced Search by name of Event", function() {
+	  var scope = this;
+
+    scope.expected = {"name": "Samosa Sale",
+                      "location": "Doherty Hall",
+					            "description": "Selling samosas"
+                     };
+
+	  scope.data = {};
+    scope.data['text'] = "doherty";
+
+    setTimeout(function() {
+		    ok(compareFields(scope.expected, scope.response.things_sent.results[0]), 'Fields not correct');
+
+        start();
+    }, 1000);
+
+	  function runIt(){
+		    scope.app.searchAction(scope.request, scope.response, scope.data);
+	  }
+
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt, []);
+});
+
 
 // This tests a basic org and subscription action.
 asyncTest("addTagsToUser", function() {
