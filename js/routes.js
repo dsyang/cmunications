@@ -220,11 +220,163 @@ module.exports = function(app, db, Auth) {
                                });
                            });
                        });
-
-
-
-
     });
 
+
+    app.get("/populatedb2", function (request, response) {
+		  var database = db;
+		  var scope = this;
+		  var index = 0;
+
+		  var user1 = ['Mochi', '123'];
+		  var user2 = ['Shikha', '123'];
+		  var user3 = ['Dan Yang', '123'];
+
+		  var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
+		  var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
+		  var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"]
+
+		  var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+
+		  var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
+
+		  var event3 = ['TSA Club Party', 'Static', 'Best club party of the year', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+
+		  var tag1 = ['party'];
+		  var tag2 = ['food'];
+
+		  // Org1 corresponds to event1 and so on. Change this by changing assignHostOrgIds below.
+		  var users = [user1, user2, user3];
+		  var orgs = [org1, org2, org3];
+		  var events = [event1, event2, event3];
+		  var tags = [tag1, tag2];	
+
+		  // Check that the database did what we want.
+		  var callback = function( error, result ){
+				console.log("Return the list of events.");		  
+		  
+				if(error){throw error;}
+				code.listEventsAction(request, response, undefined);
+		  }
+		  
+		  function addUsers(){
+				console.log("Add users.");
+
+				if(index === users.length){
+					  callback();
+				}
+				else{
+					  var cur = users[index];
+					  //console.log("Index: " + index + "Curr: " + cur);
+					  index = index + 1;
+					  code.createUser(cur[0], cur[1], addUsers);
+				}
+		  }
+		  
+		  function addEvents(){
+				console.log("Add Events.");
+
+				if(index === events.length){
+					  index = 0;
+					  addUsers();
+				}
+				else{
+					  var cur = events[index];
+					  index = index + 1;
+					  code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+				}
+		  }
+
+		  function addTags(){
+				console.log("Add tags.");
+		  
+				if(index === tags.length){
+					  index = 0;
+					  addEvents();
+				}
+				else{
+					  var cur = tags[index];
+					  index = index + 1;
+					  code.createTag(cur[0], addTags);
+				}
+		  }
+
+		  function assignHostOrgIds(err, results){
+			if(err){ throw err;}
+			
+			console.log("assignHostOrgIds.");
+			console.log(results.length);
+			console.log(results[0]);
+			
+			
+			var ids = results.map(function(elem){ return elem._id;});
+			
+			console.log(ids);
+			
+			event1.push(ids[0]);
+			event2.push(ids[0]);
+			event3.push(ids[0]);
+			
+			addTags();
+		  }
+
+		  function addOrgs(){
+				console.log("AddOrgs " + index);		  
+				if(index === orgs.length){
+					  index = 0;
+					  code.searchDb('organizations',{},assignHostOrgIds);
+				}
+				else{
+					  var cur = orgs[index];
+					  index = index + 1;
+
+					  console.log(cur[0], cur[1], cur[2]);					  
+					  
+					  code.createOrganization(cur[0], cur[1], cur[2], addOrgs);
+				}
+		  }
+
+		  
+		  function runIt(){
+				console.log("Run it.");
+				index = 0;
+				addOrgs();
+		  }
+
+		// Meant to clear the collection before starting the test.
+		function clearDbs(){
+			var arrayCollsToClear = ['users', 'organizations', 'events', 'tags'];
+		
+			var index = 0;
+			console.log("Clearing Dbs");
+			// Clears the collections in collsToClear
+			function clearCol(){				
+				if(index >=0 && index >= arrayCollsToClear.length){
+					runIt();
+				}
+				else{
+					database.collection(arrayCollsToClear[index], function(error, collection){
+						if(error)
+							error;
+						
+						console.log("Cleared Collection: " + index);
+						index++;
+						
+						collection.remove({},{},clearCol);
+					});	
+				}
+			}
+			
+			clearCol();
+		}
+
+		console.log("Code Compiled");
+        clearDbs();
+
+		//response.send( { 'success': true});
+		
+	});
+	
+	
     return app;
 }
