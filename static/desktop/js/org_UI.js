@@ -24,10 +24,6 @@ var UI = function(config){
 
         }
     }.bind(this));
-    this.dom.topleft_button.click(function() {
-        alert("to be implemented");
-    });
-    this.dom.topright_button.click(this.loginPage.bind(this));
 
 }
 
@@ -44,15 +40,26 @@ UI.prototype =
         };
 
 
+
+    },
+
+    //for events of a particular org
+    showEvents: function(events){
+        //bind left/right buttons
+        this.dom.topleft_button.unbind('click');
+        this.dom.topleft_button.html('settings');
+        this.dom.topleft_button.click(function() {
+            alert("to be implemented");
+        });
+
+        this.dom.topright_button.unbind('click');
         if(window.app_API.isLoggedIn() === false) {
             this.dom.topright_button.html("Login");
         } else {
             this.dom.topright_button.html("Logout");
         }
-    },
+        this.dom.topright_button.click(this.loginPage.bind(this));
 
-    //for events of a particular org
-    showEvents: function(events){
         allEvents = events['events'];
         console.log(allEvents);
         this.dom.eventInfo.html("");
@@ -78,11 +85,14 @@ UI.prototype =
             li.append(infoButton);
             li.append(timeStart);
             li.append(location);
-            infoButton.click (function () {
-                console.log("hit");
-                this.edit_mode = false;
-                this.org_app.showEvent(item._id);
-            }.bind(this));
+            (function() {
+                var event = item;
+                var that = this;
+                infoButton.click (function () {
+                    that.edit_mode = false;
+                    that.org_app.showEvent(event._id);
+                });
+            }.bind(this))();
 
             this.dom.myEvents.append(li);
             //this.allEvents.push(item);
@@ -94,18 +104,19 @@ UI.prototype =
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
         //get back to myevents on clicking "back"
+        this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
         // var image??? var tags?
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
-        var timeStart = $("<input>").val(event.timeStart); 
-        var timeEnd = $("<input>").val(event.timeEnd); 
+        var timeStart = $("<input>").val(event.timeStart);
+        var timeEnd = $("<input>").val(event.timeEnd);
         var description = $("<input>").val(event.description);
 
         name.addClass("name").attr({'id':"display_name", 'disabled':true});
         location.addClass("location").attr({'id':"display_location", 'disabled':true});
         timeStart.addClass("timeStart").attr({'id':"display_timeStart", 'disabled':true});
-        timeEnd.addClass("timeEnd").attr({'id':"display_timeEnd", 'disabled':true}); 
+        timeEnd.addClass("timeEnd").attr({'id':"display_timeEnd", 'disabled':true});
         description.addClass("description").attr({'id':"display_description", 'disabled':true});
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
@@ -116,20 +127,23 @@ UI.prototype =
     },
 
     set_edit_save: function(event) {
+        console.log("this was clicked");
+        this.dom.topright_button.unbind('click');
         this.dom.topright_button.click(function () {
+            console.log("this was clicked!!");
             // does this refer to the same buttons now???
             this.edit_mode = !this.edit_mode;
             //just clicked on edit
             var location = $('.location');
             var name = $('.name');
             var timeStart = $('.timeStart');
-            var timeEnd = $('.timeEnd'); 
+            var timeEnd = $('.timeEnd');
             var description = $('.description');
             if (this.edit_mode) {
                 $(".location").attr('id',"edit_location").removeAttr('disabled');
                 $(".name").attr('id',"edit_name").removeAttr('disabled');
                 $(".timeStart").attr('id',"edit_timeStart").removeAttr('disabled');
-                $(".timeEnd").attr('id',"edit_timeEnd").removeAttr('disabled'); 
+                $(".timeEnd").attr('id',"edit_timeEnd").removeAttr('disabled');
                 $(".description").attr('id',"edit_description").removeAttr('disabled');
 
                 this.dom.topright_button.html("Save");
@@ -140,7 +154,7 @@ UI.prototype =
                 var content = { "_id": _id,
                              "location": location.val(),
                              "timeStart": timeStart.val(),
-                             "timeEnd": timeEnd.val(), 
+                             "timeEnd": timeEnd.val(),
                              "name": name.val(),
                              "description": description.val()
                              };
@@ -175,7 +189,7 @@ UI.prototype =
             var location = $("<input>").html(event.location).addClass("info").attr({"type": "text", "id": "location"});
             var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
             var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
-            var timeEnd = $("<input>").html(event.timeEnd).addClass("info").attr({"type": "date", "id": "timeEnd"}); 
+            var timeEnd = $("<input>").html(event.timeEnd).addClass("info").attr({"type": "date", "id": "timeEnd"});
             var labelDescription = $("<label>").html("Description").attr({"for": "description"});
             var description = $("<textarea>").html(event.description).addClass("info").attr({"id": "description"});
 
@@ -183,7 +197,7 @@ UI.prototype =
             this.dom.eventInfo.append($("<li>").append(labelName, name));
             this.dom.eventInfo.append($("<li>").append(labelLocation,location));
             this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
-            this.dom.eventInfo.append($("<li>").append(labelDescription,description)); 
+            this.dom.eventInfo.append($("<li>").append(labelDescription,description));
             this.dom.eventInfo.css({"visibility": "visible"});
         }
         //Save
@@ -200,8 +214,8 @@ UI.prototype =
             location.attr({'id':"display_location", 'disabled':true});
             name.attr({'id':"display_name", 'disabled':true});
             timeStart.attr({'id':"display_timeStart", 'disabled':true});
-            
-            timeEnd.attr({'id':"display_timeEnd", 'disabled':true}); 
+
+            timeEnd.attr({'id':"display_timeEnd", 'disabled':true});
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;

@@ -233,9 +233,10 @@ module.exports = function(app, db, Auth) {
         var user2 = ['Shikha', '123'];
         var user3 = ['Dan Yang', '123'];
 
-        var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"]
-        var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."]
-        var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"]
+        var org1 = ['Mayur Sasa', 'abc', "Indian haven on campus"];
+        var org2 = ['Activities Board', 'abc', "You know what they say about people with big budgets..."];
+        var org3 = ['Taiwanese Student Association', 'abc', "Better than Asian Student Association"];
+        var org4 = ['Test', 'test', "A test organization"];
 
         var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
         var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
@@ -259,7 +260,7 @@ module.exports = function(app, db, Auth) {
 
         // Org1 corresponds to event1 and so on. Change this by changing assignHostOrgIds below.
         var users = [user1, user2, user3];
-        var orgs = [org1, org2, org3];
+        var orgs = [org4, org1, org2, org3];
         var events = [event1, event2, event3, event4,
                       event5, event6, event7, event8,
                       event9, event10, event11, event12,

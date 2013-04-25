@@ -4,6 +4,49 @@
 =============================================*/
 
 window.addEventListener('load', function(){
+    var ui;
+
+
+    (function(){
+
+        var g = {
+            handleLogoutResult: function(err, result){
+                window.location = '/login.html';
+            }
+        }
+
+        //==================
+        //  API
+        //==================
+
+        window.LogoutManager = {
+            setHangleLogoutResult: function(callback){
+                g.handleLogoutResult = callback;
+            },
+        }
+
+        //==================
+        //  DOM
+        //==================
+
+        Login_UI.prototype.logoutAction = function(){
+            var request = $.ajax({ type: 'post', url: '/auth/logout'});
+            setupCallback(request, g.handleLogoutResult);
+        };
+
+        function setupCallback(request, done){
+            request.done(function(data) {
+                if (data.err !== undefined)
+                    done(data.err, null);
+                else
+                    done(null, data);
+            });
+            request.fail(function(jqXHR, textStatus, err){
+                done(err, null);
+            });
+        }
+    })();
+
     var ui = new Login_UI();
 
 
@@ -150,45 +193,4 @@ window.addEventListener('load', function(){
     })();
 
 
-    (function(){
-
-        var g = {
-            handleLogoutResult: function(err, result){
-                window.location = '/login.html';
-            }
-        }
-
-        //==================
-        //  API
-        //==================
-
-        window.LogoutManager = {
-            setHangleLogoutResult: function(callback){
-                g.handleLogoutResult = callback;
-            },
-        }
-
-        //==================
-        //  DOM
-        //==================
-
-        var logoutButton = $('#logout_button');
-
-        logoutButton.onButtonTap(function(){
-            var request = $.ajax({ type: 'post', url: '/auth/logout'});
-            setupCallback(request, g.handleLogoutResult);
-        });
-
-        function setupCallback(request, done){
-            request.done(function(data) {
-                if (data.err !== undefined)
-                    done(data.err, null);
-                else
-                    done(null, data);
-            });
-            request.fail(function(jqXHR, textStatus, err){
-                done(err, null);
-            });
-        }
-    })();
 });

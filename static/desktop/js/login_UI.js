@@ -20,7 +20,7 @@ Login_UI.prototype =
         };
 
         if(window.app_API.isLoggedIn() !== false) {
-            var app = $('#app');
+            this.logoutAction();
         }
     },
 
