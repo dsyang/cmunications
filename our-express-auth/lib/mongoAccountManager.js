@@ -93,8 +93,8 @@ exports.createAccount = function(username, password, done, collection){
         done('invalid collection');
     g.mongoCollections[collection].insert(
         {
-            username: username,
-            hashedPassword: passwordTools.saltAndHash(password),
+            name: username,
+            password: passwordTools.saltAndHash(password),
             savedEvents : [ ],
             tags : [ ],
             orgs : [ ],
@@ -151,7 +151,7 @@ function openCollections(collections, done){
 
                 g.mongoCollections[name] = collection;
                 g.mongoCollections[name].ensureIndex(
-                    'username',
+                    'name',
                     { 'unique': true },
                     onUniquenessEnsured
                 );

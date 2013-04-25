@@ -249,17 +249,18 @@ module.exports = function(app, db, Auth) {
 		  var users = [user1, user2, user3];
 		  var orgs = [org1, org2, org3];
 		  var events = [event1, event2, event3];
-		  var tags = [tag1, tag2];	
+		  var tags = [tag1, tag2];
 
 		  // Check that the database did what we want.
 		  var callback = function( error, result ){
-				console.log("Return the list of events.");		  
-		  
+				console.log("Return the list of events.");
+
 				if(error){throw error;}
 				code.listEventsAction(request, response, undefined);
 		  }
-		  
-		  function addUsers(){
+
+		  function addUsers(err, result){
+          if(err) {throw err;}
 				console.log("Add users.");
 
 				if(index === users.length){
@@ -267,12 +268,12 @@ module.exports = function(app, db, Auth) {
 				}
 				else{
 					  var cur = users[index];
-					  //console.log("Index: " + index + "Curr: " + cur);
+					  console.log("Index: " + index + "Curr: " + cur);
 					  index = index + 1;
 					  code.createUser(cur[0], cur[1], addUsers);
 				}
 		  }
-		  
+
 		  function addEvents(){
 				console.log("Add Events.");
 
@@ -289,7 +290,7 @@ module.exports = function(app, db, Auth) {
 
 		  function addTags(){
 				console.log("Add tags.");
-		  
+
 				if(index === tags.length){
 					  index = 0;
 					  addEvents();
@@ -303,25 +304,26 @@ module.exports = function(app, db, Auth) {
 
 		  function assignHostOrgIds(err, results){
 			if(err){ throw err;}
-			
+
 			console.log("assignHostOrgIds.");
 			console.log(results.length);
 			console.log(results[0]);
-			
-			
+
+
 			var ids = results.map(function(elem){ return elem._id;});
-			
+
 			console.log(ids);
-			
+
 			event1.push(ids[0]);
 			event2.push(ids[0]);
 			event3.push(ids[0]);
-			
+
 			addTags();
 		  }
 
-		  function addOrgs(){
-				console.log("AddOrgs " + index);		  
+		  function addOrgs(err, result){
+          if(err) {throw err;}
+				console.log("AddOrgs " + index);
 				if(index === orgs.length){
 					  index = 0;
 					  code.searchDb('organizations',{},assignHostOrgIds);
@@ -330,13 +332,13 @@ module.exports = function(app, db, Auth) {
 					  var cur = orgs[index];
 					  index = index + 1;
 
-					  console.log(cur[0], cur[1], cur[2]);					  
-					  
+					  console.log(cur[0], cur[1], cur[2]);
+
 					  code.createOrganization(cur[0], cur[1], cur[2], addOrgs);
 				}
 		  }
 
-		  
+
 		  function runIt(){
 				console.log("Run it.");
 				index = 0;
@@ -346,11 +348,13 @@ module.exports = function(app, db, Auth) {
 		// Meant to clear the collection before starting the test.
 		function clearDbs(){
 			var arrayCollsToClear = ['users', 'organizations', 'events', 'tags'];
-		
+
 			var index = 0;
 			console.log("Clearing Dbs");
 			// Clears the collections in collsToClear
-			function clearCol(){				
+			function clearCol(err, result){
+          if(err) {throw err;}
+          console.log(result);
 				if(index >=0 && index >= arrayCollsToClear.length){
 					runIt();
 				}
@@ -358,15 +362,15 @@ module.exports = function(app, db, Auth) {
 					database.collection(arrayCollsToClear[index], function(error, collection){
 						if(error)
 							error;
-						
-						console.log("Cleared Collection: " + index);
+
+						console.log("Cleared Collection: " + arrayCollsToClear[index]);
 						index++;
-						
+
 						collection.remove({},{},clearCol);
-					});	
+					});
 				}
 			}
-			
+
 			clearCol();
 		}
 
@@ -374,9 +378,9 @@ module.exports = function(app, db, Auth) {
         clearDbs();
 
 		//response.send( { 'success': true});
-		
+
 	});
-	
-	
+
+
     return app;
 }
