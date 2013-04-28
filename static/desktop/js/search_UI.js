@@ -10,7 +10,8 @@ var Search_UI = function(config) {
     //on clicking the tab show all events BIND THIS?
 
     //Bind all the tabs relavent to events.
-    this.dom.tab_search.click(this.showResults.bind(this));
+    this.bindTabs();
+    org_app.ui.bindTabs();
 
 
 }
@@ -44,7 +45,12 @@ Search_UI.prototype = {
 
     },
 
-    showResults: function(results) {
+    bindTabs: function() {
+        this.dom.tab_search.unbind('click');
+        this.dom.tab_search.click(this.showResults.bind(this));
+    },
+
+    showResults: function(results, doRender) {
         console.log("show events!");
         this.initDom();
 
@@ -64,12 +70,18 @@ Search_UI.prototype = {
             } else {
                 this.dom.searchResults.html('');
                 for(var i= 0; i < events.length; i++) {
-                    var li = org_app.ui.generate_listing(events[i]);
+                    var li = org_app.ui.generate_listing(
+                        events[i], function() {
+                            this.showResults(events, true);
+                        }.bind(this));
                     this.dom.searchResults.append(li);
                 }
             }
         }.bind(this);
 
+        if(doRender === true) {
+            render(results);
+        }
         console.log(results);
         console.log("Showing search results");
     }

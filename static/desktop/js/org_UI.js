@@ -13,21 +13,8 @@ var UI = function(config){
     this.org_app = config.events;
 
     //on clicking the tab show all events BIND THIS?
+    this.bindTabs();
 
-    //Bind all the tabs relavent to show/create/edit events.
-    this.dom.tab_myEvents.click(this.org_app.showEvents);
-    this.dom.tab_create.click(function() { 
-        if(window.app_API.getAccountObject() !== null &&
-           window.app_API.getAccountObject().accountType !== "organizations") {
-            alert('You can only create an event if you login as an organzation.'+
-                  ' Contact cmunications@andrew.cmu.edu to receive organization'+
-                  ' account credentials.');
-        } 
-        else { 
-        this.createEvent();
-
-        } 
-    }.bind(this));
 
 }
 
@@ -60,6 +47,27 @@ UI.prototype =
 
     },
 
+    bindTabs: function() {
+        //Bind all the tabs relavent to show/create/edit events.
+        this.dom.tab_myEvents.unbind('click');
+        this.dom.tab_myEvents.click(this.org_app.showEvents);
+
+        this.dom.tab_create.unbind('click');
+        this.dom.tab_create.click(function() {
+            if(window.app_API.getAccountObject() === undefined ||
+               window.app_API.getAccountObject().accountType !== "organizations") {
+                alert('You can only create an event if you login as an organzation.'+
+                      ' Contact cmunications@andrew.cmu.edu to receive organization'+
+                      ' account credentials.');
+            } else {
+                this.createEvent();
+            }
+        }.bind(this));
+
+    },
+
+/* see Search_UI.js!!
+
 
     searchEvents: function(events) {
         this.dom.esearch.html("");
@@ -75,7 +83,7 @@ UI.prototype =
             this.org_app.searchEvents(content);
         }.bind(this));
     },
-
+*/
 
     //for events of a particular org
     showEvents: function(events){
@@ -107,14 +115,16 @@ UI.prototype =
         this.dom.topleft_button.html("Settings");
         for (var i = 0; i < allEvents.length; i++) {
             var item = allEvents[i];
-
-            var li = this.generate_listing(item);
-
+            var li = this.generate_listing(
+                item, function() {
+                    console.log("back");
+                    this.org_app.showEvents();
+                }.bind(this));
             this.dom.myEvents.append(li);
         }
     },
 
-    generate_listing: function(event) {
+    generate_listing: function(event, backfn) {
         var li = $("<li>");
         var starred = $("<div>").addClass('starred');
         var name = $("<h3>").html(event.name);
@@ -133,7 +143,7 @@ UI.prototype =
             var that = this;
             infoButton.click (function () {
                 that.edit_mode = false;
-                that.org_app.showEvent(event._id);
+                that.org_app.showEvent(event._id, backfn);
             });
         }.bind(this))();
 
@@ -156,13 +166,15 @@ UI.prototype =
         return time;
     },
     //show a particular event/edit it
-    showEvent: function(event) {
+    showEvent: function(event, backfn) {
+        console.log(event);
+        console.log('anotherbacl', backfn)
         this.initDom();
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
         //get back to myevents on clicking "back"
         this.dom.topleft_button.unbind('click');
-        this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
+        this.dom.topleft_button.click(backfn);
         // var image??? var tags?
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
@@ -207,7 +219,7 @@ UI.prototype =
                 var timeStart = $("<input>").html(displaytimeStart.val()).addClass("info");
                 timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": timeStart.val()});
                 var labelDescription = $("<label>").html("Description").attr({"for": "description"});
-                var test = $("<textarea>").text("hello test"); 
+                var test = $("<textarea>").text("hello test");
                 var description = $("<textarea>").html(event.description).addClass("info");
                 description.attr({"id": "description", "value": displaydescription.val()});
 
@@ -274,7 +286,7 @@ UI.prototype =
             this.dom.eventInfo.append($("<li>").append(labelLocation,location));
             this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
             this.dom.eventInfo.append($("<li>").append(labelDescription,description));
-            this.dom.eventInfo.css({"visibility": "visible"}); 
+            this.dom.eventInfo.css({"visibility": "visible"});
             this.dom.eventInfo.attr({"class": "on"});
         }
         //Save
