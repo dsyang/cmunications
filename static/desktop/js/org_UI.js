@@ -116,19 +116,19 @@ UI.prototype =
 
     generate_listing: function(event) {
         var li = $("<li>");
-        var starred = $("<span>").addClass('starred');
+        var starred = $("<div>").addClass('starred');
         var name = $("<h3>").html(event.name);
-        var infoButton = $("<span>").addClass('more').html("<a> </a>");
-
+        var infoButton = $("<div>").addClass('more').html("<a> </a>");
         var location = $("<p>").html(event.location);
         var timeStart = $("<p>").html(this.generateTime(event.timeStart));
         location.addClass("location");
         timeStart.addClass("time");
-        li.append(name);
         li.append(starred);
         li.append(infoButton);
-        li.append(timeStart);
+        li.append(name);
         li.append(location);
+        li.append(timeStart);
+
         (function() {
             var that = this;
             infoButton.click (function () {
