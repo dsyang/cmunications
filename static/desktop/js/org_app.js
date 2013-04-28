@@ -32,13 +32,13 @@ org_app.prototype = {
         }.bind(this));
     },
 
-    showEvent: function(_id) {
+    showEvent: function(_id, backfn) {
         console.log("grabbing event details");
         window.org_API.get(_id, function(err, result) {
             console.log("grabbed", err, result);
             if (err)
                 throw err;
-            this.ui.showEvent(result.event);
+            this.ui.showEvent(result.event, backfn);
         }.bind(this));
     },
 
