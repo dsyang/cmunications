@@ -1,8 +1,7 @@
 var Search_UI = function(config) {
 
-    this.dom = {
-        tab_search: $('.tab.search')
-    };
+
+    this.initDom();
 
     //used in org_app.js
     this.search_app = config.events;
