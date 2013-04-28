@@ -36,13 +36,14 @@ body {
 	background-repeat: none;
 }
 
-input::-webkit-input-placeholder,::-moz-input-placeholder { 
-	color: #7d7d7d; 
-} 
+input::-webkit-input-placeholder,::-moz-input-placeholder {
+	color: #7d7d7d;
+}
 
 #rest {
 	margin-top: 70px;
-	z-index: 0;
+  position: relative;
+  padding-bottom: 70px;
 }
 
 /*
@@ -54,7 +55,7 @@ Navigation
 .contain {
 	display: inline-block;
 	background-position: center;
-	width: 24%; 
+	width: 24%;
 	vertical-align: middle;
 }
 
@@ -84,7 +85,7 @@ Navigation
 	background: -ms-linear-gradient(top, #45484d 0%,#000000 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
-	
+
 
 	/*
 	background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
@@ -126,7 +127,7 @@ Navigation
 
 
 .tab [type=radio] {
-  display: none;   
+  display: none;
 
 }
 
@@ -173,9 +174,10 @@ Header
 	color: #fefefe;
 	position: fixed;
 	top: 0px;
+  z-index: 100;
 }
 
-/* doesn't fucking work center align 
+/* doesn't fucking work center align
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);*/
 #topbar:before {
 	content: '';
@@ -346,7 +348,7 @@ More Info
 
 #display_name {
 	font-size: 2em;
-	font-family: 
+	font-family:
 	border: none;
 }
 
@@ -383,4 +385,3 @@ More Info
 	height: 20px;
 	width: 20px;
 }
-
