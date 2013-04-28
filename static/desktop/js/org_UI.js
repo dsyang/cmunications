@@ -121,7 +121,7 @@ UI.prototype =
         var infoButton = $("<span>").addClass('more').html("<a> </a>");
 
         var location = $("<p>").html(event.location);
-        var timeStart = $("<p>").html(event.timeStart);
+        var timeStart = $("<p>").html(this.generateTime(event.timeStart));
         location.addClass("location");
         timeStart.addClass("time");
         li.append(name);
@@ -140,6 +140,21 @@ UI.prototype =
         return li;
     },
 
+    generateTime: function(dateObj) {
+        var date = new Date(dateObj);
+        var day = date.toDateString();
+        var timeHours = date.getHours();
+        var timeMin = date.getMinutes();
+        var zone;
+        if (timeHours > 12) {
+            zone = " PM";
+            timeHours = timeHours % 12;
+        }
+        else
+            zone = " AM";
+        var time = day + ", " + String(timeHours) + ":" + String(timeMin) + zone;
+        return time;
+    },
     //show a particular event/edit it
     showEvent: function(event) {
         this.initDom();
@@ -238,6 +253,7 @@ UI.prototype =
     createEvent: function () {
         if (this.create_mode == false) {
             this.create_mode = true;
+            this.dom.tab_create.addClass("selected_tab");
             this.dom.myEvents.html("");
             this.dom.eventInfo.html("");
             this.dom.topleft_button.html("Cancel");

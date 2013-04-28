@@ -44,15 +44,20 @@ Navigation
 ************************
 */
 
-.tab {
+.contain {
 	display: inline-block;
+	background-position: center;
+	width: 24%; 
+	vertical-align: middle;
+}
+
+.tab {
+	background-size: contain;
+	width: 80%;
+	height: 30px;
+	margin: 15px 10%;
 	background-repeat: no-repeat;
 	background-position: center;
-	height: 30px;
-	width: 23%;
-	vertical-align: middle;
-	margin: 15px 0px;
-	background-size: contain;
 }
 
 .nav {
@@ -64,33 +69,71 @@ Navigation
 	text-align: center;
 	background-color: #e6e6e6;
 	background-repeat: no-repeat;
+	background: #45484d; /* Old browsers */
+	background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484d), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #45484d 0%,#000000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #45484d 0%,#000000 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+	
+
+	/*
 	background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
 	background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
 	background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
 
 	border: 1px solid #ccc;
-	border-top-color: #bbb;
+	border-top-color: #bbb; */
 
 }
 
 .tab.ME {
-	background-image:url('img/starred.png');
+	background-image:url('img/final/starred.png');
 }
 
 .tab.search {
-	background-image: url('img/search.png');
+	background-image: url('img/final/search.png');
 }
 
 .tab.notify {
-	background-image: url('img/globe.png');
+	background-image: url('img/final/globe.png');
 }
 
 .tab.create {
-	background-image: url('img/create.png');
+	background-image: url('img/final/create.png');
+}
+
+/* hover works on mobile!!!! */
+.contain:hover {
+	background: #7d7e7d; /* Old browsers */
+	background: -moz-linear-gradient(top, #7d7e7d 0%, #0e0e0e 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #7d7e7d 0%,#0e0e0e 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
 }
 
 
+.tab [type=radio] {
+  display: none;   
 
+}
+
+
+/* selected */
+.selected {
+
+}
+
+/*
+************************
+navigation
+************************
+*/
 
 
 
@@ -141,6 +184,10 @@ Header
   	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   	border-color: #0064cd #0064cd #003f81;
   	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+
+.top_button:active {
+	
 }
 
 #left_button {
@@ -294,3 +341,4 @@ More Info
 	height: 20px;
 	width: 20px;
 }
+
