@@ -2,6 +2,19 @@
 
 //`applicationCode.js` holds all the logic for our application.
 var async = require("async");
+
+function success(name, obj) {
+    var res =  {'success': true};
+    res[name] = obj;
+    return res;
+}
+
+function fail(message) {
+    return {'success': false,
+            'message': message};
+}
+
+
 module.exports = function(app, db, Auth) {
     var code = new require("./applicationCode.js").Application(db);
 
@@ -33,13 +46,43 @@ module.exports = function(app, db, Auth) {
         var data = {};
         code.listEventsAction(request, response, data);
     });
-    app.post('/events/:id/star/',
-             //             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
-             function(request, response) {
-                 var data = {event_id: request.params.id};
-                 code.starEventAction(request, response, data)
-             });
 
+    app.post('/events/:id/star/', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"))
+                    } else {
+                        var data = { event_id: request.params.id,
+                                     user: account };
+                        code.starEventAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });
+
+    app.post('/events/:id/unstar/', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"))
+                    } else {
+                        var data = { event_id: request.params.id,
+                                     user: account };
+                        code.unstarEventAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });    
+    
     app.get('/events/starred',
             //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
@@ -84,6 +127,25 @@ module.exports = function(app, db, Auth) {
             if(err) response.send({success: false, message: err});
             else response.send({success: true,
                                 account: account});
+        });
+    });
+    app.get('/auth/refresh', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send({success: false, message: "not logged in"});
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send({success: false, message: "cannot find account"});
+                    } else {
+                        response.clearCookie('account');
+                        response.cookie('account',
+                                        JSON.stringify(account),
+                                        { maxAge: 900000 });
+                        response.send({success: true});
+                    }
+                });
+            }
         });
     });
 

@@ -8,9 +8,9 @@ var org_app = function(){
         events: {
             showEvents: this.showEvents.bind(this),
             showEvent: this.showEvent.bind(this),
+            starEvent: this.starEvent.bind(this),
             editEvent: this.editEvent.bind(this),
             createEvent: this.createEvent.bind(this),
-            searchEvents: this.searchEvents.bind(this),
         }
     });
 
@@ -56,13 +56,43 @@ org_app.prototype = {
         }.bind(this));
     },
 
-    searchEvents: function(content) {
-        window.org_API.search(content, function (err, data) {
-            if (err)
-                throw err;
-            console.log(data);
-            this.ui.showEvents(data);
-        }.bind(this));
+    starEvent: function(_id) {
+        var account = window.app_API.getAccountObject();
+        if(account === undefined) {
+            alert("You must login as a user to star events");
+        } else if(account.accountType !== 'users') {
+            alert("You must login as a user (not organization) to star events");
+        } else {
+            var that = this;
+            if(account.savedEvents.indexOf(_id) === -1) {
+                window.org_API.star(_id, function(err, data) {
+                    if(err) throw err;
+                    console.log(data);
+                    console.log(typeof(data.success));
+                    if(data.success === true) {
+                        window.app_API.refreshAccountObject(function(err, result) {
+                            if(err) throw err;
+                            console.log("refreshing account object", result);
+                            that.showEvents();
+                        });
+                    }
+                });
+            } else {
+                window.org_API.unstar(_id, function(err, data) {
+                    if(err) throw err;
+                    console.log(data);
+                    console.log(typeof(data.success));
+                    if(data.success === true) {
+                        window.app_API.refreshAccountObject(function(err, result) {
+                            if(err) throw err;
+                            console.log("refreshing account object", result);
+                            that.showEvents();
+                        });
+                    }
+                });
+            }
+        }
+
     },
 
     editEvent: function(_id,content) {
