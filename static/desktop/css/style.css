@@ -294,8 +294,18 @@ Each Event
 
 
 
-.myevents .starred {
+.myevents .star {
 	background-image: url('img/favorites.png');
+	display: inline;
+	float: left;
+	background-size: contain;
+	height: 30px;
+	width: 30px;
+	margin: 0px 5px;
+}
+
+.myevents .starred {
+	background-image: url('img/favorites-starred.png');
 	display: inline;
 	float: left;
 	background-size: contain;

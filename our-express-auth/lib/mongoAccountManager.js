@@ -53,10 +53,8 @@ exports.getAccount = function(username, password, done){
                       } else if (count === 1) {
                           if(!passwordTools.validatePassword(password,
                                                             account.password)) {
-                              console.log("fail");
                               done('bad password', null);
                           } else {
-                              console.log("success");
                               done(err, account);
                           }
                       } else if (count > 1) {
@@ -68,11 +66,9 @@ exports.getAccount = function(username, password, done){
 
     function mapfn(item, callback) {
         callback(null, function(cb) {
-            console.log("about to find");
             item.col.findOne(
                 {name: username} ,
                 function(err, result) {
-                    console.log(result)
                     if(err) {
                         cb(err);
                     } else if( result === null) {

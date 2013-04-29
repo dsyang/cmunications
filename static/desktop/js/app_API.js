@@ -24,7 +24,25 @@
                     }
                 }
             }
-
+        },
+        refreshAccountObject: function(done) {
+            var request = $.ajax({type:'get',
+                                  url: '/auth/refresh'});
+            setupCallback(request, done);
         }
+    }
+
+
+    /* on success call done */
+    function setupCallback(request, done){
+        request.done(function(data) {
+            if (data.err !== undefined)
+                done(data.err, null);
+            else
+                done(null, data);
+        });
+        request.fail(function(jqXHR, textStatus, err){
+            done(err, null);
+        });
     }
 })();

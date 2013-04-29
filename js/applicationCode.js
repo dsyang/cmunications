@@ -326,8 +326,8 @@ function Application(db) {
 
         addToArrayField(collEvents, query, 'followers', userids, cb);
     }
-    
-    
+
+
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
         var query = {};
@@ -460,11 +460,11 @@ function Application(db) {
     //given data.event_id
     function starEventAction(request, response, data) {
         var event_id = ObjectID(data.event_id);
-        var user_id = ObjectID(request.user.id);
+        var user_id = ObjectID(String(data.user._id));
         searchDb(collEvents, {'_id' : event_id}, cb);
         function cb(err, result) {
             if(err) response.send(fail(err));
-            if(!result) response.send(fail('no event found'));
+            if(result.length === 0) response.send(fail('no event found'));
             addEventsToUser( user_id, [event_id], cb2);
         }
         function cb2(err,result){
@@ -476,7 +476,7 @@ function Application(db) {
         function cb3(err, result) {
             if(err){
                 response.send(fail(err));
-            } else if(result[0]){
+            } else if(result > 0 ){
                 response.send(success('success', true));
             } else {
                 response.send(fail('no event found'));
