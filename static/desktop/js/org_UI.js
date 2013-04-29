@@ -173,16 +173,19 @@ UI.prototype =
         var location = $("<input>").val(event.location);
         var timeStart = $("<input>").val((new Date(event.timeStart)).toDateString());
         var description = $("<textarea>").val(event.description);
+        var location_icon = $("<img>").attr({"src": "img/final/location.png", "id": "location_icon"});
 
-        name.addClass("name display info").attr({'id':"display_name", 'disabled':true});
-        location.addClass("location display info").attr({'id':"display_location", 'disabled':true});
-        timeStart.addClass("timeStart display info").attr({'id':"display_timeStart", 'disabled':true});
-        description.addClass("description display info").attr({'id':"display_description", 'disabled':true});
+        name.addClass("name display").attr({'id':"display_name", 'disabled':true});
+        location.addClass("location display").attr({'id':"display_location", 'disabled':true});
+        timeStart.addClass("timeStart display").attr({'id':"display_timeStart", 'disabled':true});
+        description.addClass("description display").attr({'id':"display_description", 'disabled':true});
 
 
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
-        this.dom.eventInfo.append(name,location,timeStart,description);
+        ([name, location_icon, location, timeStart, description]).forEach (function (each) {
+            this.dom.eventInfo.append($("<li>").append(each));
+        }.bind(this));
         this.dom.eventInfo.css({"visibility": "visible"});
         //insert everything in the event Info div
         this.set_edit_save(event);
@@ -215,11 +218,10 @@ UI.prototype =
                 var test = $("<textarea>").text("hello test");
                 var description = $("<textarea>").html(event.description).addClass("info");
                 description.attr({"id": "description", "value": displaydescription.val()});
-
                 this.dom.eventInfo.html("");
                 /*this.dom.eventInfo.append($("<li>").append(test)); */
                 this.dom.eventInfo.append($("<li>").append(labelName, name));
-                this.dom.eventInfo.append($("<li>").append(labelLocation,location));
+                this.dom.eventInfo.append($("<li>").append(labelLocation, location));
                 this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
                 this.dom.eventInfo.append($("<li>").append(labelDescription,description));
                 this.dom.eventInfo.css({"visibility": "visible"});
@@ -268,12 +270,13 @@ UI.prototype =
             var labelName = $("<label>").html("Name").attr({"for": "name"});
             var name = $("<input>").html(event.name).addClass("info").attr({"type": "text", "id": "name", "placeholder": "ex: Hey Marseilles"});
             var labelLocation = $("<label>").html("Location").attr({"for": "info"});
-            var location = $("<input>").html(event.location).addClass("info").attr({"type": "text", "id": "location"});
+            var location = $("<input>").html(event.location).addClass("info").attr({"type": "text", "id": "location", "placeholder": "ex: UC Rangos"});
             var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
             var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
+            var date = $("<input>").html(event.timeStart).addClass("date").attr({"type": "time"});
             var timeEnd = $("<input>").html(event.timeEnd).addClass("info").attr({"type": "date", "id": "timeEnd"});
             var labelDescription = $("<label>").html("Description").attr({"for": "description"});
-            var description = $("<textarea></textarea>").html(event.description).addClass("info").attr({"id": "description"});
+            var description = $("<textarea></textarea>").html(event.description).addClass("info").attr({"id": "description", "placeholder": "Add more info"});
 
             this.dom.eventInfo.append($("<li>").append(labelName, name));
             this.dom.eventInfo.append($("<li>").append(labelLocation,location));
