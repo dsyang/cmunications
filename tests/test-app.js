@@ -760,10 +760,22 @@ asyncTest("starEventAction", function() {
 	  scope.data.event_id;
 
 	  // Check that the database did what we want.
+	  var callback2 = function( error, result ){
+            console.log(result[0]);
+
+		    ok(result[0].followers[0].toString() ===  scope.request.user.id, 'Fields not correct');
+	      start();
+	  }      
+      
+	  // Check that the database did what we want.
 	  var callback = function( error, result ){
 
 		    ok(result[0].savedEvents[0].toString() ===  scope.data.event_id, 'Fields not correct');
-	      start();
+
+		    var query = {};
+		    query['_id'] = scope.data.event_id_obj;
+            
+		    scope.app.searchDb('events', query, callback2);            
 	  }
 
 	  var callback1 = function(){
@@ -784,6 +796,7 @@ asyncTest("starEventAction", function() {
 
 	  function saveEventIds(err, results){
 		    scope.data.event_id = results[0]._id.toString();
+            scope.data.event_id_obj = results[0]._id;
 		    scope.app.searchDb('users',{'name' : "Shikha"},saveUserId);
 	  }
 

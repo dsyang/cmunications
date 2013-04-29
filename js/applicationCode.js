@@ -297,6 +297,15 @@ function Application(db) {
         addToArrayField(collOrgs, query, 'events', eventids, cb);
     }
 
+    // Adds users to event, by id. userids should be an array of ids.
+    function addUsersToEvent(eventid, userids, cb){
+        var query = {};
+        query['_id'] = eventid;
+
+        addToArrayField(collEvents, query, 'followers', userids, cb);
+    }
+    
+    
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
         var query = {};
@@ -436,7 +445,13 @@ function Application(db) {
             if(!result) response.send(fail('no event found'));
             addEventsToUser( user_id, [event_id], cb2);
         }
-        function cb2(err, result) {
+        function cb2(err,result){
+            if(err){
+                response.send(fail(err));
+            }
+            addUsersToEvent(event_id,[user_id], cb2);
+        }
+        function cb3(err, result) {
             if(err){
                 response.send(fail(err));
             } else if(result[0]){
