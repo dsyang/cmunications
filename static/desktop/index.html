@@ -15,7 +15,9 @@
     <script src="js/notification_UI.js"></script>
     <script src="js/notification_app.js"></script>
     <script src="js/notification_API.js"></script>
-
+    <script src="js/subscription_API.js"></script>
+    <script src="js/subscription_app.js"></script>
+    <script src="js/subscription_UI.js"></script>
 
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,6 +36,7 @@
            org_app = new org_app();
            search_app = new Search_app();
            notification_app = new Notification_app();
+           subscription_app = new Subscription_app();
         });
     </script>
 </head>
@@ -47,6 +50,13 @@
 	</div>
 	<div id = "clearfix"> </div>
 	<div id = "rest">
+      <div id="overlay" class="transition hidden">
+      </div>
+      <div id="overlay-content" class="initiallyHidden">
+        <h2>My Subscriptions</h2>
+        <input type="text" id="subscription_search" />
+        <ul id="subscription_results"></ul>
+      </div>
 		  <div id="app">
 			  <ul class = "myevents">
 			  </ul>
