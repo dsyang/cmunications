@@ -41,9 +41,9 @@ input::-webkit-input-placeholder,::-moz-input-placeholder {
 }
 
 #rest {
-	margin-top: 70px;
-  position: relative;
-  padding-bottom: 70px;
+	margin-top: 50px;
+  	position: relative;
+  	padding-bottom: 70px;
 }
 
 /*
@@ -174,7 +174,7 @@ Header
 	color: #fefefe;
 	position: fixed;
 	top: 0px;
-  z-index: 100;
+  	z-index: 100;
 }
 
 /* doesn't fucking work center align
@@ -335,32 +335,35 @@ More Info
 ************************
 */
 
+/* class info is for create/editing events */
 
-.info{
-	margin: 15px;
+#eventInfo .display {
+	border: none;
+	font-size: 1em;
+	background-repeat: no-repeat;
+	background-size: contain;
+	padding-left: 50px;
 	display: block;
-	width: 100%;
 }
 
-.info.display {
-	border: none;
-}
-
-#display_name {
+#eventInfo #display_name  {
 	font-size: 2em;
-	font-family:
 	border: none;
+	padding-left: 5px;
 }
 
-#display_location, #display_timeStart {
+
+
+/*
+#eventInfo #display_location, #eventInfo #display_timeStart {
 	font-size: 1em;
 	background-repeat: no-repeat;
 	background-size: contain;
 	padding-left: 30px;
-}
-
+} */
+ 
 #display_location {
-	background-image: url("img/location2.png");
+	background-image: url("img/final/location.png");
 }
 
 #display_timeStart {
@@ -369,19 +372,14 @@ More Info
 
 /* edit */
 #display_description {
-	background-image: url("img/desc.png");
 	font-size: 1em;
 	background-repeat: no-repeat;
 	overflow: visible;
 	resize: none;
-	padding-left: 30px;
-	width: 90%;
 	min-height: 100px;
+	padding-left: 0px;
+	margin: 0px;
+	padding-top: 10px;
 }
 
-#display_location:before {
-	content: url("img/location2.png");
-	background-size: contain;
-	height: 20px;
-	width: 20px;
-}
+
