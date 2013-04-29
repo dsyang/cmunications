@@ -186,8 +186,8 @@ function Application(db) {
 
         function insertEvent(err, results){
             if(err){ throw err;}
-            console.log("from insert Event");
-            console.log(results);
+            //console.log("from insert Event");
+            //console.log(results);
             event.hostOrg = results[0].name;
 
             db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
@@ -297,6 +297,15 @@ function Application(db) {
         addToArrayField(collOrgs, query, 'events', eventids, cb);
     }
 
+    // Adds users to event, by id. userids should be an array of ids.
+    function addUsersToEvent(eventid, userids, cb){
+        var query = {};
+        query['_id'] = eventid;
+
+        addToArrayField(collEvents, query, 'followers', userids, cb);
+    }
+    
+    
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
         var query = {};
@@ -436,7 +445,13 @@ function Application(db) {
             if(result.length === 0) response.send(fail('no event found'));
             addEventsToUser( user_id, [event_id], cb2);
         }
-        function cb2(err, result) {
+        function cb2(err,result){
+            if(err){
+                response.send(fail(err));
+            }
+            addUsersToEvent(event_id,[user_id], cb2);
+        }
+        function cb3(err, result) {
             if(err){
                 response.send(fail(err));
             } else if(result > 0 ){
@@ -491,11 +506,11 @@ function Application(db) {
 
         function cb(err, result) {
             if(err) throw err;
-            console.log(result);
+            //console.log(result);
             response.send(success('_id', result));
         }
 
-        console.log(data.event);
+        //console.log(data.event);
         response.send(success('dummy', 42));
     }
 
@@ -505,7 +520,7 @@ function Application(db) {
         searchDb(collEvents, {'_id': event_id}, cb);
         function cb(err, result) {
             if(err) throw err;
-            console.log(result);
+            //console.log(result);
             var dStart = new Date(data.event.timeStart);
             var dEnd = new Date(data.event.timeEnd);
             data.event.timeStart = dStart;
