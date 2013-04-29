@@ -400,7 +400,7 @@ function Application(db) {
         function cb(err, result) {
             if(err) response.send(fail(err));
 
-            response.send(success('results', result));
+            response.send(success('results', result.sort(function(a,b){ a > b})));
         }
 
 
