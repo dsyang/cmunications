@@ -158,101 +158,120 @@ UI.prototype =
         var time = day + ", " + String(timeHours) + ":" + String(timeMin) + zone;
         return time;
     },
+
     //show a particular event/edit it
     showEvent: function(event, backfn) {
-        console.log(event);
-        console.log('anotherbacl', backfn)
         this.initDom();
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
+
         //get back to myevents on clicking "back"
         this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.click(backfn);
+
         // var image??? var tags?
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
+        var host = $("<input>").val(event.hostOrg);
         var timeStart = $("<input>").val((new Date(event.timeStart)).toDateString());
         var description = $("<textarea>").val(event.description);
         var location_icon = $("<img>").attr({"src": "img/final/location.png", "id": "location_icon"});
 
         name.addClass("name display").attr({'id':"display_name", 'disabled':true});
         location.addClass("location display").attr({'id':"display_location", 'disabled':true});
+        host.addClass("host display").attr({'id': "display_host", 'disabled': true});
         timeStart.addClass("timeStart display").attr({'id':"display_timeStart", 'disabled':true});
         description.addClass("description display").attr({'id':"display_description", 'disabled':true});
 
 
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
-        ([name, location_icon, location, timeStart, description]).forEach (function (each) {
+        this.dom.eventInfo.html("");
+        ([name, location_icon, location, host, timeStart, description]).forEach (function (each) {
             this.dom.eventInfo.append($("<li>").append(each));
         }.bind(this));
         this.dom.eventInfo.css({"visibility": "visible"});
         //insert everything in the event Info div
-        this.set_edit_save(event);
+        this.set_edit_save(event, backfn);
     },
 
-    set_edit_save: function(event) {
+    set_edit_save: function(event, backfn) {
         console.log("this was clicked");
         this.dom.topright_button.unbind('click');
         this.dom.topright_button.click(function () {
-            console.log("this was clicked!!");
-            // does this refer to the same buttons now???
-            this.edit_mode = !this.edit_mode;
-            //just clicked on edit
-            var displaylocation = $('.location');
-            var displayname = $('.name');
-            var displaytimeStart = $('.timeStart');
-            var displaydescription = $('.description');
-            if (this.edit_mode) {
+            var user = window.app_API.getAccountObject();
+            if(user === undefined) {
+                alert("you must login as the host organization to edit this event!");
+                this.showEvent(event, backfn);
+            } else if(user.name !== event.hostOrg) {
+                alert("You are not the host organization!");
+                this.showEvent(event, backfn);
+            } else {
+                // does this refer to the same buttons now???
+                this.edit_mode = !this.edit_mode;
+                //just clicked on edit
+                var displaylocation = $('.location');
+                var displayname = $('.name');
+                var displayhost = $('.host');
+                var displaytimeStart = $('.timeStart');
+                var displaydescription = $('.description');
+                if (this.edit_mode) {
 
-                var labelName = $("<label>").html("Name").attr({"for": "name"});
-                var name = $("<input>").html(event.name).addClass("info");
-                name.attr({"type": "text", "id": "name", "placeholder": "Hey Marseilles", "value": displayname.val()});
-                var labelLocation = $("<label>").html("Location").attr({"for": "info"});
-                var location = $("<input>").html(event.location).addClass("info");
-                location.attr({"type": "text", "id": "location", "value": displaylocation.val()});
-                var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
-                var timeStart = $("<input>").html(displaytimeStart.val()).addClass("info");
-                timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": timeStart.val()});
-                var labelDescription = $("<label>").html("Description").attr({"for": "description"});
-                var test = $("<textarea>").text("hello test");
-                var description = $("<textarea>").html(event.description).addClass("info");
-                description.attr({"id": "description", "value": displaydescription.val()});
-                this.dom.eventInfo.html("");
-                /*this.dom.eventInfo.append($("<li>").append(test)); */
-                this.dom.eventInfo.append($("<li>").append(labelName, name));
-                this.dom.eventInfo.append($("<li>").append(labelLocation, location));
-                this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
-                this.dom.eventInfo.append($("<li>").append(labelDescription,description));
-                this.dom.eventInfo.css({"visibility": "visible"});
+                    var labelName = $("<label>").html("Name").attr({"for": "name"});
+                    var name = $("<input>").html(event.name).addClass("info");
+                    name.attr({"type": "text", "id": "name", "placeholder": "Hey Marseilles", "value": displayname.val()});
+                    var labelLocation = $("<label>").html("Location").attr({"for": "info"});
+                    var location = $("<input>").html(event.location).addClass("info");
+                    location.attr({"type": "text", "id": "location", "value": displaylocation.val()});
 
-                this.dom.topright_button.html("Save");
-            }
-            // just clicked save
-            else {
-                var _id = event._id;
-                var location = $("#location");
-                var timeStart = $("#timeStart");
-                var name = $("#name");
-                var description = $("#description");
-                var content = { "_id": _id,
-                             "location": location.val(),
-                             "timeStart": timeStart.val(),
-                             "name": name.val(),
-                             "description": description.text()
-                             };
-                //update in database
-                this.org_app.editEvent(_id, content);
-                // set to view mode
-                location.attr({'id':"display_location", 'disabled':true});
-                name.attr({'id':"display_name", 'disabled':true});
-                timeStart.attr({'id':"display_timeStart", 'disabled':true});
-                description.attr({'id':"display_description", 'disabled':true});
-                /*
-                //change the text in the topright button
-                this.dom.topright_button.html("Edit"); */
-                //Get back to my event page
-                this.org_app.showEvents();
+                    var labelHost = $("<label>").html("Host Org").attr({"for": "host"});
+                    var host = $("<input>").html(event.hostOrg).addClass("host");
+                    host.attr({"type": "text", "id": "host", "value": displayhost.val()});
+
+                    var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
+                    var timeStart = $("<input>").html(displaytimeStart.val()).addClass("info");
+                    timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": timeStart.val()});
+                    var labelDescription = $("<label>").html("Description").attr({"for": "description"});
+                    var test = $("<textarea>").text("hello test");
+                    var description = $("<textarea>").html(event.description).addClass("info");
+                    description.attr({"id": "description", "value": displaydescription.val()});
+                    this.dom.eventInfo.html("");
+                    /*this.dom.eventInfo.append($("<li>").append(test)); */
+                    this.dom.eventInfo.append($("<li>").append(labelName, name));
+                    this.dom.eventInfo.append($("<li>").append(labelLocation, location));
+                    this.dom.eventInfo.append($("<li>").append(labelHost, host));
+                    this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
+                    this.dom.eventInfo.append($("<li>").append(labelDescription,description));
+                    this.dom.eventInfo.css({"visibility": "visible"});
+
+                    this.dom.topright_button.html("Save");
+                } else {
+                    var _id = event._id;
+                    var location = $("#location");
+                    var timeStart = $("#timeStart");
+                    var host = $('#host');
+                    var name = $("#name");
+                    var description = $("#description");
+                    var content = { "_id": _id,
+                                    "location": location.val(),
+                                    "timeStart": timeStart.val(),
+                                    "name": name.val(),
+                                    "description": description.text()
+                                  };
+                    //update in database
+                    this.org_app.editEvent(_id, content);
+                    // set to view mode
+                    location.attr({'id':"display_location", 'disabled':true});
+                    host.attr({'id': 'display_host', 'disabled': true});
+                    name.attr({'id':"display_name", 'disabled':true});
+                    timeStart.attr({'id':"display_timeStart", 'disabled':true});
+                    description.attr({'id':"display_description", 'disabled':true});
+                    /*
+                    //change the text in the topright button
+                    this.dom.topright_button.html("Edit"); */
+                    //Get back to my event page
+                    this.org_app.showEvents();
+                }
             }
         }.bind(this));
     },

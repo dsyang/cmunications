@@ -79,21 +79,32 @@ module.exports = function(app, db, Auth) {
                 code.listOrgEventsAction(request, response, data);
             });
 
-    app.post('/events/create',
-             //             passport.authenticate('local', { failureRedirect: '/auth/login' }),
-             function(request, response) {
-                 var data = { event: request.body.event };
-                 code.createEventAction(request, response, data);
-             });
-    app.put('/events/:id/edit',
-            //             passport.authenticate('local', { failureRedirect: '/auth/login' }),
-            function(request, response) {
-                var data = { event: request.body.event,
-                             event_id: request.params.id
-                           };
-                code.editEventAction(request, response, data);
-            });
-
+    app.post('/events/create', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                var data = { event: request.body.event };
+                code.createEventAction(request, response, data);
+            }
+        });
+    });
+    app.put('/events/:id/edit', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                if(request.session.username === event.hostOrg) {
+                    var data = { event: request.body.event,
+                                 event_id: request.params.id
+                               };
+                    code.editEventAction(request, response, data);
+                } else {
+                    response.send(fail("no access"));
+                }
+            }
+        });
+    });
 
     app.get('/orgs/list', function(request, response) {
         var data = {};

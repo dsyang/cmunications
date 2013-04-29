@@ -111,7 +111,7 @@ function Application(db) {
         this.events = [];
         this.subscribers = [];
     }
-    
+
     function Notification(){
         this.event_id = "";
         this.checked = false;
@@ -226,13 +226,13 @@ function Application(db) {
     //      event_id should be a string!!!!
     function createNotification(event_id, eventName){
         var not = new Notification();
-        
+
         not.event_id = event_id;
         not.text = eventName + "has been changed.";
-        
+
         return not;
-    }    
-    
+    }
+
     // Search for a field in the database.
     function searchDb(collectionName, query, callback){
         db.collection(collectionName, getCallbackWithArgs('find',[query, callback]))
@@ -280,8 +280,8 @@ function Application(db) {
 
         }
     }
-    
-    
+
+
 
     // Remove from array field in collection
     function removeFromArrayField(collectionName, query, field, value, callback){
@@ -548,15 +548,15 @@ function Application(db) {
             data.event.timeStart = dStart;
             data.event.timeEnd = new Date();
             delete data.event._id;
-                     
+
 
             var not = createNotification(event_id, result[0].name);
-            
+
             var query = {};
             query['_id'] = {'$in': result[0].followers};
-            
+
             addToArrayField(collUsers, query, 'notifications', [not], cb2);
-            
+
             function cb2(err, result){
                 if(err) throw err;
                 updateFields(collEvents, {'_id' : event_id}, data.event, cb3);
