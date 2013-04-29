@@ -886,7 +886,7 @@ asyncTest("unstarEventAction", function() {
 
 	  // Check that the database did what we want.
 	  var callback2 = function( error, result ){
-            console.log(result[0]);
+            //console.log(result[0]);
 
 		    ok(result[0].followers.length === 1, 'Fields not correct');
 	      start();
@@ -894,7 +894,7 @@ asyncTest("unstarEventAction", function() {
       
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
-            console.log(result[0]);
+            //console.log(result[0]);
 		    ok(result[0].savedEvents.length === 2, 'Length not correct');
 
 		    var query = {};
@@ -917,8 +917,8 @@ asyncTest("unstarEventAction", function() {
 		    scope.data.user._id = result[0]._id.toString();
             scope.data.user._id_obj = result[0]._id;
             
-            console.log("Unstarring User: ");
-            console.log(result[0]);
+            //console.log("Unstarring User: ");
+            //console.log(result[0]);
 		    scope.app.unstarEventAction(scope.request, scope.response, scope.data);
 	  }
 
@@ -926,8 +926,8 @@ asyncTest("unstarEventAction", function() {
 		    scope.data.event_id = results[2]._id.toString();
             scope.data.event_id_obj = results[2]._id;
 
-            console.log("From Event: ");
-            console.log(results[2]);            
+            //console.log("From Event: ");
+            //console.log(results[2]);            
             
 		    scope.app.searchDb('users',{'name' : "Mochi"},saveUserId);
 	  }

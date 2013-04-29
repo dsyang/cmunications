@@ -356,7 +356,7 @@ function Application(db) {
         addToArrayField(collUsers, query, 'orgs', orgids, cb);
     }
 
-    // Adds organizations to a user.
+    // Adds tagss to a user.
     function addTagsToUser(userid, tags, cb){
         var query = {};
         query['_id'] = userid;
@@ -364,6 +364,15 @@ function Application(db) {
         addToArrayField(collUsers, query, 'tags', tags, cb);
     }
 
+    // remove Tags from a user.
+    function removeTagsFromUser(userid, tags, cb){
+        var query = {};
+        query['_id'] = userid;
+
+        removeFromArrayField(collUsers, query, 'tags', tags, cb);
+    }
+    
+    
 
 
     //=====================================
@@ -391,7 +400,7 @@ function Application(db) {
         function cb(err, result) {
             if(err) response.send(fail(err));
 
-            response.send(success('results', result));
+            response.send(success('results', result.sort(function(a,b){ a > b})));
         }
 
 
@@ -479,6 +488,7 @@ function Application(db) {
 
     //given data.event_id
     function starEventAction(request, response, data) {
+        //console.log("Route called.");
         var event_id = ObjectID(data.event_id);
         var user_id = ObjectID(String(data.user._id));
         searchDb(collEvents, {'_id' : event_id}, cb);
@@ -623,6 +633,8 @@ function Application(db) {
     //list all events
     function listEventsAction(request, response, data) {
         function sendResults(err,listOfDocs){
+            
+        
             response.send( { 'success': true,
                              'events': listOfDocs });
         }
@@ -633,8 +645,12 @@ function Application(db) {
     //list all organizations
     function listOrganizationAction(request, response, data) {
         function sendResults(err,listOfDocs){
+            var sorted = listOfDocs.sort(function(a, b){
+                return a > b;
+            });
+        
             response.send( { 'success': true,
-                             'organizations': listOfDocs });
+                             'organizations': sorted });
         }
 
         searchDb(collOrgs, {}, sendResults);

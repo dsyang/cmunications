@@ -119,7 +119,9 @@ UI.prototype =
         var name = $("<h3>").html(event.name);
         var infoButton = $("<div>").addClass('more').html("<a> </a>");
         var location = $("<p>").html(event.location);
-        var timeStart = $("<p>").html(this.generateTime(event.timeStart));
+        var date = (new Date(event.timeStart)).toDateString();
+        var time = this.generateTime(event.timeStart);
+        var timeStart = $("<p>").html(date + ", " + time);
         location.addClass("location");
         timeStart.addClass("time");
         li.append(starred);
@@ -145,7 +147,6 @@ UI.prototype =
 
     generateTime: function(dateObj) {
         var date = new Date(dateObj);
-        var day = date.toDateString();
         var timeHours = date.getHours();
         var timeMin = date.getMinutes();
         var zone;
@@ -155,7 +156,9 @@ UI.prototype =
         }
         else
             zone = " AM";
-        var time = day + ", " + String(timeHours) + ":" + String(timeMin) + zone;
+        if (timeHours == 0)
+            timeHours = 12;
+        var time = String(timeHours) + ":" + String(timeMin) + zone;
         return time;
     },
 
@@ -173,23 +176,28 @@ UI.prototype =
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
         var host = $("<input>").val("Hosted by: " + event.hostOrg);
-        var timeStart = $("<input>").val((new Date(event.timeStart)).toDateString());
+        var date = (new Date(event.timeStart)).toDateString();
+        var time = this.generateTime(event.timeStart);
+        var timeStart = $("<input>").val(date + ", " + time);
         var description = $("<textarea>").val(event.description);
-        var location_icon = $("<img>").attr({"src": "img/final/location.png", "id": "location_icon"});
+        var location_icon = $("<img>").attr({"src": "css/img/final/location_icon.png", "id": "location_icon"});
+        var time_icon = $("<img>").attr({"src": "css/img/final/time_icon.png", "id": "time_icon"});
+       /*  var desc_icon = $("<img>").attr({"src": "css/img/final/desc_icon.png", "id": "desc_icon"}); */
 
         name.addClass("name display").attr({'id':"display_name", 'disabled':true});
         location.addClass("location display").attr({'id':"display_location", 'disabled':true});
         host.addClass("host display").attr({'id': "display_host", 'disabled': true});
         timeStart.addClass("timeStart display").attr({'id':"display_timeStart", 'disabled':true});
         description.addClass("description display").attr({'id':"display_description", 'disabled':true});
-
-
+        var all = [ [location_icon, location], [host], [time_icon, timeStart]];
+        this.dom.eventInfo.append($("<li>").append(name));
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
         this.dom.eventInfo.html("");
-        ([name, location_icon, location, host, timeStart, description]).forEach (function (each) {
-            this.dom.eventInfo.append($("<li>").append(each));
+        all.forEach (function (each) {
+            this.dom.eventInfo.append($("<li>").append(each[0], each[1]));
         }.bind(this));
+        this.dom.eventInfo.append($("<li>").attr({"id": "li_desc"}).append(description));
         this.dom.eventInfo.css({"visibility": "visible"});
         //insert everything in the event Info div
         this.set_edit_save(event, backfn);
