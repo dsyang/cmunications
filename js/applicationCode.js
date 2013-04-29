@@ -304,8 +304,8 @@ function Application(db) {
 
         addToArrayField(collEvents, query, 'followers', userids, cb);
     }
-    
-    
+
+
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
         var query = {};
