@@ -111,6 +111,15 @@ function Application(db) {
         this.events = [];
         this.subscribers = [];
     }
+    
+    function Notification(){
+        this.event_id = "";
+        this.checked = false;
+
+        // Event name has changed.
+        this.text = "";
+    }
+
 
     /* Some conventions:
        create - Making a new database object from scratch.
@@ -213,6 +222,17 @@ function Application(db) {
                                                                callback]));
     }
 
+    // Creates a notification object to be kept in each user.
+    //      event_id should be a string!!!!
+    function createNotification(event_id, eventName){
+        var not = new Notification();
+        
+        not.event_id = event_id;
+        not.text = eventName + "has been changed.";
+        
+        return not;
+    }    
+    
     // Search for a field in the database.
     function searchDb(collectionName, query, callback){
         db.collection(collectionName, getCallbackWithArgs('find',[query, callback]))
@@ -526,8 +546,23 @@ function Application(db) {
             data.event.timeStart = dStart;
             data.event.timeEnd = new Date();
             delete data.event._id;
-            updateFields(collEvents, {'_id' : event_id}, data.event, cb2);
-            function cb2(err, result) {
+                     
+            //var query = {};
+            //query['_id'] = result[0].followers;
+
+            //addToArrayField(collUsers, query, 'notifications', createNotification(event_id, result[0].name), cb2);
+            
+            //addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
+            
+            //console.log(result[0]);
+            
+            cb2();
+            
+            function cb2(err, result){
+                if(err) throw err;
+                updateFields(collEvents, {'_id' : event_id}, data.event, cb3);
+            }
+            function cb3(err, result) {
                 if(err) throw err;
                 response.send(success('event', {'event_id': event_id,
                                                 'result': result

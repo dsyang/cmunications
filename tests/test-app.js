@@ -180,6 +180,54 @@ asyncTest( "createEvent: Add Event to Database", function() {
 	  this.db.runTest(runIt, ['events']);
 });
 
+asyncTest( "editEventAction: Edit Event in database", function() {
+	  var scope = this;
+      scope.data = {};
+      scope.data.event_id = "";
+      scope.data.event = {};
+      scope.data.event.timeStart = (new Date()).toString();
+      scope.data.event.timeEnd = (new Date()).toString();
+      scope.data.event.description = "This is the 2nd coolest event"
+      scope.data.event.location = 'Doherty Hall';
+      
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+	  expected.name = 'ASA Bake Sale';
+	  expected.location = scope.data.event.location;
+	  expected.description = scope.data.event.description;
+	  expected.hostOrg = 'ASA';
+	  expected.startTime = scope.data.event.timeStart;
+	  expected.endTime = scope.data.event.timeEnd;
+
+    var callback = function(err, results){
+        console.log(results[0]);
+    
+        ok(compareFields(scope.expected, results[0]), 'Fields not correct');
+    
+        start();
+    }
+      
+    setTimeout(function() {
+            scope.app.searchDb('events',{'_id':scope.data.event_id_obj}, callback);        
+    }, 1000);
+
+	  // Check that the database did what we want.
+	  var saveEventId = function( error, result ){     
+      
+            scope.data.event_id = result[0]._id.toString();
+            scope.data.event_id_obj = result[0]._id;
+            
+            scope.app.editEventAction(scope.request, scope.response, scope.data);
+	  }      
+      
+      function runIt(){
+            scope.app.searchDb('events',{'name':'ASA Bake Sale'},saveEventId);
+      }
+      
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
+});
+
 
 asyncTest( "createTag: Add Tag to Database", function() {
 	  var scope = this;
