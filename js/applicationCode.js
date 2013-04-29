@@ -280,6 +280,8 @@ function Application(db) {
 
         }
     }
+    
+    
 
     // Remove from array field in collection
     function removeFromArrayField(collectionName, query, field, value, callback){
@@ -547,16 +549,13 @@ function Application(db) {
             data.event.timeEnd = new Date();
             delete data.event._id;
                      
-            //var query = {};
-            //query['_id'] = result[0].followers;
 
-            //addToArrayField(collUsers, query, 'notifications', createNotification(event_id, result[0].name), cb2);
+            var not = createNotification(event_id, result[0].name);
             
-            //addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
+            var query = {};
+            query['_id'] = {'$in': result[0].followers};
             
-            //console.log(result[0]);
-            
-            cb2();
+            addToArrayField(collUsers, query, 'notifications', [not], cb2);
             
             function cb2(err, result){
                 if(err) throw err;
@@ -565,7 +564,8 @@ function Application(db) {
             function cb3(err, result) {
                 if(err) throw err;
                 response.send(success('event', {'event_id': event_id,
-                                                'result': result
+                                                'result': result,
+                                                'notification': not
                                                }
                                      ));
             }
