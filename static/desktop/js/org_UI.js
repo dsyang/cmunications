@@ -38,11 +38,9 @@ UI.prototype =
             tab_myEvents: $('.ME'),
             tab_search: $('.search'),
             tab_create: $('.create'),
-            tab_search: $('.search'),
             topleft_button: $('#left_button'),
             topright_button: $('#right_button'),
-            eventInfo: $("#eventInfo"),
-            esearch: $(".esearch")
+            eventInfo: $("#eventInfo")
         };
 
     },
@@ -65,25 +63,6 @@ UI.prototype =
         }.bind(this));
 
     },
-
-/* see Search_UI.js!!
-
-
-    searchEvents: function(events) {
-        this.dom.esearch.html("");
-        this.dom.myEvents.html("");
-        this.dom.eventInfo.html("");
-        console.log("search");
-        var searchfield = $("<input>").addClass("searchfield").attr({"type": "text", "placeholder": "Search cmunications"});
-        this.dom.esearch.append(searchfield);
-        var searchButton = $("<button>").addClass("searchButton").html("search");
-        this.dom.esearch.append(searchButton);
-        searchButton.click(function (){
-            var content = { text: searchfield.val() };
-            this.org_app.searchEvents(content);
-        }.bind(this));
-    },
-*/
 
     //for events of a particular org
     showEvents: function(events){
@@ -125,8 +104,18 @@ UI.prototype =
     },
 
     generate_listing: function(event, backfn) {
+        var account = window.app_API.getAccountObject();
+        var star = false;
+        if(account !== undefined && account.accountType === 'users') {
+            if(account.savedEvents.indexOf(event._id) !== -1)
+                star = true;
+        }
         var li = $("<li>");
-        var starred = $("<div>").addClass('starred');
+        if(star === true) {
+            var starred = $("<div>").addClass('starred');
+        } else {
+            var starred = $("<div>").addClass('star');
+        }
         var name = $("<h3>").html(event.name);
         var infoButton = $("<div>").addClass('more').html("<a> </a>");
         var location = $("<p>").html(event.location);
@@ -141,11 +130,15 @@ UI.prototype =
 
         (function() {
             var that = this;
-            infoButton.click (function () {
+            infoButton.click(function () {
                 that.edit_mode = false;
                 that.org_app.showEvent(event._id, backfn);
             });
+            starred.click(function() {
+                that.org_app.starEvent(event._id);
+            });
         }.bind(this))();
+
 
         return li;
     },
