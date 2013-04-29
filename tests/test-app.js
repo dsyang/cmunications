@@ -45,6 +45,7 @@ test("defaultAction facebook logged in", function() {
     deepEqual(this.response.things_sent, expected, 'send hello world and name');
 });
 
+
 test("nameAction test normal person", function() {
     var expected = {"hello": "John"};
     this.app.nameAction(this.request, this.response, {name: "John"});
@@ -73,6 +74,23 @@ test("postAction test fail", function() {
     this.request.body = {stuff:'Herp'};
     this.app.postAction(this.request, this.response, {stuff: "herp"});
     deepEqual(this.response.things_sent, expected, 'send failure');
+});
+
+test("Test sorting of Dates.", function() {
+    var dates = [{timeStart: new Date(2010, 4, 10, 10, 07, 16)},
+                 {timeStart: new Date(2010, 4, 8, 9, 16, 09)},
+                 {timeStart: new Date(2010, 3, 30, 0, 15, 49)},
+                 {timeStart: new Date(2010, 3, 8, 10, 08, 35)}];                
+                
+    var date_sort_asc = function (date1, date2) {
+        if (date1.timeStart > date2.timeStart) return 1;
+        if (date1.timeStart < date2.timeStart) return -1;
+        return 0;
+    };            
+                
+    //console.log(dates.sort(date_sort_asc));
+
+    ok(true);
 });
 
 // An asynchronous test which should be used with database calls.

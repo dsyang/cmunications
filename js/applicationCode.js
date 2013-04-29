@@ -400,7 +400,12 @@ function Application(db) {
         function cb(err, result) {
             if(err) response.send(fail(err));
 
-            response.send(success('results', result.sort(function(a,b){ a > b})));
+            var sorted = result.sort(function (event1, event2) {
+                return event1.name.localeCompare(event2.name);
+            });
+
+            
+            response.send(success('results', sorted));
         }
 
 
@@ -633,10 +638,14 @@ function Application(db) {
     //list all events
     function listEventsAction(request, response, data) {
         function sendResults(err,listOfDocs){
-
-
+            var sorted = listOfDocs.sort(function (date1, date2) {
+                if (date1.timeStart > date2.timeStart) return 1;
+                if (date1.timeStart < date2.timeStart) return -1;
+                return 0;
+            });
+            
             response.send( { 'success': true,
-                             'events': listOfDocs });
+                             'events': sorted });
         }
 
         searchDb(collEvents, {}, sendResults);
@@ -645,10 +654,10 @@ function Application(db) {
     //list all organizations
     function listOrganizationAction(request, response, data) {
         function sendResults(err,listOfDocs){
-            var sorted = listOfDocs.sort(function(a, b){
-                return a > b;
+            var sorted = listOfDocs.sort(function (event1, event2) {
+                return event1.name.localeCompare(event2.name);
             });
-
+            
             response.send( { 'success': true,
                              'organizations': sorted });
         }
