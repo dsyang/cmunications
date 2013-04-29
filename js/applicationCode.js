@@ -488,6 +488,7 @@ function Application(db) {
 
     //given data.event_id
     function starEventAction(request, response, data) {
+        //console.log("Route called.");
         var event_id = ObjectID(data.event_id);
         var user_id = ObjectID(String(data.user._id));
         searchDb(collEvents, {'_id' : event_id}, cb);
@@ -500,7 +501,7 @@ function Application(db) {
             if(err){
                 response.send(fail(err));
             }
-            addUsersToEvent(event_id,[user_id], cb2);
+            addUsersToEvent(event_id,[user_id], cb3);
         }
         function cb3(err, result) {
             if(err){
@@ -632,6 +633,8 @@ function Application(db) {
     //list all events
     function listEventsAction(request, response, data) {
         function sendResults(err,listOfDocs){
+            
+        
             response.send( { 'success': true,
                              'events': listOfDocs });
         }
@@ -642,8 +645,12 @@ function Application(db) {
     //list all organizations
     function listOrganizationAction(request, response, data) {
         function sendResults(err,listOfDocs){
+            var sorted = listOfDocs.sort(function(a, b){
+                return a > b;
+            });
+        
             response.send( { 'success': true,
-                             'organizations': listOfDocs });
+                             'organizations': sorted });
         }
 
         searchDb(collOrgs, {}, sendResults);
