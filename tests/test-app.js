@@ -105,7 +105,7 @@ asyncTest( "createUser: Add User to Database", function() {
 	  }
 
 	  // Call this to open the database, and run the test. ONLY CALL ONCE!
-	  this.db.runTest(runIt, ['users']);
+	  this.db.runTest(runIt, ['users','organizations','events','tags']);
 });
 
 
@@ -143,12 +143,11 @@ asyncTest( "createEvent: Add Event to Database", function() {
 	  expected.location = 'UC';
 	  expected.description = 'This is the coolest event around';
 	  expected.hostOrg = 'ASA';
-	  expected.startTime = new Date();
-	  expected.endTime = new Date();
+	  expected.timeStart = new Date();
+	  expected.timeEnd = new Date();
 
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
-            //console.log(result[0]);
 		    ok(true);
             start();
 	  }
@@ -169,7 +168,7 @@ asyncTest( "createEvent: Add Event to Database", function() {
             if(err){ throw err; }
             scope.hostOrgId = results[0]._id;
 
-		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.startTime, expected.endTime,scope.hostOrgId, checkEventAdded);
+		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd,scope.hostOrgId, checkEventAdded);
 	  }
 
       function runIt(){
@@ -656,9 +655,12 @@ asyncTest("addEventsToOrg", function() {
 
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
+            result[0].events = result[0].events.sort();
+            scope.expected.events = scope.expected.events.sort();
+
             //console.log(result);
             //console.log(scope.expected);
-
+            
 		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
 	      start();
 	  }
@@ -1083,8 +1085,8 @@ asyncTest( "eventDetailAction: Fetch Event Info From database", function() {
 	  expected.location = 'Resnik House';
 	  expected.description = 'Everybody come see resnik house';
 	  expected.hostOrg = 'Mayur Sasa';
-	  expected.startTime = new Date(2013, 07, 03, 5, 0, 0);
-	  expected.endTime = new Date(2013, 07, 03, 8, 0, 0);
+	  expected.timeStart = new Date(2013, 07, 03, 5, 0, 0);
+	  expected.timeEnd = new Date(2013, 07, 03, 8, 0, 0);
 
 
 	  setTimeout(function() {
@@ -1105,7 +1107,7 @@ asyncTest( "eventDetailAction: Fetch Event Info From database", function() {
 
             scope.hostOrgId = result[0]._id;
 
-  		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.startTime, expected.endTime, scope.hostOrgId, getEventId);
+  		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd, scope.hostOrgId, getEventId);
       }
 
 	  function runIt(){
