@@ -115,6 +115,7 @@ function Application(db) {
     function Notification(){
         this.event_id = "";
         this.checked = false;
+        this.dateUpdated = "";
 
         // Event name has changed.
         this.text = "";
@@ -224,12 +225,13 @@ function Application(db) {
 
     // Creates a notification object to be kept in each user.
     //      event_id should be a string!!!!
-    function createNotification(event_id, eventName){
+    function createNotification(event_id, eventName, date){
         var not = new Notification();
 
         not.event_id = event_id;
         not.text = eventName + " has been changed.";
-
+        not.dateUpdated = date;
+        
         return not;
     }
 
@@ -270,6 +272,7 @@ function Application(db) {
     function addToArrayField(collectionName, query, field, value, callback){
         if(isValidCollectionName(collectionName)){
             var update = {}, partialUpdate = {}, partialpartialUpdate = {};
+            
             partialpartialUpdate['$each'] = value;
             partialUpdate[field] = partialpartialUpdate;
             update['$addToSet'] = partialUpdate;
@@ -390,6 +393,22 @@ function Application(db) {
                 'message': message};
     }
 
+    // Get the notifications
+    function getNotificationsAction(request, response){
+        var id = ObjectID(request.user.id);
+
+        function cb(err, result) {
+            if(err){ response.send(fail(err));}
+            else if(result.length == 0){
+                response.send(fail("No results found."));
+            }
+            else{ response.send(success('notifications', result[0].notifications));
+            }
+        }        
+        
+        searchDb(collUsers, {'_id' : id}, cb);            
+    }
+    
     //given data.text, start, end, return all events in the period
     /*data = { text: request.body.text,
       start: request.body.startDate,
@@ -612,7 +631,7 @@ function Application(db) {
             delete data.event._id;
 
 
-            var not = createNotification(event_id, result[0].name);
+            var not = createNotification(event_id, result[0].name, new Date());
 
             var query = {};
             query['_id'] = {'$in': result[0].followers};
@@ -736,6 +755,7 @@ function Application(db) {
                                   nameAction,
                                   postAction,
                                   searchAction,
+                                  getNotificationsAction,
                                   subscribeAction,
                                   eventDetailAction,
                                   starEventAction,

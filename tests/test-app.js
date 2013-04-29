@@ -1022,6 +1022,45 @@ asyncTest( "editEventAction: Edit Event in database", function() {
 });
 
 
+asyncTest( "getNotificationsAction", function() {
+	  var scope = this;
+      scope.request.user = {};
+      scope.request.user.id = "";
+      
+	  // Fill in the fields of the object to be created.
+	  var expected = {};
+      expected.text = 'TSA Club Party has been changed.'
+      expected.checked = false;
+      expected.event_id = "";
+      
+    setTimeout(function() {    
+            scope.not = scope.response.things_sent.notifications[0];
+            //console.log(expected, scope.not);
+
+		    ok(compareFields(expected, scope.not), 'Fields not correct');
+            start();
+    }, 1000);
+
+    // Check that the database did what we want.
+	  var saveUserId = function( error, result ){
+            scope.request.user.id = result[0]._id.toString();
+            
+            expected.event_id = result[0].savedEvents[0];
+            
+            scope.app.getNotificationsAction(scope.request, scope.response);
+	  }      
+      
+      function runIt(){
+            scope.app.searchDb('users',{'name': "Shikha"},saveUserId);
+      }
+      
+	  // Call this to open the database, and run the test. ONLY CALL ONCE!
+	  this.db.runTest(runIt);
+});
+
+
+
+
 // This tests a basic listStarredEvents Actions.
 asyncTest("listStarredEventsAction", function() {
 	  var scope = this;
