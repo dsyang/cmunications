@@ -22,7 +22,7 @@ Create Event
 	opacity: 0.9;
 	position: relative;
 	overflow: auto; /* to fix floats from collapsing */
-	height: 50px;
+	min-height: 50px;
 }
 
 
@@ -33,7 +33,7 @@ Create Event
 	display: inline-block;
 	min-width: 7%;
 	padding: 0px 10px;
-	font-size: 0.9em;
+	font-size: 1em;
 	position: absolute;
 	top: 15px;
 }
@@ -44,7 +44,7 @@ Create Event
 	background-color: inherit;
 	height: 40px;
   	border:none;
-  	margin-bottom: 4px;
+  	margin: 5px 0px;
   	color: #373535;
   	font-size: 1em;
   	position: absolute;
@@ -52,6 +52,7 @@ Create Event
   	width: 60%;
   
 }
+
 
 #eventInfo li #location {
 	background-image: url("img/final/location.png");
@@ -65,6 +66,7 @@ Create Event
     display: none;
     -webkit-appearance: none;
 }
+
 
 
 #eventInfo li #description {
