@@ -229,7 +229,7 @@ function Application(db) {
 
         not.event_id = event_id;
         not.text = eventName + " has been changed.";
-        
+
         return not;
     }
 
@@ -284,7 +284,7 @@ function Application(db) {
 
 
     // Remove from array field in collection
-    // 
+    //
     // value is an array of values from which to remove.
     function removeFromArrayField(collectionName, query, field, value, callback){
         if(isValidCollectionName(collectionName)){
@@ -312,7 +312,7 @@ function Application(db) {
 
         addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
     }
-    
+
     // Adds an event to a user, by id.
     function removeEventsFromUser(userid, eventids, cb){
         var query = {};
@@ -320,7 +320,7 @@ function Application(db) {
 
         removeFromArrayField(collUsers, query, 'savedEvents', eventids, cb);
     }
-    
+
 
     // Adds an event to a user, by id.
     function addEventsToOrg(orgid, eventids, cb){
@@ -345,8 +345,8 @@ function Application(db) {
 
         removeFromArrayField(collEvents, query, 'followers', userids, cb);
     }
-    
-    
+
+
 
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
@@ -491,7 +491,7 @@ function Application(db) {
             if(err){
                 response.send(fail(err));
             }
-            addUsersToEvent(event_id,[user_id], cb2);
+            addUsersToEvent(event_id,[user_id], cb3);
         }
         function cb3(err, result) {
             if(err){
@@ -530,8 +530,8 @@ function Application(db) {
                 response.send(fail('no event found'));
             }
         }
-    }    
-    
+    }
+
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
         var savedEvents = request.user.savedEvents.map(function(elem){

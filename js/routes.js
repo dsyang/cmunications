@@ -58,6 +58,7 @@ module.exports = function(app, db, Auth) {
                     } else {
                         var data = { event_id: request.params.id,
                                      user: account };
+                        console.log(data);
                         code.starEventAction(request, response, data);
                     }
                 });
@@ -81,8 +82,8 @@ module.exports = function(app, db, Auth) {
                 });
             }
         });
-    });    
-    
+    });
+
     app.get('/events/starred',
             //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
