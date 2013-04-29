@@ -172,7 +172,7 @@ UI.prototype =
         // var image??? var tags?
         var name = $("<input>").val(event.name);
         var location = $("<input>").val(event.location);
-        var host = $("<input>").val(event.hostOrg);
+        var host = $("<input>").val("Hosted by: " + event.hostOrg);
         var timeStart = $("<input>").val((new Date(event.timeStart)).toDateString());
         var description = $("<textarea>").val(event.description);
         var location_icon = $("<img>").attr({"src": "img/final/location.png", "id": "location_icon"});
@@ -226,11 +226,18 @@ UI.prototype =
 
                     var labelHost = $("<label>").html("Host Org").attr({"for": "host"});
                     var host = $("<input>").html(event.hostOrg).addClass("host");
-                    host.attr({"type": "text", "id": "host", "value": displayhost.val()});
+                    host.attr({"type": "text", "id": "host", "value": displayhost.val().slice(displayhost.val().indexOf(': ')+2),
+                               "disabled": true
+                              });
 
                     var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
                     var timeStart = $("<input>").html(displaytimeStart.val()).addClass("info");
-                    timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": timeStart.val()});
+                    //hack date by subtracting offset from actual date, then removing 'Z' from the end to get valid string for datetime-local
+                    var date = new Date(event.timeStart);
+                    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                    timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": date.toISOString().slice(0,-1)});
+                    debugger;
+
                     var labelDescription = $("<label>").html("Description").attr({"for": "description"});
                     var test = $("<textarea>").text("hello test");
                     var description = $("<textarea>").html(event.description).addClass("info");
@@ -252,9 +259,12 @@ UI.prototype =
                     var host = $('#host');
                     var name = $("#name");
                     var description = $("#description");
+                    //unhack the datetime hack
+                    var date = new Date(timeStart.val());
+                    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
                     var content = { "_id": _id,
                                     "location": location.val(),
-                                    "timeStart": timeStart.val(),
+                                    "timeStart": date.toISOString(),
                                     "name": name.val(),
                                     "description": description.text()
                                   };
@@ -283,8 +293,10 @@ UI.prototype =
             this.dom.myEvents.html("");
             this.dom.eventInfo.html("");
             this.dom.topleft_button.html("Cancel");
-            this.dom.topright_button.html("Save");
             this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
+
+            this.dom.topright_button.unbind('click');
+            this.dom.topright_button.html("Save");
 
             var labelName = $("<label>").html("Name").attr({"for": "name"});
             var name = $("<input>").html(event.name).addClass("info").attr({"type": "text", "id": "name", "placeholder": "ex: Hey Marseilles"});
@@ -323,6 +335,7 @@ UI.prototype =
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;
+            this.org_app.showEvents();
 
         }.bind(this));
     },
