@@ -27,12 +27,17 @@
         star: function(event_id, done) {
             var request = $.ajax({
                 type: 'post',
-                url: '/events/'+event_id+'/star/',
+                url: '/events/'+event_id+'/star/'
             });
             setupCallback(request, done);
         },
 
         unstar: function(event_id, done) {
+            var request = $.ajax({
+                type: 'post',
+                url: '/events/'+event_id+'/unstar/'
+            });
+            setupCallback(request, done);
             console.log("unstarring Event: "+event_id);
         },
 

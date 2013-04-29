@@ -174,8 +174,8 @@ function Application(db) {
         event.location = location;
         event.description = description;
         event.hostOrg = '';
-        event.startTime = startTime;
-        event.endTime = endTime;
+        event.timeStart = startTime;
+        event.timeEnd = endTime;
 
         if(!callback){
             callback = logger;
@@ -371,8 +371,8 @@ function Application(db) {
 
         removeFromArrayField(collUsers, query, 'tags', tags, cb);
     }
-    
-    
+
+
 
 
     //=====================================
@@ -529,7 +529,7 @@ function Application(db) {
             if(err){
                 response.send(fail(err));
             }
-            removeUsersFromEvent(event_id,[user_id], cb2);
+            removeUsersFromEvent(event_id,[user_id], cb3);
         }
         function cb3(err, result) {
             if(err){
@@ -633,8 +633,8 @@ function Application(db) {
     //list all events
     function listEventsAction(request, response, data) {
         function sendResults(err,listOfDocs){
-            
-        
+
+
             response.send( { 'success': true,
                              'events': listOfDocs });
         }
@@ -648,7 +648,7 @@ function Application(db) {
             var sorted = listOfDocs.sort(function(a, b){
                 return a > b;
             });
-        
+
             response.send( { 'success': true,
                              'organizations': sorted });
         }
@@ -729,7 +729,8 @@ function Application(db) {
                                   searchAction,
                                   subscribeAction,
                                   eventDetailAction,
-                                  starEventAction,              unstarEventAction,
+                                  starEventAction,
+                                  unstarEventAction,
                                   listStarredEventsAction,
                                   listOrgEventsAction,
                                   createEventAction,

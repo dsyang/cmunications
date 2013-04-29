@@ -113,8 +113,10 @@ module.exports = function(app, db, Auth) {
             if(err) {
                 response.send(fail("not logged in"));
             } else {
+                var event = request.body.event;
+                console.log(event);
                 if(request.session.username === event.hostOrg) {
-                    var data = { event: request.body.event,
+                    var data = { event: event,
                                  event_id: request.params.id
                                };
                     code.editEventAction(request, response, data);
@@ -313,21 +315,22 @@ module.exports = function(app, db, Auth) {
         var org4 = ['Test', 'test', "A test organization"];
 
         var event1 = ['Samosa Sale', 'Doherty Hall', 'Selling samosas',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
-        var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
-        var event3 = ['TSA Club Party', 'Diesel', 'Best club party of the year', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        var event2 = ['Activities Board GBM', 'Doherty Hall', 'Everybody Come', new Date(2013, 5, 1, 1, 30, 0, 0), new Date(2013, 5, 1, 2, 30, 0, 0)];
+        var event3 = ['TSA Club Party', 'Diesel', 'Best club party of the year', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 2, 15, 0, 0, 0)];
         var event4 = ['ASA Club Party', 'Static', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                      new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
+                      new Date(2013, 5, 3, 12, 0, 0, 0), new Date(2013, 5, 3, 16, 0, 0, 0)];
+        //lupe's first
         var event5 = ['Lupe Fiasco', 'The Cut', 'The Show must go on.', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
-        var event6 = ['That one lecture', 'DH 2210', long_dummy_text, new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 4, 12, 0, 0, 0)];
-        var event7 = ['Final Exam relaxation', 'GHC 7', 'Massages',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
-        var event8 = ['SDC primal scream', 'The Cut', long_dummy_text, new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
-        var event9 = ['Tepper Spirit Day', 'Merson Courtyard', 'All of the free hotdogs.', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
-        var event10 = ['#riPHI', 'Panther Hollow Inn', 'Saying goodbye to an era',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
-        var event11 = ['Bond Movie Marathon', 'McConomy', 'For your eyes only', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
-        var event12 = ['Free Food', 'GHC 6', long_dummy_text, new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
-        var event13 = ['University Lecture Series', 'McConomy', 'Obama is coming!',  new Date(2013, 4, 30, 12, 0, 0, 0), new Date(2013, 4, 30, 16, 0, 0, 0)];
-        var event14 = ['Shot for Shot', 'Doherty Hall', 'The best movie festival ever', new Date(2013, 4, 28, 1, 30, 0, 0), new Date(2013, 4, 28, 2, 30, 0, 0)];
-        var event15 = ['Reading Day Fun', 'Everywhere', 'Best fun you will ever have during finals week.', new Date(2013, 5, 2, 13, 0, 0, 0), new Date(2013, 5, 3, 12, 0, 0, 0)];
+        var event6 = ['That one lecture', 'DH 2210', long_dummy_text, new Date(2013, 5, 5, 13, 0, 0, 0), new Date(2013, 5, 5, 14, 0, 0, 0)];
+        var event7 = ['Final Exam relaxation', 'GHC 7', 'Massages',  new Date(2013, 5, 5, 20, 0, 0, 0), new Date(2013, 5, 5, 22, 0, 0, 0)];
+        var event8 = ['SDC primal scream', 'The Cut', long_dummy_text, new Date(2013, 5, 6, 1, 30, 0, 0), new Date(2013, 5, 6, 2, 30, 0, 0)];
+        var event9 = ['Tepper Spirit Day', 'Merson Courtyard', 'All of the free hotdogs.', new Date(2013, 5, 7, 13, 0, 0, 0), new Date(2013, 5, 7, 20, 0, 0, 0)];
+        var event10 = ['#riPHI', 'Panther Hollow Inn', 'Saying goodbye to an era',  new Date(2013, 5, 8, 12, 0, 0, 0), new Date(2013, 5, 8, 16, 0, 0, 0)];
+        var event11 = ['Bond Movie Marathon', 'McConomy', 'For your eyes only', new Date(2013, 5, 9, 1, 30, 0, 0), new Date(2013, 5, 9, 2, 30, 0, 0)];
+        var event12 = ['Free Food', 'GHC 6', long_dummy_text, new Date(2013, 5, 10, 10, 0, 0, 0), new Date(2013, 5, 10, 12, 0, 0, 0)];
+        var event13 = ['University Lecture Series', 'McConomy', 'Obama is coming!',  new Date(2013, 5, 11, 12, 0, 0, 0), new Date(2013, 5, 11, 16, 0, 0, 0)];
+        var event14 = ['Shot for Shot', 'Doherty Hall', 'The best movie festival ever', new Date(2013, 5, 12, 1, 30, 0, 0), new Date(2013, 5, 12, 2, 30, 0, 0)];
+        var event15 = ['Reading Day Fun', 'Everywhere', 'Best fun you will ever have during finals week.', new Date(2013, 5, 22, 13, 0, 0, 0), new Date(2013, 5, 23, 12, 0, 0, 0)];
 
         var tag1 = ['party'];
         var tag2 = ['food'];
@@ -375,6 +378,7 @@ module.exports = function(app, db, Auth) {
             else{
                 var cur = events[index];
                 index = index + 1;
+                console.log(cur);
                 code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
             }
         }

@@ -64,11 +64,11 @@ window.addEventListener('load', function(){
             },
             onRegisterFail: function(msg){
                 console.log(msg);
-                alert(msg);
+                alert(msg.message);
             },
             onLoginFail: function(msg){
                 console.log(msg);
-                alert(msg);
+                alert(msg.message);
             }
         }
 

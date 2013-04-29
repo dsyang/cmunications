@@ -67,8 +67,9 @@ org_app.prototype = {
             if(account.savedEvents.indexOf(_id) === -1) {
                 window.org_API.star(_id, function(err, data) {
                     if(err) throw err;
-                    console.log(data);
-                    console.log(typeof(data.success));
+                    if(data.success === false) {
+                        alert(data.message);
+                    }
                     if(data.success === true) {
                         window.app_API.refreshAccountObject(function(err, result) {
                             if(err) throw err;
@@ -80,8 +81,11 @@ org_app.prototype = {
             } else {
                 window.org_API.unstar(_id, function(err, data) {
                     if(err) throw err;
-                    console.log(data);
-                    console.log(typeof(data.success));
+                    console.log("data", data);
+                    console.log("type", typeof(data.success));
+                    if(data.success === false) {
+                        alert(data.message);
+                    }
                     if(data.success === true) {
                         window.app_API.refreshAccountObject(function(err, result) {
                             if(err) throw err;
@@ -102,15 +106,5 @@ org_app.prototype = {
         console.log(data);
     		//take the content object and edit the respective fields with the data
     	}.bind(this));
-    },
-    /*
-    deleteEvent: function(_id){
-        window.org_API.delete(_id, function(err, result){
-            if (err)
-                throw err;
-            // show all events now, once that's deleted
-            this.showEvents();
-
-        }.bind(this));
-    } */
+    }
 }

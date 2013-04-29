@@ -149,6 +149,7 @@ UI.prototype =
         var date = new Date(dateObj);
         var timeHours = date.getHours();
         var timeMin = date.getMinutes();
+        var strTimeMin = String(timeMin);
         var zone;
         if (timeHours > 12) {
             zone = " PM";
@@ -158,7 +159,10 @@ UI.prototype =
             zone = " AM";
         if (timeHours == 0)
             timeHours = 12;
-        var time = String(timeHours) + ":" + String(timeMin) + zone;
+        if(timeMin === 0) {
+            strTimeMin = '00';
+        }
+        var time = String(timeHours) + ":" + strTimeMin + zone;
         return time;
     },
 
@@ -190,10 +194,11 @@ UI.prototype =
         timeStart.addClass("timeStart display").attr({'id':"display_timeStart", 'disabled':true});
         description.addClass("description display").attr({'id':"display_description", 'disabled':true});
         var all = [ [location_icon, location], [host], [time_icon, timeStart]];
-        this.dom.eventInfo.append($("<li>").append(name));
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
         this.dom.eventInfo.html("");
+        this.dom.eventInfo.append($("<li>").append(name));
+
         all.forEach (function (each) {
             this.dom.eventInfo.append($("<li>").append(each[0], each[1]));
         }.bind(this));
@@ -244,7 +249,6 @@ UI.prototype =
                     var date = new Date(event.timeStart);
                     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
                     timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": date.toISOString().slice(0,-1)});
-                    debugger;
 
                     var labelDescription = $("<label>").html("Description").attr({"for": "description"});
                     var test = $("<textarea>").text("hello test");
@@ -273,6 +277,7 @@ UI.prototype =
                     var content = { "_id": _id,
                                     "location": location.val(),
                                     "timeStart": date.toISOString(),
+                                    "hostOrg": host.val(),
                                     "name": name.val(),
                                     "description": description.text()
                                   };
