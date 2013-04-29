@@ -19,7 +19,10 @@ Create Event
 	margin: 0px 10px;
 	border-bottom: 1px solid #696969;
 	background-color: white;
-	opacity: 0.7;
+	opacity: 0.9;
+	position: relative;
+	overflow: auto; /* to fix floats from collapsing */
+	height: 50px;
 }
 
 
@@ -28,43 +31,55 @@ Create Event
 	color: black;
 	font-family: 'Lato', sans-serif;
 	display: inline-block;
-	min-width: 5%;
+	min-width: 7%;
 	padding: 0px 10px;
+	font-size: 0.9em;
+	position: absolute;
+	top: 15px;
 }
 
-
-#eventInfo li input, #description {
+#eventInfo li .info, #description {
 	padding: 0px 10px;
 	display: inline-block;
 	background-color: inherit;
-	width: 80%;
 	height: 40px;
   	border:none;
   	margin-bottom: 4px;
-  	font-size: 15px;
   	color: #373535;
+  	font-size: 1em;
+  	position: absolute;
+  	right: 25px;
+  	width: 60%;
+  
 }
 
-#eventInfo li #location::before {
-	background-image: url("img/location2.png");
+#eventInfo li #location {
+	background-image: url("img/final/location.png");
 	background-repeat: no-repeat;
 	background-size: contain;
+	padding-left: 40px;
 }
 
+
+#timeStart::-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+}
 
 
 #eventInfo li #description {
 	overflow: visible; /***** fix ********/
   	font-size: 15px;
   	background-color: inherit;
-	width: 80%;
 	min-height: 70px;
 	resize: none;
+	padding: 10px;
+	font-family: inherit;
 } 
 
 
 #eventInfo li label[for=description] {
-	margin-top: 10px;
+
 	float: left; /* to make it appear at the top hmm */
 }
 

@@ -24,11 +24,11 @@ Search_UI.prototype = {
             var page = $('<div id="searchEventsPage">');
             $('#app').html("").append(page);
             if($('#searchbar').length === 0)
-                page.append($('<input type="text" id="searchbar">'));
-            if($('#searchbarDate').length === 0)
-                page.append($('<input type="datetime-local" id="searchbarDate">'));
+                page.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
+            if($('#searchbarDate').length === 0) 
+                $('.search_container').append($('<input type="date" id="searchbarDate"> '));
             if($('#searchSubmit').length === 0)
-                page.append($('<button id="searchSubmit">Search</button>'));
+                $(".search_container").append($('<button id="searchSubmit"> Go </button>'));
             if($('#searchResults').length === 0)
                 page.append($('<ul class="myevents" id="searchResults">'));
             console.log("creating elements");
