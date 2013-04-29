@@ -148,7 +148,7 @@ asyncTest( "createEvent: Add Event to Database", function() {
 
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
-            console.log(result[0]);
+            //console.log(result[0]);
 		    ok(true);
             start();
 	  }
@@ -489,9 +489,9 @@ asyncTest("Advanced Search by name of Event", function() {
                      };
 
 	  scope.data = {};
-    scope.data['text'] = "doherty";
+    scope.data['text'] = "samosa";
 
-    setTimeout(function() {
+    setTimeout(function() {   
 		    ok(compareFields(scope.expected, scope.response.things_sent.results[0]), 'Fields not correct');
 
         start();
@@ -656,6 +656,9 @@ asyncTest("addEventsToOrg", function() {
 
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
+            //console.log(result);
+            //console.log(scope.expected);
+      
 		    ok(compareFields(scope.expected, result[0]), 'Fields not correct');
 	      start();
 	  }
@@ -673,8 +676,9 @@ asyncTest("addEventsToOrg", function() {
 	  }
 
 	  function saveEventIds(err, results){
-		    results.forEach(function(elem){
-			      scope.eventids.push(elem._id);
+            //console.log(results);
+		    results.forEach(function(elem, index){
+			      scope.eventids[index] = elem._id;
 		    });
 
 		    scope.expected['events'] = scope.eventids;
@@ -761,7 +765,7 @@ asyncTest("starEventAction", function() {
 
 	  // Check that the database did what we want.
 	  var callback2 = function( error, result ){
-            console.log(result[0]);
+            //console.log(result[0]);
 
 		    ok(result[0].followers[0].toString() ===  scope.request.user.id, 'Fields not correct');
 	      start();

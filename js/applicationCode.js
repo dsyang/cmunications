@@ -186,8 +186,8 @@ function Application(db) {
 
         function insertEvent(err, results){
             if(err){ throw err;}
-            console.log("from insert Event");
-            console.log(results);
+            //console.log("from insert Event");
+            //console.log(results);
             event.hostOrg = results[0].name;
 
             db.collection(collEvents, getCallbackWithArgs('insert', [event, {safe:true}, updateOrg]));
@@ -506,11 +506,11 @@ function Application(db) {
 
         function cb(err, result) {
             if(err) throw err;
-            console.log(result);
+            //console.log(result);
             response.send(success('_id', result));
         }
 
-        console.log(data.event);
+        //console.log(data.event);
         response.send(success('dummy', 42));
     }
 
@@ -520,7 +520,7 @@ function Application(db) {
         searchDb(collEvents, {'_id': event_id}, cb);
         function cb(err, result) {
             if(err) throw err;
-            console.log(result);
+            //console.log(result);
             var dStart = new Date(data.event.timeStart);
             var dEnd = new Date(data.event.timeEnd);
             data.event.timeStart = dStart;
