@@ -228,8 +228,8 @@ function Application(db) {
         var not = new Notification();
 
         not.event_id = event_id;
-        not.text = eventName + "has been changed.";
-
+        not.text = eventName + " has been changed.";
+        
         return not;
     }
 
@@ -284,11 +284,13 @@ function Application(db) {
 
 
     // Remove from array field in collection
+    // 
+    // value is an array of values from which to remove.
     function removeFromArrayField(collectionName, query, field, value, callback){
         if(isValidCollectionName(collectionName)){
             var update = {}, partialUpdate = {};
             partialUpdate[field] = value;
-            update['$pull'] = partialUpdate;
+            update['$pullAll'] = partialUpdate;
 
             db.collection(collectionName,
                           getCallbackWithArgs('update', [query, update, {'multi':true},
@@ -310,6 +312,15 @@ function Application(db) {
 
         addToArrayField(collUsers, query, 'savedEvents', eventids, cb);
     }
+    
+    // Adds an event to a user, by id.
+    function removeEventsFromUser(userid, eventids, cb){
+        var query = {};
+        query['_id'] = userid;
+
+        removeFromArrayField(collUsers, query, 'savedEvents', eventids, cb);
+    }
+    
 
     // Adds an event to a user, by id.
     function addEventsToOrg(orgid, eventids, cb){
@@ -327,6 +338,15 @@ function Application(db) {
         addToArrayField(collEvents, query, 'followers', userids, cb);
     }
 
+    // Adds users to event, by id. userids should be an array of ids.
+    function removeUsersFromEvent(eventid, userids, cb){
+        var query = {};
+        query['_id'] = eventid;
+
+        removeFromArrayField(collEvents, query, 'followers', userids, cb);
+    }
+    
+    
 
     // Adds organizations to a user.
     function addOrganizationsToUser(userid, orgids, cb){
@@ -485,6 +505,33 @@ function Application(db) {
 
     }
 
+    //given data.event_id
+    function unstarEventAction(request, response, data) {
+        var event_id = ObjectID(data.event_id);
+        var user_id = ObjectID(String(data.user._id));
+        searchDb(collEvents, {'_id' : event_id}, cb);
+        function cb(err, result) {
+            if(err) response.send(fail(err));
+            if(result.length === 0) response.send(fail('no event found'));
+            removeEventsFromUser( user_id, [event_id], cb2);
+        }
+        function cb2(err,result){
+            if(err){
+                response.send(fail(err));
+            }
+            removeUsersFromEvent(event_id,[user_id], cb2);
+        }
+        function cb3(err, result) {
+            if(err){
+                response.send(fail(err));
+            } else if(result > 0 ){
+                response.send(success('success', true));
+            } else {
+                response.send(fail('no event found'));
+            }
+        }
+    }    
+    
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
         var savedEvents = request.user.savedEvents.map(function(elem){
@@ -666,7 +713,7 @@ function Application(db) {
                                   searchAction,
                                   subscribeAction,
                                   eventDetailAction,
-                                  starEventAction,
+                                  starEventAction,              unstarEventAction,
                                   listStarredEventsAction,
                                   listOrgEventsAction,
                                   createEventAction,

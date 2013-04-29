@@ -65,6 +65,24 @@ module.exports = function(app, db, Auth) {
         });
     });
 
+    app.post('/events/:id/unstar/', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"))
+                    } else {
+                        var data = { event_id: request.params.id,
+                                     user: account };
+                        code.unstarEventAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });    
+    
     app.get('/events/starred',
             //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
