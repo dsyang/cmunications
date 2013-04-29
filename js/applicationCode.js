@@ -356,7 +356,7 @@ function Application(db) {
         addToArrayField(collUsers, query, 'orgs', orgids, cb);
     }
 
-    // Adds organizations to a user.
+    // Adds tagss to a user.
     function addTagsToUser(userid, tags, cb){
         var query = {};
         query['_id'] = userid;
@@ -364,6 +364,15 @@ function Application(db) {
         addToArrayField(collUsers, query, 'tags', tags, cb);
     }
 
+    // remove Tags from a user.
+    function removeTagsFromUser(userid, tags, cb){
+        var query = {};
+        query['_id'] = userid;
+
+        removeFromArrayField(collUsers, query, 'tags', tags, cb);
+    }
+    
+    
 
 
     //=====================================
