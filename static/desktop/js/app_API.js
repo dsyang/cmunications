@@ -12,7 +12,7 @@
             return false;
         },
         getAccountObject: function() {
-            if(window.app_API.isLoggedIn === false) {
+            if(window.app_API.isLoggedIn() === false) {
                 return null;
             } else {
                 var cookies = document.cookie.split('; ');
