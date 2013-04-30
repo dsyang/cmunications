@@ -596,8 +596,10 @@ function Application(db) {
         //console.log(data.orgids, data.tags);
         console.log("data!", data);
         var orgids = [];
-        for(var i = 0; i < data.orgids.length; i++) {
-            orgids.push(ObjectID(data.orgids[i]));
+        if(data.orgids !== undefined) {
+            for(var i = 0; i < data.orgids.length; i++) {
+                orgids.push(ObjectID(data.orgids[i]));
+            }
         }
 
         if(orgids) {
@@ -628,14 +630,16 @@ function Application(db) {
     }
 
     function unsubscribeAction(request, response, data) {
-        var id = ObjectID(request.user.id);
+        var id = data.user._id;
         var finalResult = {};
         console.log("data!", data);
         //console.log(data.orgids, data.tags);
 
         var orgids = [];
-        for(var i = 0; i < data.orgids.length; i++) {
-            orgids.push(ObjectID(data.orgids[i]));
+        if(data.orgids !== undefined) {
+            for(var i = 0; i < data.orgids.length; i++) {
+                orgids.push(ObjectID(data.orgids[i]));
+            }
         }
 
         if(orgids) {

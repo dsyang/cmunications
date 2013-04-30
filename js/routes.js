@@ -53,13 +53,26 @@ module.exports = function(app, db, Auth) {
         });
     });
 
-    app.post('/unsubscribe',
-             function(request, response) {
-                 var data = {orgids: request.body.orgids,
-                             tags: request.body.tags
-                            };
-                 code.unsubscribeAction(request, response, data);
-             });
+    app.post('/unsubscribe', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"));
+                    } else {
+                        var data = {orgids: request.body.orgids,
+                                    tags: request.body.tags,
+                                    user: account
+                                   };
+                        code.unsubscribeAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });
+
 
     app.post('/notifications/clear', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
