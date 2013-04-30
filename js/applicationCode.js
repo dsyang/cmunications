@@ -165,11 +165,12 @@ function Application(db) {
                                                                callback]));
     }
 
-    // Creates an event and adds it to the database.
+     // Creates an event and adds it to the database.
     function createEvent(name, location, description, startTime,
                          endTime, hostOrgId, tags, callback){
         // Check that startTime < endTime
-
+        var scope = this;
+        
         var event = new Event();
         event.name = name;
         event.location = location;
@@ -186,13 +187,42 @@ function Application(db) {
         // This function is necessary to make sure our function is called
         // with the full event object.
         function callbackContext(){
+            console.log("Calling Back.");
             callback(null, [event]);
+        }
+        
+        function tagsToDb(err, results){
+            console.log("In tagsToDb");
+            scope.allTags = results.map(function(elem){
+                return elem.name;
+            });
+            
+            console.log(scope.allTags)
+            
+            var tagsToAdd = event.tags.filter(function(elem){
+                if(scope.allTags.indexOf(elem) === -1){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            });
+            
+            console.log("Got Here");
+            
+            addTagsToDb(tagsToAdd, callbackContext);      
+        }
+        
+        function getTagsFromDb(err, results){
+            if(err){ throw err;}
+            
+            searchDb(collTags,{},tagsToDb);
         }
 
         function updateOrg(err, listOfDocs){
             event._id = listOfDocs[0]._id;
 
-            addEventsToOrg(hostOrgId, [event._id], callbackContext);
+            addEventsToOrg(hostOrgId, [event._id], getTagsFromDb);
         }
 
         function insertEvent(err, results){
@@ -376,6 +406,22 @@ function Application(db) {
         removeFromArrayField(collUsers, query, 'tags', tags, cb);
     }
 
+    function addTagsToDb(tags, callback){
+        //console.log(tags.length);
+        if(tags.length === 0){
+            callback();
+            return;
+        }
+        
+        var nextTag = tags.shift();
+        
+        createTag(nextTag, cb);
+        
+        function cb(err, stuff){
+            if(err){ throw err;}
+            addTagsToDb(tags, callback);
+        }
+    }
 
 
 
