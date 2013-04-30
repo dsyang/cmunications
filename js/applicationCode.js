@@ -484,6 +484,51 @@ function Application(db) {
         searchDb(collEvents, query, cb);
     }
 
+    //given data.text, start, end, return all events in the period
+    /*data = { text: request.body.text,
+      start: request.body.startDate,
+      end: request.body.endDate
+      };
+    */
+
+    function searchSubscriptionsAction(request, response, data) {
+        var scope = this;
+        scope.results = {
+                        'orgs' : '',
+                        'tags' : ''
+                         };
+                         
+        function cb2(err, result) {
+            if(err) response.send(fail(err));
+
+            scope.results.tags = result;
+            
+            response.send(success('results', scope.results));
+        }
+
+
+        function cb(err, result) {
+            if(err) response.send(fail(err));
+            
+            scope.results.orgs = result;
+            
+            searchDb(collTags, scope.query, cb2);            
+        }
+
+
+        scope.query = {};
+
+        var regexPat = ".*" + data.text + ".*";
+        var regexMod = 'i'
+
+        var patt = new RegExp(regexPat,regexMod);
+
+        query['name'] = patt;
+
+        searchDb(collOrgs, scope.query, cb);
+    }
+    
+    
     //given data,orgs or data.tags, add to request.user's tags/organizations
     /*
       {orgids: request.body.orgids,
