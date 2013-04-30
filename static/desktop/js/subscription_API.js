@@ -5,7 +5,6 @@
         getSubscriptions: function(done) {
             console.log("getting notifications");
             done(null, []);
-
         }
 
     }

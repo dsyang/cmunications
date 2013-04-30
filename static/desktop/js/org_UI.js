@@ -20,6 +20,15 @@ var UI = function(config){
 
 UI.prototype =
 {
+    hashtags: function (tags) {
+        var tagList = tags.split(",").map(function (s) { return s.trim();});
+        tagList = tagList.map(function(s) { if(s[0] === "#") return s.split('#')[1];
+                                            return s;
+                                          });
+
+        return tagList;
+    },
+
     initDom: function(){
         //create necessary dom elements and append into $('#app') if they
         //don't exist:
@@ -179,7 +188,8 @@ UI.prototype =
         var date = (new Date(event.timeStart)).toDateString();
         var time = this.generateTime(event.timeStart);
         var timeStart = $("<input>").val(date + ", " + time);
-        var description = $("<textarea>").val(event.description);
+        var tags = $('<input>').val(event.tags.toString());
+        var description = $("<textarea>").html(event.description);
         var location_icon = $("<img>").attr({"src": "css/img/final/location_icon.png", "id": "location_icon"});
         var time_icon = $("<img>").attr({"src": "css/img/final/time_icon.png", "id": "time_icon"});
        /*  var desc_icon = $("<img>").attr({"src": "css/img/final/desc_icon.png", "id": "desc_icon"}); */
@@ -188,8 +198,9 @@ UI.prototype =
         location.addClass("location display").attr({'id':"display_location", 'disabled':true});
         host.addClass("host display").attr({'id': "display_host", 'disabled': true});
         timeStart.addClass("timeStart display").attr({'id':"display_timeStart", 'disabled':true});
+        tags.addClass("tags display").attr({'id': 'display_tags', 'disabled': true});
         description.addClass("description display").attr({'id':"display_description", 'disabled':true});
-        var all = [ [location_icon, location], [host], [time_icon, timeStart]];
+        var all = [ [location_icon, location], [host], [time_icon, timeStart], [tags]];
         //add to the eventInfo Div and clear myEvents
         this.dom.myEvents.html("");
         this.dom.eventInfo.html("");
@@ -222,6 +233,7 @@ UI.prototype =
                 var displaylocation = $('.location');
                 var displayname = $('.name');
                 var displayhost = $('.host');
+                var displaytag = $('.tags');
                 var displaytimeStart = $('.timeStart');
                 var displaydescription = $('.description');
                 if (this.edit_mode) {
@@ -246,16 +258,20 @@ UI.prototype =
                     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
                     timeStart.attr({"type": "datetime-local", "id": "timeStart", "value": date.toISOString().slice(0,-1)});
 
+                    var labelTags = $('<label for="tags">').html("Tags");
+                    var tags = $('<input>').val(event.tags.toString()).addClass("info");
+                    tags.attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
+
                     var labelDescription = $("<label>").html("Description").attr({"for": "description"});
-                    var test = $("<textarea>").text("hello test");
-                    var description = $("<textarea>").html(event.description).addClass("info");
-                    description.attr({"id": "description", "value": displaydescription.val()});
+                    var description = $("<textarea>").text(event.description).addClass("info");
+                    description.attr({"id": "description"});
                     this.dom.eventInfo.html("");
-                    /*this.dom.eventInfo.append($("<li>").append(test)); */
+
                     this.dom.eventInfo.append($("<li>").append(labelName, name));
                     this.dom.eventInfo.append($("<li>").append(labelLocation, location));
                     this.dom.eventInfo.append($("<li>").append(labelHost, host));
                     this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
+                    this.dom.eventInfo.append($("<li>").append(labelTags, tags));
                     this.dom.eventInfo.append($("<li>").append(labelDescription,description));
                     this.dom.eventInfo.css({"visibility": "visible"});
 
@@ -266,6 +282,7 @@ UI.prototype =
                     var timeStart = $("#timeStart");
                     var host = $('#host');
                     var name = $("#name");
+                    var tags = $('#tags');
                     var description = $("#description");
                     //unhack the datetime hack
                     var date = new Date(timeStart.val());
@@ -273,9 +290,10 @@ UI.prototype =
                     var content = { "_id": _id,
                                     "location": location.val(),
                                     "timeStart": date.toISOString(),
+                                    "tags": this.hashtags(tags.val()),
                                     "hostOrg": host.val(),
                                     "name": name.val(),
-                                    "description": description.text()
+                                    "description": description.val()
                                   };
                     //update in database
                     this.org_app.editEvent(_id, content);
@@ -283,6 +301,7 @@ UI.prototype =
                     location.attr({'id':"display_location", 'disabled':true});
                     host.attr({'id': 'display_host', 'disabled': true});
                     name.attr({'id':"display_name", 'disabled':true});
+                    tags.attr({'id': 'display_tags', 'disabled': true});
                     timeStart.attr({'id':"display_timeStart", 'disabled':true});
                     description.attr({'id':"display_description", 'disabled':true});
                     /*
@@ -307,21 +326,23 @@ UI.prototype =
             this.dom.topright_button.unbind('click');
             this.dom.topright_button.html("Save");
 
-            var labelName = $("<label>").html("Name").attr({"for": "name"});
+            var labelName = $('<label for="name">').html("Name")
             var name = $("<input>").html(event.name).addClass("info").attr({"type": "text", "id": "name", "placeholder": "ex: Hey Marseilles"});
-            var labelLocation = $("<label>").html("Location").attr({"for": "info"});
+            var labelLocation = $('<label for="info">').html("Location");
             var location = $("<input>").html(event.location).addClass("info").attr({"type": "text", "id": "location", "placeholder": "ex: UC Rangos"});
-            var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
+            var labelTimeStart = $('<label for="timeStart">').html("Time");
             var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
-            var date = $("<input>").html(event.timeStart).addClass("date").attr({"type": "time"});
-            var timeEnd = $("<input>").html(event.timeEnd).addClass("info").attr({"type": "date", "id": "timeEnd"});
+            var labelTags = $('<label for="tags">').html("Tags");
+            var tags = $('<input>').val(event.tags.toString()).addClass("info").attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
             var labelDescription = $("<label>").html("Description").attr({"for": "description"});
             var description = $("<textarea></textarea>").html(event.description).addClass("info").attr({"id": "description", "placeholder": "Add more info"});
 
             this.dom.eventInfo.append($("<li>").append(labelName, name));
             this.dom.eventInfo.append($("<li>").append(labelLocation,location));
             this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
+            this.dom.eventInfo.append($("<li>").append(labelTags, tags));
             this.dom.eventInfo.append($("<li>").append(labelDescription,description));
+
             this.dom.eventInfo.css({"visibility": "visible"});
             this.dom.eventInfo.attr({"class": "on"});
         }
@@ -329,7 +350,7 @@ UI.prototype =
         this.dom.topright_button.click(function () {
             var content = {  "location": location.val(),
                              "timeStart": timeStart.val(),
-                             "timeEnd": timeEnd.val(),
+                             "tags": this.hashtags(tags.val()),
                              "name": name.val(),
                              "description": description.val()
                              };
@@ -339,8 +360,6 @@ UI.prototype =
             location.attr({'id':"display_location", 'disabled':true});
             name.attr({'id':"display_name", 'disabled':true});
             timeStart.attr({'id':"display_timeStart", 'disabled':true});
-
-            timeEnd.attr({'id':"display_timeEnd", 'disabled':true});
             description.attr({'id':"display_description", 'disabled':true});
             //switch back to my Events?? *******
             this.create_mode = false;

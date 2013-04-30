@@ -33,6 +33,7 @@ Subscription_UI.prototype = {
         var overlay = $('#overlay').addClass('hidden');
         var overlay_content = $('#overlay-content');
         var search = $('#subscription_search');
+        var submit = $('#subscription_submit');
         var results = $('#subscription_results');
         console.log(overlay)
 
@@ -40,6 +41,7 @@ Subscription_UI.prototype = {
             overlay: overlay,
             overlay_content: overlay_content,
             search: search,
+            submit: submit,
             results: results,
             settings_button: org_app.ui.dom.topleft_button,
             rest: $('#rest')
@@ -47,6 +49,13 @@ Subscription_UI.prototype = {
 
         this.dom.overlay_content.removeClass('initiallyHidden');
         this.dom.overlay_content.detach();
+
+        this.dom.submit.click(function() {
+            var text = this.dom.search.val();
+            console.log(text);
+            this.subscription_app.searchSubscriptions(text);
+
+        }.bind(this));
 
     },
 
@@ -67,6 +76,8 @@ Subscription_UI.prototype = {
         this.dom.rest.css('overflow', 'hidden');
         this.dom.overlay.removeClass('hidden');
 
+
+        //toggling of showing overlay
         this.dom.settings_button.unbind('click');
         this.dom.settings_button.click(function() {
             this.hideOverlay(overlay);
