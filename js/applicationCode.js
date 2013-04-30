@@ -187,41 +187,17 @@ function Application(db) {
         // This function is necessary to make sure our function is called
         // with the full event object.
         function callbackContext(){
-            console.log("Calling Back.");
             callback(null, [event]);
         }
-        
-        function tagsToDb(err, results){
-            console.log("In tagsToDb");
-            scope.allTags = results.map(function(elem){
-                return elem.name;
-            });
-            
-            console.log(scope.allTags)
-            
-            var tagsToAdd = event.tags.filter(function(elem){
-                if(scope.allTags.indexOf(elem) === -1){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            });
-            
-            console.log("Got Here");
-            
-            addTagsToDb(tagsToAdd, callbackContext);      
-        }
-        
+                
         function getTagsFromDb(err, results){
             if(err){ throw err;}
-            
-            searchDb(collTags,{},tagsToDb);
+
+            addTagsToDb(event.tags,callbackContext);
         }
 
         function updateOrg(err, listOfDocs){
             event._id = listOfDocs[0]._id;
-
             addEventsToOrg(hostOrgId, [event._id], getTagsFromDb);
         }
 
@@ -406,21 +382,45 @@ function Application(db) {
         removeFromArrayField(collUsers, query, 'tags', tags, cb);
     }
 
-    function addTagsToDb(tags, callback){
-        //console.log(tags.length);
-        if(tags.length === 0){
-            callback();
-            return;
+
+    
+    function addTagsToDb(tags, callback){        
+        function cb(err, results){
+            var allTags = results.map(function(elem){
+                return elem.name;
+            });                
+                
+            var tagsToAdd = tags.filter(function(elem){
+                if(allTags.indexOf(elem) === -1){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            });
+            
+            
+            tagsToDb(tagsToAdd); 
         }
         
-        var nextTag = tags.shift();
-        
-        createTag(nextTag, cb);
-        
-        function cb(err, stuff){
-            if(err){ throw err;}
-            addTagsToDb(tags, callback);
+        function tagsToDb(tags){
+            //console.log(tags.length);
+            if(tags.length === 0){
+                callback();
+                return;
+            }
+            
+            var nextTag = tags.shift();
+            
+            createTag(nextTag, cb);
+            
+            function cb(err, stuff){
+                if(err){ throw err;}
+                tagsToDb(tags);
+            }
         }
+
+        searchDb(collTags, {}, cb);
     }
 
 
@@ -752,6 +752,11 @@ function Application(db) {
             //console.log(result);
             var dStart = new Date(data.event.timeStart);
             var dEnd = new Date(data.event.timeEnd);
+            var tags = [];
+            if(data.event.tags){
+                tags = data.event.tags
+            }
+            
             data.event.timeStart = dStart;
             data.event.timeEnd = new Date();
             delete data.event._id;
@@ -763,12 +768,16 @@ function Application(db) {
             query['_id'] = {'$in': result[0].followers};
 
             addToArrayField(collUsers, query, 'notifications', [not], cb2);
-
+            /*
             function cb2(err, result){
                 if(err) throw err;
-                updateFields(collEvents, {'_id' : event_id}, data.event, cb3);
-            }
-            function cb3(err, result) {
+                addTagsToDb(tags,cb3);
+            }*/
+            function cb2(err, result){
+                if(err) throw err;
+                updateFields(collEvents, {'_id' : event_id}, data.event, cb4);
+            }            
+            function cb4(err, result) {
                 if(err) throw err;
                 response.send(success('event', {'event_id': event_id,
                                                 'result': result,
