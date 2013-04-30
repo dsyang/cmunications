@@ -143,18 +143,23 @@ module.exports = function(app, db, Auth) {
     });
 
     //returns a list of events that I've starred or match what I'm subscribed to
-    app.get('/events/subscribed',
-            //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
-            function(request, response) {
-                var data = {};
-                code.listStarredEventsAction(request, response, data);
-            });
+    app.get('/events/subscribed', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"));
+                    } else {
+                        var data = {user : account };
+                        code.listMyActions(request, response, data);
+                    }
+                });
+            }
+        });
+    });
 
-    app.get('/myevents',
-            function(request, response) {
-                var data = {};
-                code.listOrgEventsAction(request, response, data);
-            });
 
     app.post('/events/create', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
