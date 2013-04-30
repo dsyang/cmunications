@@ -167,7 +167,7 @@ function Application(db) {
 
     // Creates an event and adds it to the database.
     function createEvent(name, location, description, startTime,
-                         endTime, hostOrgId, callback){
+                         endTime, hostOrgId, tags, callback){
         // Check that startTime < endTime
 
         var event = new Event();
@@ -177,6 +177,7 @@ function Application(db) {
         event.hostOrg = '';
         event.timeStart = startTime;
         event.timeEnd = endTime;
+        event.tags = tags;
 
         if(!callback){
             callback = logger;
@@ -680,7 +681,11 @@ function Application(db) {
         console.log("stuff");
         var dStart = new Date(data.event.timeStart);
         var dEnd = new Date(data.event.timeEnd);
-        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), cb);
+        var tags = [];
+        if(data.event.tags){
+            tags = data.event.tags;
+        }   
+        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), tags, cb);
 
         function cb(err, result) {
             if(err) throw err;
@@ -833,6 +838,7 @@ function Application(db) {
                                   clearNotificationAction,
                                   getNotificationsAction,
                                   subscribeAction,
+                                  searchSubscriptionsAction,
                                   eventDetailAction,
                                   starEventAction,
                                   unstarEventAction,

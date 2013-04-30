@@ -186,7 +186,7 @@ asyncTest( "createEvent: Add Event to Database", function() {
             if(err){ throw err; }
             scope.hostOrgId = results[0]._id;
 
-		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd,scope.hostOrgId, checkEventAdded);
+		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd,scope.hostOrgId, [], checkEventAdded);
 	  }
 
       function runIt(){
@@ -415,7 +415,7 @@ asyncTest( "Populate Database test. This puts a bunch of items in the database t
 		    else{
 			      var cur = events[index];
 			      index = index + 1;
-			      scope.app.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+			      scope.app.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], [], addEvents);
 		    }
 	  }
 
@@ -1164,7 +1164,7 @@ asyncTest( "eventDetailAction: Fetch Event Info From database", function() {
 
             scope.hostOrgId = result[0]._id;
 
-  		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd, scope.hostOrgId, getEventId);
+  		    scope.app.createEvent(expected.name, expected.location, expected.description, expected.timeStart, expected.timeEnd, scope.hostOrgId, [], getEventId);
       }
 
 	  function runIt(){
