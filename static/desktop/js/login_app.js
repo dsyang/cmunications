@@ -54,7 +54,8 @@ window.addEventListener('load', function(){
 
         var g = {
             onLoginSuccess: function(){
-                window.location = '/';
+                org_app.ui.dom.loginOverlay.hide();
+                org_app.showEvents();
             },
             onRegisterSuccess: function(){
                 var username = usernameInput.val();
@@ -110,7 +111,6 @@ window.addEventListener('load', function(){
             } else if (password === "") {
                 ui.showMessage("Password field cannot be empty!");
             } else {
-                console.log("sending code");
                 login(username, password);
             }
 
@@ -125,7 +125,6 @@ window.addEventListener('load', function(){
             } else if (password === "") {
                 ui.showMessage("Password field cannot be empty!");
             } else {
-                console.log("sending code");
                 register(username, password);
             }
 
