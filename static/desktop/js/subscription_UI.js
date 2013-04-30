@@ -35,6 +35,9 @@ Subscription_UI.prototype = {
         var search = $('#subscription_search');
         var submit = $('#subscription_submit');
         var results = $('#subscription_results');
+        var tags = $('#subscription_tags');
+        var orgs = $('#subscription_orgs');
+
         console.log(overlay)
 
         this.dom = {
@@ -42,6 +45,8 @@ Subscription_UI.prototype = {
             overlay_content: overlay_content,
             search: search,
             submit: submit,
+            tags: tags,
+            orgs: orgs,
             results: results,
             settings_button: org_app.ui.dom.topleft_button,
             rest: $('#rest')
@@ -53,6 +58,8 @@ Subscription_UI.prototype = {
         this.dom.submit.click(function() {
             var text = this.dom.search.val();
             console.log(text);
+            console.log(this);
+            console.log(this.subscription_app);
             this.subscription_app.searchSubscriptions(text);
 
         }.bind(this));
@@ -66,6 +73,19 @@ Subscription_UI.prototype = {
             this.showOverlay(this.dom.overlay_content);
         }.bind(this));
         console.log('binding tabs');
+    },
+
+    showSubscriptions: function(results) {
+
+        var matchedOrgs = results.orgs;
+        var matchedTags = results.tags;
+        var render = [];
+        if(this.dom.tags.attr('checked'))
+            render.concat(matchedTags);
+        if(this.dom.orgs.attr('checked'))
+            render.concat(matchedOrgs);
+//        this.dom.results.
+
     },
 
     showOverlay: function(overlay) {
@@ -107,7 +127,6 @@ Subscription_UI.prototype = {
         }.bind(this));
 
     }
-
 
 
 }

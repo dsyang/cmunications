@@ -27,15 +27,12 @@ module.exports = function(app, db, Auth) {
         code.searchAction(request, response, data);
     });
 
-    /* Returns results = { orgs = []
-                            tags = []
-                        }
-                        */
+
     app.post('/subscriptions/search', function(request, response) {
         var data = { text: request.body.text};
         code.searchSubscriptionsAction(request, response, data);
     });
-    
+
     app.post('/subscribe',
              //             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
