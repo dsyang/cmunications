@@ -14,9 +14,11 @@
             console.log("subscribing to ", thing);
             var data = {};
             if(thing.password !== undefined) {
-                data.tags = [thing.name];
-            } else {
                 data.orgids = [thing._id];
+                data.tags = [];
+            } else {
+                data.orgids = [];
+                data.tags = [thing.name];
             }
             var request = $.ajax({ type: 'post',
                                   url: '/subscribe',

@@ -139,7 +139,7 @@ Subscription_UI.prototype = {
         var subscribedToggle = $('<a class="is_subscribed">');
         if(elem.password !== undefined) {
             var idx =  indexWhere(account.orgs, function(org) {
-                return elem._id === org._id;
+                return elem._id === org;
             });
             if(idx !== -1) subscribed = true;
         } else {
@@ -154,7 +154,7 @@ Subscription_UI.prototype = {
             subscribedToggle.html("[unsubscribe]");
             subscribedToggle.click(function() {
                 this.subscription_app.unsubscribe(elem, text);
-            });
+            }.bind(this));
         } else {
             subscribedToggle.html("[subscribe]");
             subscribedToggle.click(function() {
