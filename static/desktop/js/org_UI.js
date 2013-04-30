@@ -38,7 +38,19 @@ UI.prototype =
             if($('#eventInfo').length === 0)
                 page.append($('<div id="eventInfo">'));
             console.log("creating elements");
-        }
+        };
+
+        if($('#createEventsPage').length == 0) {
+            var page = $('<div id = "createEventsPage">');
+            console.log("create pageee");
+            $('#app').html("").append(page);
+
+            page.append($('<ul class="myevents">'));
+            if($('#eventInfo').length === 0)
+                page.append($('<div id="eventInfo">'));
+            console.log("creating page");
+        };
+
         this.dom = {
             myEvents: $('.myevents'),
             tab_myEvents: $('.ME'),
@@ -47,6 +59,7 @@ UI.prototype =
             topleft_button: $('#left_button'),
             topright_button: $('#right_button'),
             eventInfo: $("#eventInfo"),
+            app: $("#app"),
             loginOverlay: $("#loginOverlay"),
             loginWrapper: $('#loginWrapper'),
             tab1_contain: $('.contain.tab1'),
@@ -64,10 +77,7 @@ UI.prototype =
 
         this.dom.tab_create.unbind('click');
         this.dom.tab_create.click(function() {
-            this.dom.tab4_contain.attr({"id":"selected"});
-            this.dom.tab2_contain.attr({"id":""});
-            this.dom.tab3_contain.attr({"id":""});
-            this.dom.tab1_contain.attr({"id":""});
+            console.log("click create");
             if(window.app_API.getAccountObject() === null ||
                window.app_API.getAccountObject().accountType !== "organizations") {
                 alert('You can only create an event if you login as an organzation.'+
@@ -337,15 +347,19 @@ UI.prototype =
     },
 
     createEvent: function () {
+        console.log(this.create_mode);
+        this.dom.tab4_contain.attr({"id":"selected"});
+        this.dom.tab2_contain.attr({"id":""});
+        this.dom.tab3_contain.attr({"id":""});
+        this.dom.tab1_contain.attr({"id":""});
         this.dom.loginOverlay.addClass("login_hidden");
-        if (this.create_mode == false) {
+        this.initDom();
             this.create_mode = true;
-            this.dom.tab_create.addClass("selected_tab");
-            this.dom.myEvents.html("");
-            this.dom.eventInfo.html("");
+            console.log("create Event");
             this.dom.topleft_button.html("Cancel");
             this.dom.topleft_button.click(this.org_app.showEvents.bind(this));
-
+            this.dom.eventInfo.html("");
+            this.dom.myEvents.html("");
             this.dom.topright_button.unbind('click');
             this.dom.topright_button.html("Save");
 
@@ -356,7 +370,7 @@ UI.prototype =
             var labelTimeStart = $('<label for="timeStart">').html("Time");
             var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
             var labelTags = $('<label for="tags">').html("Tags");
-            var tags = $('<input>').val(String(event.tags)).addClass("info").attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
+            var tags = $('<input>').val(String("")).addClass("info").attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
             var labelDescription = $("<label>").html("Description").attr({"for": "description"});
             var description = $("<textarea></textarea>").html(event.description).addClass("info").attr({"id": "description", "placeholder": "Add more info"});
 
@@ -369,7 +383,6 @@ UI.prototype =
 
             this.dom.eventInfo.css({"visibility": "visible"});
             this.dom.eventInfo.attr({"class": "on"});
-        }
         //Save
         this.dom.topright_button.click(function () {
             var content = {  "location": location.val(),
