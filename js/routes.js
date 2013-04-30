@@ -34,7 +34,6 @@ module.exports = function(app, db, Auth) {
     });
 
     app.post('/subscribe',
-             //             passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
              function(request, response) {
                  var data = {orgids: request.body.orgids,
                              tags: request.body.tags
@@ -42,6 +41,14 @@ module.exports = function(app, db, Auth) {
                  code.subscribeAction(request, response, data);
              });
 
+    app.post('/unsubscribe',
+             function(request, response) {
+                 var data = {orgids: request.body.orgids,
+                             tags: request.body.tags
+                            };
+                 code.unsubscribeAction(request, response, data);
+             });             
+             
     app.post('/notifications/clear', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
             if(err) {
