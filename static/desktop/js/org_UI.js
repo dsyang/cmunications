@@ -78,10 +78,7 @@ UI.prototype =
         //initiate DOM in case it was over written
         this.initDom();
         //bind left/right buttons
-        this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.html('settings');
-        subscription_app.ui.bindTabs();
-
 
         this.dom.topright_button.unbind('click');
         if(window.app_API.isLoggedIn() === false) {
@@ -342,7 +339,7 @@ UI.prototype =
             var labelTimeStart = $('<label for="timeStart">').html("Time");
             var timeStart = $("<input>").html(event.timeStart).addClass("info").attr({"type": "datetime-local", "id": "timeStart"});
             var labelTags = $('<label for="tags">').html("Tags");
-            var tags = $('<input>').val(event.tags.toString()).addClass("info").attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
+            var tags = $('<input>').val(String(event.tags)).addClass("info").attr({"type": "text", "id": "tags", "placeholder": "ex: #free_food, #lecture"});
             var labelDescription = $("<label>").html("Description").attr({"for": "description"});
             var description = $("<textarea></textarea>").html(event.description).addClass("info").attr({"id": "description", "placeholder": "Add more info"});
 
@@ -378,16 +375,13 @@ UI.prototype =
     },
 
     loginPage: function() {
-        this.dom.topleft_button.html("Back");
             if (this.dom.loginOverlay.is(":hidden")) {
                 console.log("it's 4 AM #cmulyfeeeee");
-                this.dom.loginOverlay.removeClass("login_hidden");
                 (this.dom.loginOverlay).slideDown("slow");
                 $("#app").html("");
+                this.dom.loginOverlay.removeClass("login_hidden");
                 } else {
                 (this.dom.loginOverlay).hide();
                 }
-
-        //window.location = 'login.html';
     }
 }
