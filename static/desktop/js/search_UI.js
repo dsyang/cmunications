@@ -38,8 +38,12 @@ Search_UI.prototype = {
             searchbarDate: $('#searchbarDate'),
             searchResults: $('#searchResults'),
             submit: $('#searchSubmit'),
-            tab_search: $('.tab.search')
-        }
+            tab_search: $('.tab.search'),
+            tab1_contain: $('.contain.tab1'),
+            tab2_contain: $('.contain.tab2'),
+            tab3_contain: $('.contain.tab3'),
+            tab4_contain: $('.contain.tab4')
+        };
 
     },
 
@@ -51,7 +55,10 @@ Search_UI.prototype = {
     showResults: function(results, doRender) {
         console.log("show events!");
         this.initDom();
-
+            this.dom.tab2_contain.attr({"id":"selected"});
+            this.dom.tab3_contain.attr({"id":""});
+            this.dom.tab1_contain.attr({"id":""});
+            this.dom.tab4_contain.attr({"id":""});
 
         this.dom.submit.click(function() {
             window.search_API.doSearch(this.dom.searchbar.val(),
