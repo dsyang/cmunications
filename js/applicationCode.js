@@ -165,11 +165,12 @@ function Application(db) {
                                                                callback]));
     }
 
-    // Creates an event and adds it to the database.
+     // Creates an event and adds it to the database.
     function createEvent(name, location, description, startTime,
-                         endTime, hostOrgId, callback){
+                         endTime, hostOrgId, tags, callback){
         // Check that startTime < endTime
-
+        var scope = this;
+        
         var event = new Event();
         event.name = name;
         event.location = location;
@@ -177,6 +178,7 @@ function Application(db) {
         event.hostOrg = '';
         event.timeStart = startTime;
         event.timeEnd = endTime;
+        event.tags = tags;
 
         if(!callback){
             callback = logger;
@@ -187,11 +189,16 @@ function Application(db) {
         function callbackContext(){
             callback(null, [event]);
         }
+                
+        function getTagsFromDb(err, results){
+            if(err){ throw err;}
+
+            addTagsToDb(event.tags,callbackContext);
+        }
 
         function updateOrg(err, listOfDocs){
             event._id = listOfDocs[0]._id;
-
-            addEventsToOrg(hostOrgId, [event._id], callbackContext);
+            addEventsToOrg(hostOrgId, [event._id], getTagsFromDb);
         }
 
         function insertEvent(err, results){
@@ -375,6 +382,46 @@ function Application(db) {
         removeFromArrayField(collUsers, query, 'tags', tags, cb);
     }
 
+
+    
+    function addTagsToDb(tags, callback){        
+        function cb(err, results){
+            var allTags = results.map(function(elem){
+                return elem.name;
+            });                
+                
+            var tagsToAdd = tags.filter(function(elem){
+                if(allTags.indexOf(elem) === -1){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            });
+            
+            
+            tagsToDb(tagsToAdd); 
+        }
+        
+        function tagsToDb(tags){
+            //console.log(tags.length);
+            if(tags.length === 0){
+                callback();
+                return;
+            }
+            
+            var nextTag = tags.shift();
+            
+            createTag(nextTag, cb);
+            
+            function cb(err, stuff){
+                if(err){ throw err;}
+                tagsToDb(tags);
+            }
+        }
+
+        searchDb(collTags, {}, cb);
+    }
 
 
 
@@ -680,7 +727,11 @@ function Application(db) {
         console.log("stuff");
         var dStart = new Date(data.event.timeStart);
         var dEnd = new Date(data.event.timeEnd);
-        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), cb);
+        var tags = [];
+        if(data.event.tags){
+            tags = data.event.tags;
+        }   
+        createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), tags, cb);
 
         function cb(err, result) {
             if(err) throw err;
@@ -701,6 +752,11 @@ function Application(db) {
             //console.log(result);
             var dStart = new Date(data.event.timeStart);
             var dEnd = new Date(data.event.timeEnd);
+            var tags = [];
+            if(data.event.tags){
+                tags = data.event.tags
+            }
+            
             data.event.timeStart = dStart;
             data.event.timeEnd = new Date();
             delete data.event._id;
@@ -712,12 +768,16 @@ function Application(db) {
             query['_id'] = {'$in': result[0].followers};
 
             addToArrayField(collUsers, query, 'notifications', [not], cb2);
-
+            /*
             function cb2(err, result){
                 if(err) throw err;
-                updateFields(collEvents, {'_id' : event_id}, data.event, cb3);
-            }
-            function cb3(err, result) {
+                addTagsToDb(tags,cb3);
+            }*/
+            function cb2(err, result){
+                if(err) throw err;
+                updateFields(collEvents, {'_id' : event_id}, data.event, cb4);
+            }            
+            function cb4(err, result) {
                 if(err) throw err;
                 response.send(success('event', {'event_id': event_id,
                                                 'result': result,

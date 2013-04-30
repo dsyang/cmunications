@@ -6,9 +6,7 @@ var Subscription_UI = function(config) {
 
     this.subscription_app = config.events;
 
-//    notification_app.ui.bindTabs();
-//    search_app.ui.bindTabs();
-//    org_app.ui.bindTabs();
+
     this.bindTabs();
 }
 
@@ -38,7 +36,7 @@ Subscription_UI.prototype = {
     initDom: function() {
 
         var overlay = $('#overlay').addClass('hidden');
-        var overlay_content = $('#overlay-content');
+        var overlay_content = $('#overlay_content');
         var search = $('#subscription_search');
         var submit = $('#subscription_submit');
         var results = $('#subscription_results');
