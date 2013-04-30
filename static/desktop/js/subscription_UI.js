@@ -13,6 +13,13 @@ var Subscription_UI = function(config) {
 }
 
 
+function indexWhere(array, fn) {
+    for(var i = 0; i < array.length; i++) {
+        if(fn(array[i]) === true) return i;
+    }
+    return -1;
+}
+
 Subscription_UI.prototype = {
 
 
@@ -94,18 +101,44 @@ Subscription_UI.prototype = {
             render = render.concat(matchedOrgs);
 
         this.dom.results.html("");
+        var account = window.app_API.getAccountObject();
 
         render.forEach(function(elem) {
-            var li = this.generate_subscription_html(elem);
+            var li = this.generate_subscription_html(elem, account);
             this.dom.results.append(li);
         }.bind(this));
 
     },
 
-    generate_subscription_html: function(elem) {
+    generate_subscription_html: function(elem, account) {
         var li = $("<li>");
         var name = $("<h3>").html(elem.name);
-        var subscribedToggle = $('<div class="subscribed">').html("[x]");
+        var subscribed = false;
+        var subscribedToggle = $('<a class="is_subscribed">');
+        if(elem.password !== undefined) {
+            var idx =  indexWhere(account.orgs, function(org) {
+                return elem._id === org._id;
+            });
+            if(idx !== -1) subscribed = true;
+        } else {
+            var idx = indexWhere(account.tags, function(tag) {
+                return elem.name === tag;
+            });
+            console.log(elem.name);
+            name.html('#'+elem.name);
+            if(idx !== -1) subscribed = true;
+        }
+        if(subscribed) {
+            subscribedToggle.html("[unsubscribe]");
+            subscribedToggle.click(function() {
+                console.log("unsubscribe user");
+            });
+        } else {
+            subscribedToggle.html("[subscribe]");
+            subscribedToggle.click(function() {
+                console.log("subscribe user");
+            });
+        }
         li.append(name);
         li.append(subscribedToggle);
         return li;
