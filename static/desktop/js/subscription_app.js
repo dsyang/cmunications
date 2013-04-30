@@ -2,7 +2,7 @@ var Subscription_app = function() {
 
     this.ui = new Subscription_UI({
         events: {
-            searchSubscriptions: this.searchSubscriptions
+            searchSubscriptions: this.searchSubscriptions.bind(this)
         }
     });
 
@@ -16,8 +16,7 @@ Subscription_app.prototype = {
             if(err) throw err;
             this.ui.showSubscriptions(results);
             console.log("got results", results);
-        });
-
+        }.bind(this));
     }
 
 

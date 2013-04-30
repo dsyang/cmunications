@@ -80,11 +80,14 @@ Subscription_UI.prototype = {
         var matchedOrgs = results.orgs;
         var matchedTags = results.tags;
         var render = [];
-        if(this.dom.tags.attr('checked'))
+        console.log(this.dom.tags.attr('checked'));
+        if(this.dom.tags.attr('checked') === 'checked')
             render.concat(matchedTags);
-        if(this.dom.orgs.attr('checked'))
+        if(this.dom.orgs.attr('checked') === 'checked')
             render.concat(matchedOrgs);
-//        this.dom.results.
+
+        console.log("render",render);
+
 
     },
 
