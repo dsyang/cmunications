@@ -256,9 +256,8 @@ UI.prototype =
                     location.attr({"type": "text", "id": "location", "value": displaylocation.val()});
 
                     var labelHost = $("<label>").html("Host Org").attr({"for": "host"});
-                    var host = $("<input>").html(event.hostOrg).addClass("host");
+                    var host = $("<input>").html(event.hostOrg).addClass("host info");
                     host.attr({"type": "text", "id": "host", "value": displayhost.val().slice(displayhost.val().indexOf(': ')+2),
-                               "disabled": true
                               });
 
                     var labelTimeStart = $("<label>").html("Time").attr({"for": "timeStart"});
@@ -282,7 +281,7 @@ UI.prototype =
                     this.dom.eventInfo.append($("<li>").append(labelHost, host));
                     this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
                     this.dom.eventInfo.append($("<li>").append(labelTags, tags));
-                    this.dom.eventInfo.append($("<li>").append(labelDescription,description));
+                    this.dom.eventInfo.append($("<li>").append(labelDescription,description).addClass("li_desc"));
                     this.dom.eventInfo.css({"visibility": "visible"});
 
                     this.dom.topright_button.html("Save");
@@ -352,7 +351,8 @@ UI.prototype =
             this.dom.eventInfo.append($("<li>").append(labelLocation,location));
             this.dom.eventInfo.append($("<li>").append(labelTimeStart, timeStart));
             this.dom.eventInfo.append($("<li>").append(labelTags, tags));
-            this.dom.eventInfo.append($("<li>").append(labelDescription,description));
+            console.log("here");
+            this.dom.eventInfo.append($("<li>").append(labelDescription,description).addClass("li_desc"));
 
             this.dom.eventInfo.css({"visibility": "visible"});
             this.dom.eventInfo.attr({"class": "on"});
