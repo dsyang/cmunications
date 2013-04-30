@@ -375,6 +375,7 @@ UI.prototype =
     },
 
     loginPage: function() {
+        this.dom.topleft_button.html("Back");
             if (this.dom.loginOverlay.is(":hidden")) {
                 console.log("it's 4 AM #cmulyfeeeee");
                 (this.dom.loginOverlay).slideDown("slow");
