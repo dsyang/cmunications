@@ -143,7 +143,7 @@ module.exports = function(app, db, Auth) {
     });
 
     //returns a list of events that I've starred or match what I'm subscribed to
-    app.get('/events/subscribed', function(request, response) {
+    app.get('/events/mine', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
             if(err) {
                 response.send(fail("not logged in"));
@@ -153,7 +153,10 @@ module.exports = function(app, db, Auth) {
                         response.send(fail("cannot get account"));
                     } else {
                         var data = {user : account };
-                        code.listMyActions(request, response, data);
+                        if(account.accountType === 'users')
+                            code.listMyEventsAction(request, response, data);
+                        else
+                            code.listOrgEventsAction(request, response, data);
                     }
                 });
             }

@@ -114,6 +114,7 @@ Subscription_UI.prototype = {
     },
 
     showSubscriptions: function(results) {
+        this.bindTabs();
         this.latestResults = results;
         var matchedOrgs = results.orgs;
         var matchedTags = results.tags;
@@ -176,7 +177,7 @@ Subscription_UI.prototype = {
     },
 
     showOverlay: function(overlay) {
-
+        this.bindTabs();
         console.log('Showing Overlay');
 
         this.dom.overlay.append(overlay);
@@ -203,7 +204,7 @@ Subscription_UI.prototype = {
     },
 
     hideOverlay: function(overlay) {
-
+        this.bindTabs();
         this.dom.overlay.addClass('hidden');
         this.dom.overlay.one(this.C.TRANSITION_END, function(e) {
             console.log('Hiding Overlay');

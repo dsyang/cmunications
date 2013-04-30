@@ -14,6 +14,11 @@
             setupCallback(request, done);
         },
 
+        getMine: function(done) {
+            var request = $.ajax({ type: 'get', url: '/events/mine'});
+            setupCallback(request, done);
+        },
+
         /* create a new event */
         create: function(content, done){
             var request = $.ajax({
