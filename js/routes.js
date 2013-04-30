@@ -142,7 +142,8 @@ module.exports = function(app, db, Auth) {
         });
     });
 
-    app.get('/events/starred',
+    //returns a list of events that I've starred or match what I'm subscribed to
+    app.get('/events/subscribed',
             //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
@@ -150,7 +151,6 @@ module.exports = function(app, db, Auth) {
             });
 
     app.get('/myevents',
-            //            passport.authenticate('local', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listOrgEventsAction(request, response, data);
