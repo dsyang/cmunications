@@ -70,9 +70,6 @@ UI.prototype =
         this.initDom();
         //bind left/right buttons
         this.dom.topleft_button.html('settings');
-        // this.dom.topleft_button.click(function() {
-        //     alert("to be implemented");
-        // });
 
         this.dom.topright_button.unbind('click');
         if(window.app_API.isLoggedIn() === false) {

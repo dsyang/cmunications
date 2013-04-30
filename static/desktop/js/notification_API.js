@@ -3,9 +3,15 @@
     window.notification_API = {
 
         getNotifications: function(done) {
-            console.log("getting notifications");
-            done(null, []);
-
+            window.app_API.refreshAccountObject(function(err, result) {
+                console.log("getting notifications");
+                if(err) throw err;
+                if(result.success === true) {
+                    done(null,  window.app_API.getAccountObject().notifications);
+                } else {
+                    done(result.message, []);
+                }
+            });
         }
 
     }

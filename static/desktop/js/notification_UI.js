@@ -19,7 +19,7 @@ Notification_UI.prototype = {
             var page = $('<div id="notificationsPage">');
             $('#app').html("").append(page);
             if($('#notifications').length === 0)
-                page.append($('<ul id="notifications">'));
+                page.append($('<ul id="notifications" class="myevents">'));
             console.log("creating elements");
         }
 
@@ -35,8 +35,40 @@ Notification_UI.prototype = {
     },
 
 
-    showNotifications: function() {
+    showNotifications: function(results) {
         this.initDom();
-        this.dom.notifications.html("No notifications");
+        if(results.length === 0) {
+            this.dom.notifications.html("No notifications");
+        } else {
+            this.dom.notifications.html("");
+            results.forEach(function(elem) {
+                var li = this.generate_notification(elem, function() {
+                    this.showNotifications(results);
+                }.bind(this));
+                this.dom.notifications.append(li);
+            }.bind(this));
+        }
+    },
+
+
+    generate_notification: function(elem, backfn) {
+        var li = $('<li>');
+        var text = $('<p>').html(elem.text);
+        var date = (new Date(elem.dateUpdated)).toDateString();
+        var time = org_app.ui.generateTime(new Date(elem.dateUpdated));
+        var updateTime = $('<p class="time">').html(date + ", " + time);
+        var infoButton = $('<div class="more">').html("<a> </a>");
+        var clearButton = $('<a class="close">').html('[x]');
+
+        li.append(infoButton);
+        li.append(text);
+        li.append(updateTime);
+        infoButton.click(function() {
+            org_app.showEvent(elem.event_id, backfn);
+        });
+        clearButton.click(function() {
+
+        });
+        return li;
     }
 }
