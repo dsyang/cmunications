@@ -60,7 +60,7 @@ UI.prototype =
 
         this.dom.tab_create.unbind('click');
         this.dom.tab_create.click(function() {
-            if(window.app_API.getAccountObject() === undefined ||
+            if(window.app_API.getAccountObject() === null ||
                window.app_API.getAccountObject().accountType !== "organizations") {
                 alert('You can only create an event if you login as an organzation.'+
                       ' Contact cmunications@andrew.cmu.edu to receive organization'+
@@ -114,7 +114,7 @@ UI.prototype =
     generate_listing: function(event, backfn) {
         var account = window.app_API.getAccountObject();
         var star = false;
-        if(account !== undefined && account.accountType === 'users') {
+        if(account !== null && account.accountType === 'users') {
             if(account.savedEvents.indexOf(event._id) !== -1)
                 star = true;
         }
@@ -225,7 +225,7 @@ UI.prototype =
         this.dom.topright_button.unbind('click');
         this.dom.topright_button.click(function () {
             var user = window.app_API.getAccountObject();
-            if(user === undefined) {
+            if(user === null) {
                 alert("you must login as the host organization to edit this event!");
                 this.showEvent(event, backfn);
             } else if(user.name !== event.hostOrg) {
