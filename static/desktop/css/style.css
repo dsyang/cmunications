@@ -364,6 +364,9 @@ More Info
   	margin-top: 5px;
 }
 
+.display {
+	overflow: hidden;
+}
 
 #eventInfo #display_name  {
 	font-size: 1.2em;
@@ -389,50 +392,6 @@ More Info
 	resize: none;
 	min-height: 200px;
 	padding-top: 10px;
-}
-
-
-/* Subscription Overlay */
-
-#overlay {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, .7);
-    z-index: 50;
-}
-
-#overlay.hidden {
-    left: 0;
-    right: 0;
-    top: -100%;
-    bottom: 100%;
-    display: none;
-}
-
-#overlay-content {
-    background: black;
-    margin-top: 100px;
-    text-align: center;
-}
-
-.transition {
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-
-    /* prevents flickering and other weirdness */
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    -ms-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-.initiallyHidden {
-    display: none;
 }
 
 
