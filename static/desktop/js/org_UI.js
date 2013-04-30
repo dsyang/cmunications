@@ -29,6 +29,7 @@ UI.prototype =
     initDom: function(){
         //create necessary dom elements and append into $('#app') if they
         //don't exist:
+        console.log("insideinitDom", $('#staredEventsPage'));
         if($('#starredEventsPage').length === 0) { // just entering star page
             var page = $('<div id="starredEventsPage">');
             console.log('app');
@@ -39,8 +40,13 @@ UI.prototype =
                 page.append($('<div id="eventInfo">'));
             console.log("creating elements");
         };
+        console.log($('#createEventsPage').length,
+                    $('.tab4#selected').length
+                   );
 
-        if($('#createEventsPage').length == 0) {
+        if($('#createEventsPage').length === 0 &&
+           $('.tab4#selected').length !== 0)
+        {
             var page = $('<div id = "createEventsPage">');
             console.log("create pageee");
             $('#app').html("").append(page);

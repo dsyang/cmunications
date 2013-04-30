@@ -40,7 +40,7 @@ input::-webkit-input-placeholder,::-moz-input-placeholder {
 }
 
 #rest {
-	margin-top: 50px;
+	  margin-top: 50px;
   	position: relative;
   	padding-bottom: 70px;
 }
@@ -392,6 +392,3 @@ More Info
 	min-height: 200px;
 	padding-top: 10px;
 }
-
-
-
