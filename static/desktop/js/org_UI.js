@@ -94,6 +94,7 @@ UI.prototype =
         this.bindTabs();
 
         allEvents = events['events'];
+        console.log(events);
         console.log(allEvents);
         this.dom.eventInfo.html("");
         this.dom.myEvents.html("");

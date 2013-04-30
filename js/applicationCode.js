@@ -793,7 +793,12 @@ function Application(db) {
                         var allevents = [].concat(savedEvents,
                                                   savedOrgEvents,
                                                   savedTagEvents);
-                        response.send(success('results', allevents));
+                        var sorted = allevents.sort(function (date1, date2) {
+                            if (date1.timeStart > date2.timeStart) return 1;
+                            if (date1.timeStart < date2.timeStart) return -1;
+                            return 0;
+                        });
+                        response.send(success('events', sorted));
                     };
                 };
             };

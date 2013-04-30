@@ -28,7 +28,7 @@ org_app.prototype = {
             this.myEvents = data_array;
             this.ui.showEvents(data_array);
         }.bind(this);
-        if(window.app_API.isLoggedIn() === true) {
+        if(window.app_API.isLoggedIn() !== false) {
             window.org_API.getMine(done);
         } else {
             window.org_API.getAll(done);
