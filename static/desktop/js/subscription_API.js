@@ -8,6 +8,20 @@
                                    url: '/subscriptions/search',
                                    data: { text: text} });
             setupCallback(request, done);
+        },
+
+        subscribe: function(thing, done) {
+            console.log("subscribing to ", thing);
+            var data = {};
+            if(thing.password !== undefined) {
+                data.tags = [thing.name];
+            } else {
+                data.orgids = [thing._id];
+            }
+            var request = $.ajax({ type: 'post',
+                                  url: '/subscribe',
+                                  data: data });
+            setupCallback(request, done);
         }
 
     }

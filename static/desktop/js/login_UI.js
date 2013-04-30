@@ -19,9 +19,6 @@ Login_UI.prototype =
             back: $('#left_button')
         };
 
-        if(window.app_API.isLoggedIn() !== false) {
-            this.logoutAction();
-        }
     },
 
     showMessage: function(message) {

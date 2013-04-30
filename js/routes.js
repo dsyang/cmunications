@@ -33,13 +33,25 @@ module.exports = function(app, db, Auth) {
         code.searchSubscriptionsAction(request, response, data);
     });
 
-    app.post('/subscribe',
-             function(request, response) {
-                 var data = {orgids: request.body.orgids,
-                             tags: request.body.tags
-                            };
-                 code.subscribeAction(request, response, data);
-             });
+    app.post('/subscribe', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"));
+                    } else {
+                        var data = {orgids: request.body.orgids,
+                                    tags: request.body.tags,
+                                    user: account
+                                   };
+                        code.subscribeAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });
 
     app.post('/unsubscribe',
              function(request, response) {
@@ -47,8 +59,8 @@ module.exports = function(app, db, Auth) {
                              tags: request.body.tags
                             };
                  code.unsubscribeAction(request, response, data);
-             });             
-             
+             });
+
     app.post('/notifications/clear', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
             if(err) {

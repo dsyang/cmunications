@@ -10,7 +10,6 @@ var Search_UI = function(config) {
 
     //Bind all the tabs relavent to events.
     this.bindTabs();
-    org_app.ui.bindTabs();
 
 
 }
@@ -25,7 +24,7 @@ Search_UI.prototype = {
             $('#app').html("").append(page);
             if($('#searchbar').length === 0)
                 page.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
-            if($('#searchbarDate').length === 0) 
+            if($('#searchbarDate').length === 0)
                 $('.search_container').append($('<input type="date" id="searchbarDate"> '));
             if($('#searchSubmit').length === 0)
                 $(".search_container").append($('<button id="searchSubmit"> Go </button>'));

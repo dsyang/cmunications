@@ -170,7 +170,7 @@ function Application(db) {
                          endTime, hostOrgId, tags, callback){
         // Check that startTime < endTime
         var scope = this;
-        
+
         var event = new Event();
         event.name = name;
         event.location = location;
@@ -189,7 +189,7 @@ function Application(db) {
         function callbackContext(){
             callback(null, [event]);
         }
-                
+
         function getTagsFromDb(err, results){
             if(err){ throw err;}
 
@@ -391,13 +391,13 @@ function Application(db) {
     }
 
 
-    
-    function addTagsToDb(tags, callback){        
+
+    function addTagsToDb(tags, callback){
         function cb(err, results){
             var allTags = results.map(function(elem){
                 return elem.name;
-            });                
-                
+            });
+
             var tagsToAdd = tags.filter(function(elem){
                 if(allTags.indexOf(elem) === -1){
                     return true;
@@ -406,22 +406,22 @@ function Application(db) {
                     return false;
                 }
             });
-            
-            
-            tagsToDb(tagsToAdd); 
+
+
+            tagsToDb(tagsToAdd);
         }
-        
+
         function tagsToDb(tags){
             //console.log(tags.length);
             if(tags.length === 0){
                 callback();
                 return;
             }
-            
+
             var nextTag = tags.shift();
-            
+
             createTag(nextTag, cb);
-            
+
             function cb(err, stuff){
                 if(err){ throw err;}
                 tagsToDb(tags);
@@ -591,7 +591,7 @@ function Application(db) {
       };
     */
     function subscribeAction(request, response, data) {
-        var id = ObjectID(request.user.id);
+        var id = data.user._id;
         var finalResult = {};
         //console.log(data.orgids, data.tags);
 
@@ -772,7 +772,7 @@ function Application(db) {
         var tags = [];
         if(data.event.tags){
             tags = data.event.tags;
-        }   
+        }
         createEvent(data.event.name, data.event.location, data.event.description, dStart, dEnd, ObjectID(data.event.hostOrgId), tags, cb);
 
         function cb(err, result) {
@@ -798,7 +798,7 @@ function Application(db) {
             if(data.event.tags){
                 tags = data.event.tags
             }
-            
+
             data.event.timeStart = dStart;
             data.event.timeEnd = new Date();
             delete data.event._id;
@@ -818,7 +818,7 @@ function Application(db) {
             function cb2(err, result){
                 if(err) throw err;
                 updateFields(collEvents, {'_id' : event_id}, data.event, cb4);
-            }            
+            }
             function cb4(err, result) {
                 if(err) throw err;
                 response.send(success('event', {'event_id': event_id,
