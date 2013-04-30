@@ -25,7 +25,10 @@ Create Event
 	min-height: 50px;
 }
 
-
+#eventInfo li.li_desc {
+	overflow: auto;
+	min-height: 150px;
+}
 
 #eventInfo li label {
 	color: black;
@@ -71,13 +74,14 @@ Create Event
 
 #eventInfo li #description {
 	overflow: visible; /***** fix ********/
-  font-size: 15px;
-  background-color: inherit;
+  	font-size: 1em;
+  	background-color: inherit;
 	min-height: 70px;
 	resize: none;
 	padding: 10px;
 	font-family: inherit;
-  -webkit-user-select: auto;
+  	-webkit-user-select: auto;
+  	font-family: "Lato", sans-serif;
 }
 
 

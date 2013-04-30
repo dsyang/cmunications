@@ -115,24 +115,110 @@
 	width: 46%;
 	vertical-align: middle;
 	text-align: center;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+ 	margin: 5px 0px;
+ 	height: 90%;
+ 	background: #b5bdc8; /* Old browsers */
+background: -moz-linear-gradient(top, #b5bdc8 0%, #828c95 36%, #28343b 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b5bdc8), color-stop(36%,#828c95), color-stop(100%,#28343b)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #b5bdc8 0%,#828c95 36%,#28343b 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #b5bdc8 0%,#828c95 36%,#28343b 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #b5bdc8 0%,#828c95 36%,#28343b 100%); /* IE10+ */
+background: linear-gradient(to bottom, #b5bdc8 0%,#828c95 36%,#28343b 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#28343b',GradientType=0 ); /* IE6-9 */
+	border: 0.4px solid #696969;
 }
+
+.set_contain.left {
+	border-top-left-radius: 50px;
+ 	border-bottom-left-radius: 50px;
+}
+
+.set_contain.right {
+	border-top-right-radius: 50px;
+ 	border-bottom-right-radius: 50px;
+}
+
+
 
 .set_tab {
 	width: 80%;
 	height: 20px;
 	margin: 15px 10%;
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  	border-color: #0064cd #0064cd #003f81;
-  	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-.set_contain:hover {
-	background: #45484d; /* Old browsers */
-	background: -moz-linear-gradient(top, #45484d 0%, #3a3a3a 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484d), color-stop(100%,#3a3a3a)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #45484d 0%,#3a3a3a 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #45484d 0%,#3a3a3a 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #45484d 0%,#3a3a3a 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #45484d 0%,#3a3a3a 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#3a3a3a',GradientType=0 ); /* IE6-9 */
+.set_contain:hover, .set_contain.selected {
+	background: #2e3c44; /* Old browsers */
+background: -moz-linear-gradient(top, #2e3c44 0%, #2e3c44 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2e3c44), color-stop(100%,#2e3c44)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #2e3c44 0%,#2e3c44 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #2e3c44 0%,#2e3c44 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #2e3c44 0%,#2e3c44 100%); /* IE10+ */
+background: linear-gradient(to bottom, #2e3c44 0%,#2e3c44 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e3c44', endColorstr='#2e3c44',GradientType=0 ); /* IE6-9 */
 }
+
+#subscription_results {
+	font-family: "Lato", sans-serif;
+	font-size: 1.3em;
+}
+
+#subscription_results li a {
+	display: inline;
+	position: absolute;
+	right: 10px;
+	bottom: 20px;
+	padding: 5px;
+}
+
+#subscription_results li {
+	padding: 10px;
+	display: block;
+	background-color: inherit;
+	min-height: 40px;
+  	border-bottom: 1px solid #696969;
+  	margin: 5px;
+  	font-size: 1em;
+  	color: white;
+  	position: relative;
+
+}
+
+
+#subscription_results input {
+	  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+}
+
+#subscription_results li h3 {
+	padding: 5px 0px;
+	float: left;
+}
+
+
+#subscription_search {
+	border-radius: 20px;
+	border: none;
+	padding-left: 35px;
+	background-image: url("img/used/search-grey2.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	-moz-box-shadow: inset 0 0 5px #888;
+	-webkit-box-shadow: inset 0 0 5px#888;
+	box-shadow: inner 0 0 5px #888;
+	font-size: 1em;
+	font-family: "Lato", sans-serif;
+	color: #696969;
+	position: relative;
+/*
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; */
+    margin: 10px;
+    height: 25px;
+    width: 80%;
+}
+
