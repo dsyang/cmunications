@@ -117,7 +117,6 @@ UI.prototype =
         this.dom.tab4_contain.attr({"id":""});
 
         allEvents = events['events'];
-        console.log(events);
         console.log(allEvents);
         this.dom.eventInfo.html("");
         this.dom.myEvents.html("");

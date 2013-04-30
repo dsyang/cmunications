@@ -222,3 +222,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e3c44', end
     width: 80%;
 }
 
+#notifications {
+	font-family: 'Lato', sans-serif;
+	padding: 20px;
+	text-align: center;
+	font-size: 1.4em;
+}
+
+#notificationsPage, #app {
+	height: 100%;
+}
