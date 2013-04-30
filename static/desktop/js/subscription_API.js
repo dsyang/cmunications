@@ -2,10 +2,12 @@
 
     window.subscription_API = {
 
-        getSubscriptions: function(done) {
-            console.log("getting notifications");
-            done(null, []);
-
+        searchSubscriptions: function(text,done) {
+            console.log("searching for "+text);
+            var request = $.ajax({ type: 'post',
+                                   url: '/subscriptions/search',
+                                   data: { text: text} });
+            setupCallback(request, done);
         }
 
     }

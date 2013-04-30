@@ -100,6 +100,7 @@ org_app.prototype = {
     },
 
     editEvent: function(_id,content) {
+        console.log(content);
     	window.org_API.update(_id,content, function (err, data) {
     		if (err)
     			throw err;

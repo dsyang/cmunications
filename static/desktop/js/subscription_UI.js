@@ -33,16 +33,23 @@ Subscription_UI.prototype = {
         var overlay = $('#overlay').addClass('hidden');
         var overlay_content = $('#overlay-content');
         var search = $('#subscription_search');
+        var submit = $('#subscription_submit');
         var results = $('#subscription_results');
+
         var left_button = $('#left_button');
         var right_button = $('#right_button');
         var headline = $('#topbar');
+        var tags = $('#subscription_tags');
+        var orgs = $('#subscription_orgs');
         console.log(overlay)
 
         this.dom = {
             overlay: overlay,
             overlay_content: overlay_content,
             search: search,
+            submit: submit,
+            tags: tags,
+            orgs: orgs,
             results: results,
             settings_button: org_app.ui.dom.topleft_button,
             rest: $('#rest'),
@@ -53,6 +60,15 @@ Subscription_UI.prototype = {
         this.dom.overlay_content.removeClass('initiallyHidden');
         this.dom.overlay_content.detach();
 
+        this.dom.submit.click(function() {
+            var text = this.dom.search.val();
+            console.log(text);
+            console.log(this);
+            console.log(this.subscription_app);
+            this.subscription_app.searchSubscriptions(text);
+
+        }.bind(this));
+
     },
 
     bindTabs: function() {
@@ -62,6 +78,19 @@ Subscription_UI.prototype = {
             this.showOverlay(this.dom.overlay_content);
         }.bind(this));
         console.log('binding tabs');
+    },
+
+    showSubscriptions: function(results) {
+
+        var matchedOrgs = results.orgs;
+        var matchedTags = results.tags;
+        var render = [];
+        if(this.dom.tags.attr('checked'))
+            render.concat(matchedTags);
+        if(this.dom.orgs.attr('checked'))
+            render.concat(matchedOrgs);
+//        this.dom.results.
+
     },
 
     showOverlay: function(overlay) {
@@ -75,6 +104,8 @@ Subscription_UI.prototype = {
         this.dom.rest.css('overflow', 'hidden');
         this.dom.overlay.removeClass('hidden');
 
+
+        //toggling of showing overlay
         this.dom.settings_button.unbind('click');
         this.dom.settings_button.click(function() {
             this.hideOverlay(overlay);
@@ -104,7 +135,6 @@ Subscription_UI.prototype = {
         }.bind(this));
 
     }
-
 
 
 }

@@ -497,22 +497,22 @@ function Application(db) {
                         'orgs' : '',
                         'tags' : ''
                          };
-                         
+
         function cb2(err, result) {
             if(err) response.send(fail(err));
 
             scope.results.tags = result;
-            
+
             response.send(success('results', scope.results));
         }
 
 
         function cb(err, result) {
             if(err) response.send(fail(err));
-            
+
             scope.results.orgs = result;
-            
-            searchDb(collTags, scope.query, cb2);            
+
+            searchDb(collTags, scope.query, cb2);
         }
 
 
@@ -523,12 +523,12 @@ function Application(db) {
 
         var patt = new RegExp(regexPat,regexMod);
 
-        query['name'] = patt;
+        scope.query['name'] = patt;
 
         searchDb(collOrgs, scope.query, cb);
     }
-    
-    
+
+
     //given data,orgs or data.tags, add to request.user's tags/organizations
     /*
       {orgids: request.body.orgids,
@@ -833,6 +833,7 @@ function Application(db) {
                                   clearNotificationAction,
                                   getNotificationsAction,
                                   subscribeAction,
+                                  searchSubscriptionsAction,
                                   eventDetailAction,
                                   starEventAction,
                                   unstarEventAction,
