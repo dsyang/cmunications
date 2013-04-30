@@ -11,7 +11,7 @@ window.addEventListener('load', function(){
 
         var g = {
             handleLogoutResult: function(err, result){
-                window.location = '/login.html';
+                window.location = '/index.html';
             }
         }
 

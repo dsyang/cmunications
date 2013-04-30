@@ -18,6 +18,10 @@
     <script src="js/subscription_API.js"></script>
     <script src="js/subscription_app.js"></script>
     <script src="js/subscription_UI.js"></script>
+    <script src="js/login_UI.js"></script>
+    <script src="js/login_app.js"></script>
+    <script src="js/login_API.js"></script>
+    <script src="js/app_API.js"></script>
 
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,6 +30,7 @@
 
   	<link rel="apple-touch-icon-precomposed" href="/mobile/icon.png" />
     <link href="css/style.css" rel="stylesheet" type="text/css" media = "all">
+    <link href="css/login.css" rel="stylesheet" type="text/css" media = "all">
     <link href="css/reset.css" rel="stylesheet" type="text/css" media = "all">
     <link href="css/create.css" rel="stylesheet" type="text/css" media = "all">
     <link href="css/search.css" rel="stylesheet" type="text/css" media = "all">
@@ -37,6 +42,7 @@
            search_app = new Search_app();
            notification_app = new Notification_app();
            subscription_app = new Subscription_app();
+           app = new Login_app();
         });
     </script>
 </head>
@@ -50,8 +56,14 @@
 	</div>
 	<div id = "clearfix"> </div>
 	<div id = "rest">
-      <div id="overlay" class="transition hidden">
-      </div>
+			<div id = "loginOverlay" class = "login_fields login_hidden">
+		          <div id="message"></div>
+		          <input type="text" name="name"  id="username" class = "login" placeholder = "Username"><br>
+		          <input type="password" name="password" id="password" class = "login" placeholder = "Password"><br>
+		          <input type="submit" class = "top_button" value="Login" id="login_button">
+		          <input type="button" class = "top_button" value="Register" id="register_button" >
+		   	 </div>  
+      <div id="overlay" class="transition hidden">	</div>
       <div id="overlay-content" class="initiallyHidden">
         <h2>My Subscriptions</h2>
         <input type="text" id="subscription_search" />
@@ -62,13 +74,16 @@
         </div>
         <ul id="subscription_results"></ul>
       </div>
-		  <div id="app">
+
+		  <div id="app"> 
+   
 			  <ul class = "myevents">
 			  </ul>
 			  <div id = "eventInfo">
 
 			  </div>
 		  </div>
+
 			<div id = "clearfix"> </div>
 			<div class = "nav">
 				<div class = "contain">
@@ -84,6 +99,6 @@
 					<div class = "tab create"> <input type="radio" id="tab-4" name="tab-group" checked> </div>
 				</div>
 			</div>
-</div>
+	</div>
 </body>
 </html>
