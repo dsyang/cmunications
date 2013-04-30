@@ -405,7 +405,7 @@ module.exports = function(app, db, Auth) {
                 var cur = events[index];
                 index = index + 1;
                 console.log(cur);
-                code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], addEvents);
+                code.createEvent(cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], [], addEvents);
             }
         }
 
