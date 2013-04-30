@@ -594,12 +594,10 @@ function Application(db) {
         var id = data.user._id;
         var finalResult = {};
         //console.log(data.orgids, data.tags);
-        console.log("data!", data);
+        //console.log("data!", data);
         var orgids = [];
         if(data.orgids !== undefined) {
-            for(var i = 0; i < data.orgids.length; i++) {
-                orgids.push(ObjectID(data.orgids[i]));
-            }
+            orgids = data.orgids.map(function(elem){return ObjectID(elem);})
         }
 
         if(orgids) {
@@ -821,12 +819,12 @@ function Application(db) {
             query['_id'] = {'$in': result[0].followers};
 
             addToArrayField(collUsers, query, 'notifications', [not], cb2);
-            /*
+            
             function cb2(err, result){
                 if(err) throw err;
                 addTagsToDb(tags,cb3);
-            }*/
-            function cb2(err, result){
+            }
+            function cb3(err, result){
                 if(err) throw err;
                 updateFields(collEvents, {'_id' : event_id}, data.event, cb4);
             }
