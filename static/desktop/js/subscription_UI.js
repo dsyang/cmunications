@@ -6,7 +6,8 @@ var Subscription_UI = function(config) {
 
     this.subscription_app = config.events;
 
-
+    this.showing = "tags";
+    this.latestResults = [];
     this.bindTabs();
 }
 
@@ -40,12 +41,12 @@ Subscription_UI.prototype = {
         var search = $('#subscription_search');
         var submit = $('#subscription_submit');
         var results = $('#subscription_results');
-
         var left_button = $('#left_button');
-//        var right_button = $('#right_button');
         var headline = $('#topbar');
         var tags = $('#subscription_tags');
         var orgs = $('#subscription_orgs');
+        var settab_tags = $('.set_tab.tags');
+        var settab_orgs = $('.set_tab.orgs');
 
         this.dom = {
             overlay: overlay,
@@ -59,6 +60,8 @@ Subscription_UI.prototype = {
             rest: $('#rest'),
             topleft_button: left_button,
             topright_button: org_app.ui.dom.topright_button,
+            settab_tags: settab_tags,
+            settab_orgs: settab_orgs
         }
 
         this.dom.overlay_content.removeClass('initiallyHidden');
@@ -79,7 +82,6 @@ Subscription_UI.prototype = {
         this.dom.settings_button.unbind('click');
         this.dom.settings_button.click(function() {
             var account = window.app_API.getAccountObject();
-            console.log(account);
             if(account !== null && account.accountType === 'users') {
                 this.showOverlay(this.dom.overlay_content);
             } else {
@@ -88,30 +90,49 @@ Subscription_UI.prototype = {
             }
         }.bind(this));
 
+        this.dom.settab_tags.unbind('click');
+        this.dom.settab_tags.click(function() {
+            console.log("clicking settags tab");
+            this.showing = "tags";
+            this.showSubscriptions(this.latestResults);
+        }.bind(this));
+        this.dom.settab_orgs.unbind('click');
+        this.dom.settab_orgs.click(function() {
+            console.log("clicking setorgs tab");
+            this.showing = 'orgs';
+            this.showSubscriptions(this.latestResults);
+        }.bind(this));
+
     },
 
     showSubscriptions: function(results) {
-
+        this.latestResults = results;
         var matchedOrgs = results.orgs;
         var matchedTags = results.tags;
         console.log(matchedOrgs, matchedTags);
         var render = [];
-        if(this.dom.tags.attr('checked') === 'checked')
-            render = render.concat(matchedTags);
-        if(this.dom.orgs.attr('checked') === 'checked')
-            render = render.concat(matchedOrgs);
+//        if(this.dom.tags.attr('checked') === 'checked')
+//            render = render.concat(matchedTags);
+//        if(this.dom.orgs.attr('checked') === 'checked')
+//            render = render.concat(matchedOrgs);
+
+        if(this.showing === "orgs")
+            render = matchedOrgs;
+        if(this.showing === "tags")
+            render = matchedTags;
 
         this.dom.results.html("");
         var account = window.app_API.getAccountObject();
-
+        var text = this.dom.search.val();
+        console.log("mahrender", render);
         render.forEach(function(elem) {
-            var li = this.generate_subscription_html(elem, account);
+            var li = this.generate_subscription_html(elem, account, text);
             this.dom.results.append(li);
         }.bind(this));
 
     },
 
-    generate_subscription_html: function(elem, account) {
+    generate_subscription_html: function(elem, account, text) {
         var li = $("<li>");
         var name = $("<h3>").html(elem.name);
         var subscribed = false;
@@ -132,13 +153,13 @@ Subscription_UI.prototype = {
         if(subscribed) {
             subscribedToggle.html("[unsubscribe]");
             subscribedToggle.click(function() {
-                console.log("unsubscribe user");
+                this.subscription_app.unsubscribe(elem, text);
             });
         } else {
             subscribedToggle.html("[subscribe]");
             subscribedToggle.click(function() {
-                console.log("subscribe user");
-            });
+                this.subscription_app.subscribe(elem,text);
+            }.bind(this));
         }
         li.append(name);
         li.append(subscribedToggle);
@@ -148,7 +169,6 @@ Subscription_UI.prototype = {
     showOverlay: function(overlay) {
 
         console.log('Showing Overlay');
-//        this.dom.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
 
         this.dom.overlay.append(overlay);
         this.dom.rest.css('overflow', 'hidden');
@@ -169,6 +189,8 @@ Subscription_UI.prototype = {
         this.dom.overlay.click(function() {
             this.hideOverlay(overlay);
         }.bind(this));
+
+        this.subscription_app.searchSubscriptions("");
     },
 
     hideOverlay: function(overlay) {

@@ -7,7 +7,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, .7);
+    background: rgba(0, 0, 0, .85);
     z-index: 50;
 }
 
@@ -136,4 +136,3 @@
 	background: linear-gradient(to bottom, #45484d 0%,#3a3a3a 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#3a3a3a',GradientType=0 ); /* IE6-9 */
 }
-
