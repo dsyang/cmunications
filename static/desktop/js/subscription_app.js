@@ -25,7 +25,10 @@ Subscription_app.prototype = {
         window.subscription_API.subscribe(thing, function(err, results) {
             if(err) throw err;
             console.log('subscribed', results);
-            this.searchSubscriptions(text);
+            window.app_API.refreshAccountObject(function(err, results) {
+                if(err) throw err;
+                this.searchSubscriptions(text);
+            }.bind(this));
         }.bind(this));
     },
 
@@ -33,8 +36,11 @@ Subscription_app.prototype = {
         window.subscription_API.unsubscribe(thing, function(err, results) {
             if(err) throw err;
             console.log('unsubscribed', results);
-            this.searchSubscriptions(text);
-        });
+            window.app_API.refreshAccountObject(function(err, results) {
+                if(err) throw err;
+                this.searchSubscriptions(text);
+            }.bind(this));
+        }.bind(this));
     },
 
 

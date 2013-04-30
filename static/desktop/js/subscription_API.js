@@ -14,12 +14,30 @@
             console.log("subscribing to ", thing);
             var data = {};
             if(thing.password !== undefined) {
-                data.tags = [thing.name];
-            } else {
                 data.orgids = [thing._id];
+                data.tags = [];
+            } else {
+                data.orgids = [];
+                data.tags = [thing.name];
             }
             var request = $.ajax({ type: 'post',
                                   url: '/subscribe',
+                                  data: data });
+            setupCallback(request, done);
+        },
+
+        unsubscribe: function(thing, done) {
+            console.log("unsubscribing from ", thing);
+            var data = {};
+            if(thing.password !== undefined) {
+                data.orgids = [thing._id];
+                data.tags = [];
+            } else {
+                data.orgids = [];
+                data.tags = [thing.name];
+            }
+            var request = $.ajax({ type: 'post',
+                                  url: '/unsubscribe',
                                   data: data });
             setupCallback(request, done);
         }

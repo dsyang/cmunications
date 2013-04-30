@@ -53,13 +53,26 @@ module.exports = function(app, db, Auth) {
         });
     });
 
-    app.post('/unsubscribe',
-             function(request, response) {
-                 var data = {orgids: request.body.orgids,
-                             tags: request.body.tags
-                            };
-                 code.unsubscribeAction(request, response, data);
-             });
+    app.post('/unsubscribe', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"));
+                    } else {
+                        var data = {orgids: request.body.orgids,
+                                    tags: request.body.tags,
+                                    user: account
+                                   };
+                        code.unsubscribeAction(request, response, data);
+                    }
+                });
+            }
+        });
+    });
+
 
     app.post('/notifications/clear', function(request, response) {
         Auth.checkLogin(request, response, function(err) {
@@ -129,7 +142,8 @@ module.exports = function(app, db, Auth) {
         });
     });
 
-    app.get('/events/starred',
+    //returns a list of events that I've starred or match what I'm subscribed to
+    app.get('/events/subscribed',
             //            passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
@@ -137,7 +151,6 @@ module.exports = function(app, db, Auth) {
             });
 
     app.get('/myevents',
-            //            passport.authenticate('local', { failureRedirect: '/auth/login' }),
             function(request, response) {
                 var data = {};
                 code.listOrgEventsAction(request, response, data);
