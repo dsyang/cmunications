@@ -12,6 +12,14 @@
                     done(result.message, []);
                 }
             });
+        },
+
+        clearNotification: function(notification, done) {
+            var request = $.ajax({type: 'post',
+                                  url: '/notifications/clear',
+                                  data: { notification: notification }
+                                 });
+            setupCallback(request, done);
         }
 
     }

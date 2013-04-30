@@ -36,15 +36,26 @@ module.exports = function(app, db, Auth) {
                  code.subscribeAction(request, response, data);
              });
 
-    app.get('/user/:id/notifications',
-             function(request, response) {
-                 request.user = {};
-                 if(!request.params.id){response.send(fail("no user given"));}
-                 else{
-                    request.user.id = request.params.id;
-                    code.getNotificationsAction(request, response);
-                 }
-             });
+    app.post('/notifications/clear', function(request, response) {
+        Auth.checkLogin(request, response, function(err) {
+            if(err) {
+                response.send(fail("not logged in"));
+            } else {
+                Auth.getAccount(request, function(err, account) {
+                    if(err) {
+                        response.send(fail("cannot get account"));
+                    }
+                    if(account.accountType !== "users") {
+                        response.send(fail("not a user account"));
+                    }
+                    var data = {notification: request.body.notification,
+                                account: account
+                               };
+                    code.clearNotificationAction(request, response, data);
+                });
+            }
+        });
+    });
 
     app.get('/events/:id/details/', function(request, response) {
         var data = {event_id: request.params.id};

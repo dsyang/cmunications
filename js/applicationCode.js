@@ -231,7 +231,7 @@ function Application(db) {
         not.event_id = event_id;
         not.text = eventName + " has been changed.";
         not.dateUpdated = date;
-        
+
         return not;
     }
 
@@ -272,7 +272,7 @@ function Application(db) {
     function addToArrayField(collectionName, query, field, value, callback){
         if(isValidCollectionName(collectionName)){
             var update = {}, partialUpdate = {}, partialpartialUpdate = {};
-            
+
             partialpartialUpdate['$each'] = value;
             partialUpdate[field] = partialpartialUpdate;
             update['$addToSet'] = partialUpdate;
@@ -294,7 +294,7 @@ function Application(db) {
             var update = {}, partialUpdate = {};
             partialUpdate[field] = value;
             update['$pullAll'] = partialUpdate;
-
+            console.log(update);
             db.collection(collectionName,
                           getCallbackWithArgs('update', [query, update, {'multi':true},
                                                          callback]));
@@ -393,6 +393,36 @@ function Application(db) {
                 'message': message};
     }
 
+    function clearNotificationAction(request, response, data) {
+        var notifications = data.account.notifications;
+        console.log("clearing notifications");
+        console.log(notifications[0].dateUpdated);
+        console.log(typeof(notifications[0].dateUpdated));
+        console.log(data.notification.dateUpdated);
+        console.log(typeof(data.notification.dateUpdated));
+        console.log(typeof(data.account._id));
+        console.log("her");
+        var idx = -1;
+        var length = notifications.length;
+        for(var i = 0; i < length; i++) {
+            var date = new Date(data.notification.dateUpdated);
+            if(notifications[i].event_id.toString() === data.notification.event_id
+               && notifications[i].dateUpdated.getTime() === date.getTime())
+                idx = i;
+        }
+        if(idx === -1) {
+            response.send(fail("no matching notification"));
+        } else {
+            removeFromArrayField(collUsers, {_id : data.account._id},
+                               'notifications', [notifications[idx]],
+                               function(err, result) {
+                                   console.log(err, result);
+                                   if(err) response.send(fail(err));
+                                   response.send(success('result', result));
+                               })
+        }
+    }
+
     // Get the notifications
     function getNotificationsAction(request, response){
         var id = ObjectID(request.user.id);
@@ -404,11 +434,11 @@ function Application(db) {
             }
             else{ response.send(success('notifications', result[0].notifications));
             }
-        }        
-        
-        searchDb(collUsers, {'_id' : id}, cb);            
+        }
+
+        searchDb(collUsers, {'_id' : id}, cb);
     }
-    
+
     //given data.text, start, end, return all events in the period
     /*data = { text: request.body.text,
       start: request.body.startDate,
@@ -423,7 +453,7 @@ function Application(db) {
                 return event1.name.localeCompare(event2.name);
             });
 
-            
+
             response.send(success('results', sorted));
         }
 
@@ -662,7 +692,7 @@ function Application(db) {
                 if (date1.timeStart < date2.timeStart) return -1;
                 return 0;
             });
-            
+
             response.send( { 'success': true,
                              'events': sorted });
         }
@@ -676,7 +706,7 @@ function Application(db) {
             var sorted = listOfDocs.sort(function (event1, event2) {
                 return event1.name.localeCompare(event2.name);
             });
-            
+
             response.send( { 'success': true,
                              'organizations': sorted });
         }
@@ -755,6 +785,7 @@ function Application(db) {
                                   nameAction,
                                   postAction,
                                   searchAction,
+                                  clearNotificationAction,
                                   getNotificationsAction,
                                   subscribeAction,
                                   eventDetailAction,

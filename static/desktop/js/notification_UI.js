@@ -42,16 +42,14 @@ Notification_UI.prototype = {
         } else {
             this.dom.notifications.html("");
             results.forEach(function(elem) {
-                var li = this.generate_notification(elem, function() {
-                    this.showNotifications(results);
-                }.bind(this));
+                var li = this.generate_notification(elem, results);
                 this.dom.notifications.append(li);
             }.bind(this));
         }
     },
 
 
-    generate_notification: function(elem, backfn) {
+    generate_notification: function(elem, results) {
         var li = $('<li>');
         var text = $('<p>').html(elem.text);
         var date = (new Date(elem.dateUpdated)).toDateString();
@@ -63,12 +61,35 @@ Notification_UI.prototype = {
         li.append(infoButton);
         li.append(text);
         li.append(updateTime);
+        li.append(clearButton);
+        var that = this;
         infoButton.click(function() {
+            function backfn() {
+                that.showNotifications(results);
+            }
             org_app.showEvent(elem.event_id, backfn);
         });
         clearButton.click(function() {
-
+            window.notification_API.clearNotification(
+                elem, function(err, result) {
+                    if (err !== null) throw err;
+                    console.log(result);
+                    console.log("easy",results.indexOf(elem));
+                    if(result.success === true) {
+                        window.app_API.refreshAccountObject(function(err, result) {
+                            if(err !== null) throw err;
+                            var idx = results.indexOf(elem);
+                            if(idx === -1) {
+                                that.showNotifications(results);
+                            } else {
+                                results.splice(idx,1);
+                                that.showNotifications(results);
+                            }
+                        });
+                    }
+                });
         });
+
         return li;
     }
 }
