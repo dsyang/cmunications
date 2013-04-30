@@ -14,8 +14,6 @@ var UI = function(config){
 
     //on clicking the tab show all events BIND THIS?
     this.bindTabs();
-
-
 }
 
 UI.prototype =
@@ -49,7 +47,8 @@ UI.prototype =
             tab_create: $('.create'),
             topleft_button: $('#left_button'),
             topright_button: $('#right_button'),
-            eventInfo: $("#eventInfo")
+            eventInfo: $("#eventInfo"),
+            loginOverlay: $("#loginOverlay")
         };
 
     },
@@ -75,6 +74,7 @@ UI.prototype =
 
     //for events of a particular org
     showEvents: function(events){
+        this.dom.loginOverlay.addClass("login_hidden");
         //initiate DOM in case it was over written
         this.initDom();
         //bind left/right buttons
@@ -106,6 +106,9 @@ UI.prototype =
                 }.bind(this));
             this.dom.myEvents.append(li);
         }
+
+
+
     },
 
     generate_listing: function(event, backfn) {
@@ -173,6 +176,7 @@ UI.prototype =
 
     //show a particular event/edit it
     showEvent: function(event, backfn) {
+        this.dom.loginOverlay.addClass("login_hidden");
         this.initDom();
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
@@ -216,6 +220,7 @@ UI.prototype =
     },
 
     set_edit_save: function(event, backfn) {
+        this.dom.loginOverlay.addClass("login_hidden");
         console.log("this was clicked");
         this.dom.topright_button.unbind('click');
         this.dom.topright_button.click(function () {
@@ -315,6 +320,7 @@ UI.prototype =
     },
 
     createEvent: function () {
+        this.dom.loginOverlay.addClass("login_hidden");
         if (this.create_mode == false) {
             this.create_mode = true;
             this.dom.tab_create.addClass("selected_tab");
@@ -369,6 +375,14 @@ UI.prototype =
     },
 
     loginPage: function() {
-        window.location = 'login.html';
+            if (this.dom.loginOverlay.is(":hidden")) {
+                console.log("it's 4 AM #cmulyfeeeee");
+                (this.dom.loginOverlay).slideDown("slow");
+                $("#app").html("");
+                } else {
+                (this.dom.loginOverlay).hide();
+                }
+        this.dom.loginOverlay.removeClass("login_hidden");
+        //window.location = 'login.html';
     }
 }

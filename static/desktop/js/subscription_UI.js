@@ -42,9 +42,12 @@ Subscription_UI.prototype = {
         var search = $('#subscription_search');
         var submit = $('#subscription_submit');
         var results = $('#subscription_results');
+
+        var left_button = $('#left_button');
+        var right_button = $('#right_button');
+        var headline = $('#topbar');
         var tags = $('#subscription_tags');
         var orgs = $('#subscription_orgs');
-
         console.log(overlay)
 
         this.dom = {
@@ -56,7 +59,9 @@ Subscription_UI.prototype = {
             orgs: orgs,
             results: results,
             settings_button: org_app.ui.dom.topleft_button,
-            rest: $('#rest')
+            rest: $('#rest'),
+            topleft_button: left_button,
+            topright_button: right_button,
         }
 
         this.dom.overlay_content.removeClass('initiallyHidden');
@@ -147,6 +152,9 @@ Subscription_UI.prototype = {
     showOverlay: function(overlay) {
 
         console.log('Showing Overlay');
+        this.dom.topleft_button.html("Back");
+        this.dom.topright_button.html("Edit");
+        this.dom.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
 
         this.dom.overlay.append(overlay);
         this.dom.rest.css('overflow', 'hidden');
