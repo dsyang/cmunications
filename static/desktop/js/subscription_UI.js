@@ -41,7 +41,7 @@ Subscription_UI.prototype = {
         var search = $('#subscription_search');
         var submit = $('#subscription_submit');
         var results = $('#subscription_results');
-        var left_button = $('#left_button');
+//        var left_button = $('#left_button');
         var headline = $('#topbar');
         var tags = $('#subscription_tags');
         var orgs = $('#subscription_orgs');
@@ -114,16 +114,12 @@ Subscription_UI.prototype = {
     },
 
     showSubscriptions: function(results) {
-        this.bindTabs();
+//        this.bindTabs();
         this.latestResults = results;
         var matchedOrgs = results.orgs;
         var matchedTags = results.tags;
         console.log(matchedOrgs, matchedTags);
         var render = [];
-//        if(this.dom.tags.attr('checked') === 'checked')
-//            render = render.concat(matchedTags);
-//        if(this.dom.orgs.attr('checked') === 'checked')
-//            render = render.concat(matchedOrgs);
 
         if(this.showing === "orgs") {
             render = matchedOrgs;
@@ -177,7 +173,6 @@ Subscription_UI.prototype = {
     },
 
     showOverlay: function(overlay) {
-        this.bindTabs();
         console.log('Showing Overlay');
 
         this.dom.overlay.append(overlay);
@@ -189,6 +184,7 @@ Subscription_UI.prototype = {
         this.dom.settings_button.unbind('click');
         this.dom.settings_button.html('Back');
         this.dom.settings_button.click(function() {
+            console.log("asdfasd");
             this.hideOverlay(overlay);
         }.bind(this));
 
