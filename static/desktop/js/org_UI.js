@@ -78,7 +78,10 @@ UI.prototype =
         //initiate DOM in case it was over written
         this.initDom();
         //bind left/right buttons
+        this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.html('settings');
+        subscription_app.ui.bindTabs();
+
 
         this.dom.topright_button.unbind('click');
         if(window.app_API.isLoggedIn() === false) {
