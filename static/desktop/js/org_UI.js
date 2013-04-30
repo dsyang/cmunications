@@ -378,12 +378,13 @@ UI.prototype =
         this.dom.topleft_button.html("Back");
             if (this.dom.loginOverlay.is(":hidden")) {
                 console.log("it's 4 AM #cmulyfeeeee");
+                this.dom.loginOverlay.removeClass("login_hidden");
                 (this.dom.loginOverlay).slideDown("slow");
                 $("#app").html("");
                 } else {
                 (this.dom.loginOverlay).hide();
                 }
-        this.dom.loginOverlay.removeClass("login_hidden");
+
         //window.location = 'login.html';
     }
 }
