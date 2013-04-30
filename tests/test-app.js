@@ -714,6 +714,7 @@ asyncTest("addEventsToOrg", function() {
 	  this.db.runTest(runIt, []);
 });
 
+
 // This tests a basic org and subscription action.
 asyncTest("Subscribe Action", function() {
 	  var scope = this;
@@ -895,6 +896,7 @@ asyncTest("starEventAction2", function() {
 
 
 
+
 // This tests a basic org and subscription action.
 asyncTest("unstarEventAction", function() {
 	  var scope = this;
@@ -1024,7 +1026,6 @@ asyncTest( "editEventAction: Edit Event in database", function() {
 	  this.db.runTest(runIt);
 });
 
-
 // This tests a basic listStarredEvents Actions.
 asyncTest("listStarredEventsAction", function() {
 	  var scope = this;
@@ -1060,37 +1061,32 @@ asyncTest("listStarredEventsAction", function() {
 });
 
 
+
 // This tests a basic listOrgEvents Actions.
 asyncTest("listOrgEventsAction", function() {
 	  var scope = this;
 
-	  scope.eventids = [];
 
 	  scope.data = {};
-	  scope.request.org = {};
+      scope.data.user = {};
+      scope.data.user.name = "Mayur Sasa";
 	  // Check that the database did what we want.
 
     setTimeout(function() {
 		    //console.log(scope.response.things_sent.results);
-		    ok(scope.response.things_sent.results.length === 3);
+		    ok(scope.response.things_sent.events.length === 1);
 		    start();
-    }, 3000);
+    }, 1000);
 
-	  function saveUserId(err, result){
-		    if(err){ throw err;}
-
-		    scope.request.org.id = result[0]._id.toString();
-
-		    scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
-	  }
 
 	  function runIt(){
-		    scope.app.searchDb('organizations',{'name' : "Mayur Sasa"},saveUserId);
-	  }
+		    scope.app.listOrgEventsAction(scope.request, scope.response, scope.data);
+      }
 
 	  // Call this to open the database, and run the test. ONLY CALL ONCE!
 	  this.db.runTest(runIt, []);
 });
+
 
 
 asyncTest( "eventDetailAction: Fetch Event Info From database", function() {
