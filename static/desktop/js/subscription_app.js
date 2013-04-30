@@ -26,7 +26,7 @@ Subscription_app.prototype = {
             if(err) throw err;
             console.log('subscribed', results);
             this.searchSubscriptions(text);
-        });
+        }.bind(this));
     },
 
     unsubscribe: function(thing, text) {
