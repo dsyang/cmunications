@@ -6,9 +6,9 @@ var Subscription_UI = function(config) {
 
     this.subscription_app = config.events;
 
-    notification_app.ui.bindTabs();
-    search_app.ui.bindTabs();
-    org_app.ui.bindTabs();
+//    notification_app.ui.bindTabs();
+//    search_app.ui.bindTabs();
+//    org_app.ui.bindTabs();
     this.bindTabs();
 }
 
@@ -44,11 +44,10 @@ Subscription_UI.prototype = {
         var results = $('#subscription_results');
 
         var left_button = $('#left_button');
-        var right_button = $('#right_button');
+//        var right_button = $('#right_button');
         var headline = $('#topbar');
         var tags = $('#subscription_tags');
         var orgs = $('#subscription_orgs');
-        console.log(overlay)
 
         this.dom = {
             overlay: overlay,
@@ -61,7 +60,7 @@ Subscription_UI.prototype = {
             settings_button: org_app.ui.dom.topleft_button,
             rest: $('#rest'),
             topleft_button: left_button,
-            topright_button: right_button,
+            topright_button: org_app.ui.dom.topright_button,
         }
 
         this.dom.overlay_content.removeClass('initiallyHidden');
@@ -90,7 +89,7 @@ Subscription_UI.prototype = {
                       "subscription settings");
             }
         }.bind(this));
-        console.log('binding tabs');
+
     },
 
     showSubscriptions: function(results) {
@@ -151,8 +150,6 @@ Subscription_UI.prototype = {
     showOverlay: function(overlay) {
 
         console.log('Showing Overlay');
-        this.dom.topleft_button.html("Back");
-        this.dom.topright_button.html("Edit");
 //        this.dom.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
 
         this.dom.overlay.append(overlay);
@@ -162,6 +159,7 @@ Subscription_UI.prototype = {
 
         //toggling of showing overlay
         this.dom.settings_button.unbind('click');
+        this.dom.settings_button.html('Back');
         this.dom.settings_button.click(function() {
             this.hideOverlay(overlay);
         }.bind(this));
@@ -185,6 +183,7 @@ Subscription_UI.prototype = {
             this.dom.rest.css('overflow', 'auto');
         });
         this.dom.settings_button.unbind('click');
+        this.dom.settings_button.html('Settings');
         this.dom.settings_button.click(function() {
             this.showOverlay(overlay);
         }.bind(this));

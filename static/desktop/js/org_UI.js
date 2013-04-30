@@ -13,7 +13,6 @@ var UI = function(config){
     this.org_app = config.events;
 
     //on clicking the tab show all events BIND THIS?
-    this.bindTabs();
 }
 
 UI.prototype =
@@ -48,7 +47,8 @@ UI.prototype =
             topleft_button: $('#left_button'),
             topright_button: $('#right_button'),
             eventInfo: $("#eventInfo"),
-            loginOverlay: $("#loginOverlay")
+            loginOverlay: $("#loginOverlay"),
+            loginWrapper: $('#loginWrapper')
         };
 
     },
@@ -70,13 +70,6 @@ UI.prototype =
             }
         }.bind(this));
 
-    },
-
-    //for events of a particular org
-    showEvents: function(events){
-        this.dom.loginOverlay.addClass("login_hidden");
-        //initiate DOM in case it was over written
-        this.initDom();
         //bind left/right buttons
         this.dom.topleft_button.unbind('click');
         this.dom.topleft_button.html('settings');
@@ -86,10 +79,22 @@ UI.prototype =
         this.dom.topright_button.unbind('click');
         if(window.app_API.isLoggedIn() === false) {
             this.dom.topright_button.html("Login");
+            this.dom.topright_button.click(this.loginPage.bind(this));
         } else {
             this.dom.topright_button.html("Logout");
+            this.dom.topright_button.click(login_app.ui.logoutAction);
         }
-        this.dom.topright_button.click(this.loginPage.bind(this));
+
+
+
+    },
+
+    //for events of a particular org
+    showEvents: function(events){
+        this.dom.loginOverlay.addClass("login_hidden");
+        //initiate DOM in case it was over written
+        this.initDom();
+        this.bindTabs();
 
         allEvents = events['events'];
         console.log(allEvents);
@@ -379,13 +384,17 @@ UI.prototype =
 
     loginPage: function() {
             if (this.dom.loginOverlay.is(":hidden")) {
-                console.log("it's 4 AM #cmulyfeeeee");
                 (this.dom.loginOverlay).slideDown("slow");
-                $("#app").html("");
+                this.dom.loginWrapper.click(function(e) {
+                    console.log("herp");
+                    e.stopPropagation();
+                });
+                this.dom.loginOverlay.click(function() {
+                    this.dom.loginOverlay.hide();
+                }.bind(this));
                 } else {
                 (this.dom.loginOverlay).hide();
                 }
         this.dom.loginOverlay.removeClass("login_hidden");
-        //window.location = 'login.html';
     }
 }

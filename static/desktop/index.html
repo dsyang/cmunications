@@ -38,6 +38,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <script>
         window.addEventListener('load', function(){
+           login_app = new Login_app();
            org_app = new org_app();
            search_app = new Search_app();
            notification_app = new Notification_app();
@@ -56,12 +57,14 @@
 	<div id = "clearfix"> </div>
 	<div id = "rest">
 			<div id = "loginOverlay" class = "login_fields login_hidden">
-		          <div id="message"></div>
+        <div id="loginWrapper">
+		      <div id="message"></div>
 		          <input type="text" name="name"  id="username" class = "login" placeholder = "Username"><br>
 		          <input type="password" name="password" id="password" class = "login" placeholder = "Password"><br>
 		          <input type="submit" class = "top_button" value="Login" id="login_button">
 		          <input type="button" class = "top_button" value="Register" id="register_button" >
-		   	 </div>
+		   	</div>
+      </div>
       <div id="overlay" class="transition hidden">	</div>
       <div id="overlay-content" class="initiallyHidden">
         <h2>My Subscriptions</h2>

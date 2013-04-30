@@ -6,8 +6,6 @@ var Notification_UI = function(config) {
 
 
     this.bindTabs();
-    search_app.ui.bindTabs();
-    org_app.ui.bindTabs();
 
 
 }
