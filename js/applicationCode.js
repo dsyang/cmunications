@@ -366,6 +366,14 @@ function Application(db) {
         addToArrayField(collUsers, query, 'orgs', orgids, cb);
     }
 
+    // Adds organizations to a user.
+    function removeOrganizationsFromUser(userid, orgids, cb){
+        var query = {};
+        query['_id'] = userid;
+
+        removeFromArrayField(collUsers, query, 'orgs', orgids, cb);
+    }    
+    
     // Adds tagss to a user.
     function addTagsToUser(userid, tags, cb){
         var query = {};
@@ -616,6 +624,40 @@ function Application(db) {
         }
     }
 
+    function unsubscribeAction(request, response, data) {
+        var id = ObjectID(request.user.id);
+        var finalResult = {};
+        //console.log(data.orgids, data.tags);
+
+        var orgids = data.orgids.map(function(elem){return ObjectID(elem)});
+
+        if(orgids) {
+            removeOrganizationsFromUser(id, orgids, cb);
+        }
+        else{
+            cb();
+        }
+        function cb(err, result) {
+
+            if(err){ response.send(fail(err));}
+            finalResult = result;
+
+
+            if(data.tags) {
+                removeTagsFromUser(id, data.tags, cb2);
+            }
+            else{
+                cb2(err, result);
+            }
+        }
+        function cb2(err, result) {
+            if(err){ response.send(fail(err));}
+
+            finalResult = result;
+            response.send(success('result', result));
+        }
+    }
+    
     //given data.event_id
     function eventDetailAction(request, response, data) {
         var id = ObjectID(data.event_id);
@@ -893,6 +935,7 @@ function Application(db) {
                                   clearNotificationAction,
                                   getNotificationsAction,
                                   subscribeAction,
+                                  unsubscribeAction,
                                   searchSubscriptionsAction,
                                   eventDetailAction,
                                   starEventAction,
