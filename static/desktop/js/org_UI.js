@@ -48,7 +48,11 @@ UI.prototype =
             topright_button: $('#right_button'),
             eventInfo: $("#eventInfo"),
             loginOverlay: $("#loginOverlay"),
-            loginWrapper: $('#loginWrapper')
+            loginWrapper: $('#loginWrapper'),
+            tab1_contain: $('.contain.tab1'),
+            tab2_contain: $('.contain.tab2'),
+            tab3_contain: $('.contain.tab3'),
+            tab4_contain: $('.contain.tab4')
         };
 
     },
@@ -60,12 +64,17 @@ UI.prototype =
 
         this.dom.tab_create.unbind('click');
         this.dom.tab_create.click(function() {
+            this.dom.tab4_contain.attr({"id":"selected"});
+            this.dom.tab2_contain.attr({"id":""});
+            this.dom.tab3_contain.attr({"id":""});
+            this.dom.tab1_contain.attr({"id":""});
             if(window.app_API.getAccountObject() === null ||
                window.app_API.getAccountObject().accountType !== "organizations") {
                 alert('You can only create an event if you login as an organzation.'+
                       ' Contact cmunications@andrew.cmu.edu to receive organization'+
                       ' account credentials.');
             } else {
+
                 this.createEvent();
             }
         }.bind(this));
@@ -92,6 +101,10 @@ UI.prototype =
         //initiate DOM in case it was over written
         this.initDom();
         this.bindTabs();
+        this.dom.tab1_contain.attr({"id":"selected"});
+        this.dom.tab2_contain.attr({"id":""});
+        this.dom.tab3_contain.attr({"id":""});
+        this.dom.tab4_contain.attr({"id":""});
 
         allEvents = events['events'];
         console.log(allEvents);

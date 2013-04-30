@@ -23,18 +23,26 @@ Notification_UI.prototype = {
 
         this.dom = {
             notifications: $('#notifications'),
-            tab_notify: $('.tab.notify')
-        }
+            tab_notify: $('.tab.notify'),
+            tab1_contain: $('.contain.tab1'),
+            tab2_contain: $('.contain.tab2'),
+            tab3_contain: $('.contain.tab3'),
+            tab4_contain: $('.contain.tab4')            
+        };
 
     },
 
     bindTabs: function() {
-        this.dom.tab_notify.click(this.notification_app.getNotifications)
+        this.dom.tab_notify.click(this.notification_app.getNotifications);
     },
 
 
     showNotifications: function(results) {
         this.initDom();
+            this.dom.tab3_contain.attr({"id":"selected"});
+            this.dom.tab2_contain.attr({"id":""});
+            this.dom.tab1_contain.attr({"id":""});
+            this.dom.tab4_contain.attr({"id":""});
 
         if(results === undefined || results.length === 0) {
             this.dom.notifications.html("No notifications");
