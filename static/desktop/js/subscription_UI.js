@@ -79,7 +79,6 @@ Subscription_UI.prototype = {
     },
 
     bindTabs: function() {
-        console.log(this.dom.settings_button);
         this.dom.settings_button.unbind('click');
         this.dom.settings_button.click(function() {
             var account = window.app_API.getAccountObject();
@@ -154,7 +153,7 @@ Subscription_UI.prototype = {
         console.log('Showing Overlay');
         this.dom.topleft_button.html("Back");
         this.dom.topright_button.html("Edit");
-        this.dom.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
+//        this.dom.append($('<div class = "search_container"> <input type="text" id="searchbar"> </div>'));
 
         this.dom.overlay.append(overlay);
         this.dom.rest.css('overflow', 'hidden');
