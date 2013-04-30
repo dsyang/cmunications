@@ -715,7 +715,7 @@ asyncTest("addEventsToOrg", function() {
 });
 
 // This tests a basic org and subscription action.
-asyncTest("Basic Search by name of Event", function() {
+asyncTest("Subscribe Action", function() {
 	  var scope = this;
 
     scope.expected = {"name": "Dan Yang",
@@ -726,9 +726,8 @@ asyncTest("Basic Search by name of Event", function() {
 	  scope.data = {};
 	  scope.data.orgids = [];
 	  scope.data.tags = ['party', 'food'];
-
-	  scope.request = {};
-	  scope.request.user = {};
+      scope.data.user = {};
+      scope.data.user._id = {};
 
 	  // Check that the database did what we want.
 	  var callback = function( error, result ){
@@ -740,7 +739,7 @@ asyncTest("Basic Search by name of Event", function() {
 
 	  var callback1 = function(){
 		    var query = {};
-		    query['_id'] = scope.request.user.id_obj;
+		    query['_id'] = scope.data.user._id;
 		    scope.app.searchDb('users', query, callback);
 	  }
 
@@ -749,8 +748,7 @@ asyncTest("Basic Search by name of Event", function() {
     }, 3000);
 
 	  function saveUserId(err, result){
-		    scope.request.user.id = result[0]._id.toString();
-			scope.request.user.id_obj = result[0]._id;
+		    scope.data.user._id = result[0]._id;
 
 		    scope.app.subscribeAction(scope.request, scope.response, scope.data);
 	  }
