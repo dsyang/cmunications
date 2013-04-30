@@ -23,13 +23,16 @@ var org_app = function(){
 org_app.prototype = {
 	// on refreshing, or going to myEvents tab, callback function below
     showEvents: function(){
-        window.org_API.getAll(function (err, data_array) {
-        	if (err)
-             throw err;
-        	//data returned in array form, store locally
-        	this.myEvents = data_array;
-        	this.ui.showEvents(data_array);
-        }.bind(this));
+        var done = function (err, data_array) {
+            if(err) throw err;
+            this.myEvents = data_array;
+            this.ui.showEvents(data_array);
+        }.bind(this);
+        if(window.app_API.isLoggedIn() === true) {
+            window.org_API.getMine(done);
+        } else {
+            window.org_API.getAll(done);
+        }
     },
 
     showEvent: function(_id, backfn) {

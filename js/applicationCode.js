@@ -739,6 +739,68 @@ function Application(db) {
         }
     }
 
+
+    function listMyEventsAction(request, response, data) {
+        var user = data.user;
+        var savedEvents = [];
+        if(user.savedEvents !== undefined) {
+            savedEvents = user.savedEvents;
+            // for(var i = 0; i < user.savedEvents.length; i++) {
+            //     console.log(user.savedEvents[i]);
+            //     savedEvents.push(ObjectID(user.savedEvents[i]));
+            // }
+        }
+        var savedOrgIds = [];
+        if(user.orgs !== undefined) {
+            savedOrgIds = user.orgs;
+//            for(var i = 0; i < user.orgs.length; i++) {
+//                savedOrgIds.push(ObjectID(user.orgs[i]));
+//            }
+        }
+        var savedTags = [];
+        if(user.tags !== undefined) {
+            savedTags = user.tags
+        }
+
+        var querySavedEvents = {'_id': {$in: savedEvents}};
+        var queryEventsFromSavedTags = {'tags' : {$elemMatch:
+                                                  { $in: savedTags }}};
+
+        var queryOrgNames = {'_id': {$in: savedOrgIds}};
+        //grab events
+        searchDb(collEvents, querySavedEvents, callback1);
+        function callback1 (err, savedEvents) {
+            if(err) throw err;
+            //create array of org names
+            searchDb(collOrgs, queryOrgNames, callback2);
+            function callback2 (err, savedOrgs) {
+                if(err) throw err;
+                var savedOrgNames = [];
+                if(savedOrgs !== undefined) {
+                    for(var i = 0; i < savedOrgs.length; i++) {
+                        savedOrgNames.push(savedOrgs[i].name);
+                    }
+                }
+                var queryEventsFromSavedOrgs = {'hostOrg': {$in: savedOrgNames}};
+                searchDb(collEvents, queryEventsFromSavedOrgs, callback3);
+
+                function callback3 (err, savedOrgEvents) {
+                    if(err) throw err;
+                    searchDb(collEvents, queryEventsFromSavedTags, callback4);
+
+                    function callback4 (err, savedTagEvents) {
+                        if(err) throw err;
+                        var allevents = [].concat(savedEvents,
+                                                  savedOrgEvents,
+                                                  savedTagEvents);
+                        response.send(success('results', allevents));
+                    };
+                };
+            };
+        };
+    }
+
+
     //return all starred events for request.user
     function listStarredEventsAction(request, response, data) {
         var savedEvents = request.user.savedEvents.map(function(elem){
@@ -819,7 +881,7 @@ function Application(db) {
             query['_id'] = {'$in': result[0].followers};
 
             addToArrayField(collUsers, query, 'notifications', [not], cb2);
-            
+
             function cb2(err, result){
                 if(err) throw err;
                 addTagsToDb(tags,cb3);
@@ -949,6 +1011,7 @@ function Application(db) {
                                   eventDetailAction,
                                   starEventAction,
                                   unstarEventAction,
+                                  listMyEventsAction,
                                   listStarredEventsAction,
                                   listOrgEventsAction,
                                   createEventAction,
