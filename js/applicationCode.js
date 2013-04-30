@@ -824,19 +824,15 @@ function Application(db) {
     function listOrgEventsAction(request, response, data){
         var scope = this;
 
-        var orgid = ObjectID(request.org.id);
-        searchDb(collOrgs, {'_id' : orgid}, cb);
+        var orgName = data.user.name;
 
-        function cb(err, results){
-            if(err){ throw err;}
 
-            var query = {'_id': {'$in': results[0].events}};
-            searchDb(collEvents, query, finalCallback);
-        }
+        var query = {'hostOrg': orgName};
+        searchDb(collEvents, query, finalCallback);
 
         function finalCallback(err, results){
             if(err){ throw err;}
-            response.send(success('results', results));
+            response.send(success('events', results));
         }
     }
 

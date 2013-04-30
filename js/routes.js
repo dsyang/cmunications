@@ -153,7 +153,10 @@ module.exports = function(app, db, Auth) {
                         response.send(fail("cannot get account"));
                     } else {
                         var data = {user : account };
-                        code.listMyEventsAction(request, response, data);
+                        if(account.accountType === 'users')
+                            code.listMyEventsAction(request, response, data);
+                        else
+                            code.listOrgEventsAction(request, response, data);
                     }
                 });
             }
