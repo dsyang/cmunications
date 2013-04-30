@@ -35,7 +35,8 @@ Notification_UI.prototype = {
 
     showNotifications: function(results) {
         this.initDom();
-        if(results.length === 0) {
+
+        if(results === undefined || results.length === 0) {
             this.dom.notifications.html("No notifications");
         } else {
             this.dom.notifications.html("");

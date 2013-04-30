@@ -79,8 +79,14 @@ Search_UI.prototype = {
 
         if(doRender === true) {
             render(results);
+        } else {
+            window.search_API.doSearch("", function(err, results) {
+                if(err) throw err;
+                //check success
+                render(results.results);
+            });
         }
-        console.log(results);
+
         console.log("Showing search results");
     }
 
